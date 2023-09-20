@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 import auth from "./src/router/authRouter.js";
 import users from "./src/router/usersRouter.js";
 import dotenv from "dotenv";
-import graphqlSchema from "./src/graphql/schema/index.js";
-import graphqlResolvers from "./src/graphql/resolvers/index.js";
-import expressGraphQL from "express-graphql";
+
 import cors from "cors";
 
-const { graphqlHTTP } = expressGraphQL;
 
 const app = express();
 
@@ -20,14 +17,6 @@ app.use(
   })
 );
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema: graphqlSchema,
-    rootValue: graphqlResolvers,
-    graphiql: true,
-  })
-);
 
 app.listen(3002, () => console.log("Server is running on localhost:3002"));
 
@@ -52,6 +41,7 @@ app.use("/auth", auth);
 app.use("/users", users);
 
 try {
+  console.log("process.env.DB_URI ====", process.env.DB_URI);
   await mongoose.connect(process.env.DB_URI);
   console.log("Connected to database");
 } catch (e) {

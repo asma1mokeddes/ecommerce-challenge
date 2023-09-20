@@ -1,5 +1,5 @@
 import express from "express";
-import { addTeacherInfoToGrades, getUsers } from "../routes/usersRoutes.js";
+import { getUsers } from "../routes/usersRoutes.js";
 
 const router = express.Router();
 
