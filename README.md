@@ -1,1 +1,1 @@
-# ecommerce-challenge
+# ecommerce
