@@ -1,0 +1,25 @@
+name: CI/CD for ecommerce-Challenge Project
+on:
+  push:
+    branches:
+      - develop  # Le workflow s'exécutera sur les pushes vers la branche principale
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependecies 
+      run: npm install
+
+    - name: Build ecommerce project
+      run: docker-compose up -d
+        
+    - name: Run Tests
+      run: npx jest
+
+    - name: Deploy
+      run: |
