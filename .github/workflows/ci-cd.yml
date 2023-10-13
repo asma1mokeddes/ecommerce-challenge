@@ -14,10 +14,7 @@ jobs:
 
     - name: Install dependecies 
       run: npm install
-
-    - name: Build ecommerce project
-      run: docker-compose up -d
-        
+      
     - name: Run Tests
       run: npx jest
 
