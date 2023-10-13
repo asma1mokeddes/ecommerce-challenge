@@ -2,7 +2,9 @@ name: CI/CD for ecommerce-Challenge Project
 on:
   push:
     branches:
-      - develop  # Le workflow s'exécutera sur les pushes vers la branche principale
+      - [ "develop" ]  # Le workflow s'exécutera sur les pushes vers la branche principale
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
@@ -12,11 +14,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install dependecies 
-      run: npm install
-      
+    - name: Build and Launch Project
+      run: docker-compose up -d
+        
     - name: Run Tests
-      run: npx jest
+      run: npx jest tests/unit/register.test.js  # Vous pouvez exécuter vos tests ici
 
     - name: Deploy
       run: |
+        # Ajoutez les étapes de déploiement si nécessaire
