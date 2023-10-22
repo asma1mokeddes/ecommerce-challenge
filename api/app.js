@@ -2,10 +2,13 @@ import express from "express";
 import mongoose from "mongoose";
 import auth from "./src/router/authRouter.js";
 import users from "./src/router/usersRouter.js";
+// import products from "./src/router/productsRouter.js";
+import categories from "./src/router/categoriesRouter.js";
+import promos from "./src/router/promosRouter.js";
+import brands from "./src/router/brandsRouter.js";
 import dotenv from "dotenv";
-
 import cors from "cors";
-
+import sequelize from "./src/config/db.config.js";
 
 const app = express();
 
@@ -39,6 +42,10 @@ app.use((req, res, next) => {
 
 app.use("/auth", auth);
 app.use("/users", users);
+app.use("/categories", categories);
+app.use("/brands", brands);
+app.use("/promos", promos);
+// app.use("/products", products);
 
 try {
   console.log("process.env.DB_URI ====", process.env.DB_URI);
@@ -47,5 +54,13 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+try {
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (e) {
+  console.error('Unable to connect to the database:', e);
+}
+
 
 export default app;
