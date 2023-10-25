@@ -17,9 +17,14 @@ jobs:
     - name: Build and Launch Project
       run: docker-compose up -d
         
+    - name: Build and Launch Project
+      run: docker-compose up -d
+        
     - name: Run Tests
       run: npx jest tests/unit/register.test.js  # Vous pouvez exécuter vos tests ici
 
     - name: Deploy
       run: |
+        # Ajoutez les étapes de déploiement si nécessaire
+
         # Ajoutez les étapes de déploiement si nécessaire
