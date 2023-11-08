@@ -4,7 +4,8 @@ import ProductDetailPage from '../views/ProductDetailPage.vue';
 import CartPage from '../views/CartPage.vue';
 import NotFoundPage from '../views/NotFoundPage.vue';
 import HomePage from '../views/HomePage.vue';
-
+import Connexion from '../views/Connexion.vue';
+import Inscription from '../views/Inscription.vue';
 const routes = [
   {
     path: '/home',
@@ -34,7 +35,17 @@ const routes = [
   {
     path: '/:catchAll(.*)', // Utilisation de ":catchAll(.*)" pour la route catch-all
     component: NotFoundPage,
-  }
+  },
+  {
+    path: '/Connexion',
+    name: 'Connexion',
+    component: Connexion,
+  },
+  {
+    path: '/Inscription',
+    name: 'Inscription',
+    component: Inscription,
+  },
 ];
 
 const router = createRouter({
