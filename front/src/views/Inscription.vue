@@ -30,46 +30,50 @@
 <style scoped>
 .login-container {
   display: flex;
-  flex-direction: column; /* Empile les éléments verticalement */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* S'assure que le container s'étend sur toute la hauteur de la fenêtre */
+  min-height: 100vh;
   padding: 20px;
-  box-sizing: border-box;
-  width: 40%; /* Réduire la largeur du formulaire */
-  max-width: 400px; /* Maximum width to prevent it from being too wide on larger screens */
-  margin: auto; /* Centre le conteneur dans la page */
-  
-  border-radius: 8px; /* Bords arrondis pour le container */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre légère pour le container */
+  margin: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
 }
 
 .formGroup {
   margin-bottom: 15px;
-  width: 100%; /* Force tous les éléments de formulaire à occuper tout l'espace disponible dans le .login-container */
+  width: 100%;
 }
 
 label {
   display: block;
-  color: black; /* Change la couleur du texte des étiquettes pour le contraste avec l'arrière-plan bleu */
-  margin-bottom: .5rem; /* Ajoute un peu d'espace sous l'étiquette */
+  color: black;
+  margin-bottom: .5rem;
+  align-items: center;
 }
 
 input[type="text"],
 input[type="password"] {
-  width: calc(100% - 16px); /* calc() permet de déduire la marge interne de la largeur totale */
-  padding: 8px;
+  width: 300px; /* ajustez si nécessaire pour les marges */
+  padding: 10px; /* Plus de remplissage pour un champ plus grand */
   margin-top: 5px;
+
   border-radius: 5px;
-  border: 1px solid transparent;
-  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid #ccc;
+  background-color: #fff;
   color: #333;
+  font-size: 16px; /* Taille de texte plus grande pour une meilleure lisibilité */
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  background-color: rgba(255, 255, 255, 0.8);
+  border-color: #6aa9af;
+  box-shadow: 0 0 0 2px #6aa9af;
 }
+
+
 
 button {
   width: 100%;
@@ -77,8 +81,16 @@ button {
   cursor: pointer;
   border-radius: 5px;
   background-color: #71C9CE;
-  border: none; /* Supprime la bordure par défaut des boutons */
-  color: #fff; /* Change la couleur du texte pour le contraste */
+  border: none;
+  color: white;
+  transition: transform 0.1s; /* Ajout de la transition pour l'animation */
 }
 
+button:hover {
+  background-color: #63b1b8; /* Assombrissement du bouton au survol */
+}
+
+button:active {
+  transform: scale(0.98); /* Effet de clic */
+}
 </style>
