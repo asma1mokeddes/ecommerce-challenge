@@ -2,6 +2,12 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+export function validatePassword(password) {
+    const pwdFilter =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return pwdFilter.test(password);
+}
+
 export const createUser = async (req, res) => {
     try {
         // Validate request
@@ -13,6 +19,11 @@ export const createUser = async (req, res) => {
             });
         }
 
+        if (!validatePassword(password)) {
+            return res.status(409).json({
+                message: `Mot de passe invalide.`,
+            });
+        }
         // Vérifiez si l'utilisateur existe déjà
         const existingUser = await User.findOne({
             where: {
@@ -137,4 +148,38 @@ export const deleteUser = (req, res) => {
                 message: "Could not delete User with id=" + id,
             });
         });
+};
+
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ message: "Identifiants invalides" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Identifiants invalides" });
+        }
+
+        const payload = {
+            userId: user._id,
+        };
+
+        const options = {
+            expiresIn: "12h",
+        };
+
+        const token = jwt.sign(payload, process.env.SECRET_KEY, options);
+
+        res.json({ user, token });
+    } catch (error) {
+        res.status(500).json({
+            error: `Une erreur est survenue lors de la connexion : ${error}`,
+        });
+    }
 };

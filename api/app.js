@@ -5,6 +5,9 @@ import users from "./src/router/usersRouter.js";
 import categories from "./src/router/categoriesRouter.js";
 import promos from "./src/router/promosRouter.js";
 import brands from "./src/router/brandsRouter.js";
+import emails from "./src/router/emailRouter.js";
+import auth from "./src/router/authRouter.js";
+
 import dotenv from "dotenv";
 import cors from "cors";
 import sequelize from "./src/config/db.config.js";
@@ -42,6 +45,9 @@ app.use("/users", users);
 app.use("/categories", categories);
 app.use("/brands", brands);
 app.use("/promos", promos);
+app.use("/register", emails);
+app.use("/auth", auth);
+
 // app.use("/products", products);
 
 try {
