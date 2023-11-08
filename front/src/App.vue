@@ -1,30 +1,70 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Riad + Vue" />
+  <nav-bar />
+  <router-view/>
+  <bottom-bar />
+
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #F6F6F6;
+  }
+
+  #page-wrap {
+    margin: auto;
+    max-width: 800px;
+    min-height: 100vh;
+  }
+
+    
+  @media screen and (max-width: 800px) {
+    html{
+      font-size: 14px;
+    }
+    .body img {
+      width: 90%;
+    }
+  }
+
+
+  button {
+    background-color: black;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    outline: 0;
+    padding: 16px;
+  }
 </style>
+
+<script>
+import BottomBar from './views/BottomBar.vue';
+import NavBar from './views/NavBar.vue';
+
+export default {
+  components: {
+        BottomBar,
+        NavBar
+  },
+  data() {
+    return {
+      isNavToggled: false,
+    };
+  },
+  methods: {
+    toggleNav() {
+      this.isNavToggled = !this.isNavToggled; // Inverse l'état au clic du bouton
+    },
+  },
+};
+</script>
