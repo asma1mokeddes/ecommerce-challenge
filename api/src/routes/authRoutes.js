@@ -39,13 +39,10 @@ export const register = async (req, res) => {
             expiresIn: "12h",
         };
 
-        const token = jwt.sign(payload, process.env.SECRET_KEY, options);
-
         await user.save();
 
         res.json({
             message: "Utilisateur créé avec succès",
-            token: token,
         });
     } catch (error) {
         res.status(500).json({

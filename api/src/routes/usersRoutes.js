@@ -58,10 +58,8 @@ export const createUser = async (req, res) => {
             expiresIn: "12h",
         };
 
-        const token = jwt.sign(payload, process.env.SECRET_KEY, options);
         res.status(201).json({
             message: "Utilisateur créé avec succès",
-            token: token,
         });
     } catch (error) {
         res.status(500).json({
