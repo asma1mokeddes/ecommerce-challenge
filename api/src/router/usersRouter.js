@@ -6,13 +6,14 @@ import {
     updateUser,
     deleteUser,
 } from "../routes/usersRoutes.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getUsers);
-router.post("/", createUser);
 router.get("/:id", getUser);
-router.post("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.post("/", authMiddleware, createUser);
+router.put("update/:id", authMiddleware, updateUser);
+router.delete("delete/:id", authMiddleware, deleteUser);
 
 export default router;

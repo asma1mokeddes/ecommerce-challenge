@@ -1,12 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
+import auth from "./src/router/authRouter.js";
 import users from "./src/router/usersRouter.js";
-// import products from "./src/router/productsRouter.js";
+import products from "./src/router/productsRouter.js";
 import categories from "./src/router/categoriesRouter.js";
 import promos from "./src/router/promosRouter.js";
 import brands from "./src/router/brandsRouter.js";
-import emails from "./src/router/emailRouter.js";
-import auth from "./src/router/authRouter.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
@@ -17,7 +16,7 @@ const app = express();
 // Configurez le middleware CORS pour autoriser les requêtes depuis localhost:4200
 app.use(
     cors({
-        origin: "http://localhost:4200", // Remplacez par l'URL de votre application Angular
+        origin: "http://localhost:5173", // Remplacez par l'URL de votre application Angular
         credentials: true, // Si vous utilisez des cookies ou des en-têtes d'authentification, activez ceci
     })
 );
@@ -41,19 +40,22 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/users", users);
-app.use("/categories", categories);
-app.use("/brands", brands);
-app.use("/promos", promos);
-app.use("/register", emails);
 app.use("/auth", auth);
-
-// app.use("/products", products);
+app.use("/users", users);
+app.use("/products", products);
+app.use("/categories", categories);
+app.use("/promos", promos);
+app.use("/brands", brands);
 
 try {
     console.log("process.env.DB_URI ====", process.env.DB_URI);
-    await mongoose.connect(process.env.DB_URI);
-    console.log("Connected to database");
+    await mongoose
+        .connect(process.env.DB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => console.log("Connexion à MongoDB réussie !"))
+        .catch(() => console.log("Connexion à MongoDB échouée !"));
 } catch (e) {
     console.error(e);
 }

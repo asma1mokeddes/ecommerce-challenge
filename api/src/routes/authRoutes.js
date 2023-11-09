@@ -11,10 +11,14 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const existingUser = await User.findOne({ emailAddress });
+        const existingUser = await User.findOne({
+            where: {
+                emailAddress: emailAddress,
+            },
+        });
         if (existingUser)
             throw new Error(
-                `L'adresse emailAddress ${emailAddress} est déjà utilisée`
+                `L'adresse email ${emailAddress} est déjà utilisée`
             );
 
         const user = new User({
@@ -22,7 +26,7 @@ export const register = async (req, res) => {
             lastName,
             emailAddress,
             password: hashedPassword,
-            role,
+            role: "ROLE_USER",
         });
 
         const payload = {

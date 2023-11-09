@@ -5,14 +5,15 @@ import {
     getProduit,
     updateProduit,
     deleteProduit,
-} from "../routes/productssRoutes.js";
+} from "../routes/productsRoutes.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getProduits);
-router.post("/", createProduit);
+router.post("/", authMiddleware, createProduit);
 router.get("/:id", getProduit);
-router.post("/:id", updateProduit);
-router.delete("/:id", deleteProduit);
+router.put("/:id", authMiddleware, updateProduit);
+router.delete("/:id", authMiddleware, deleteProduit);
 
 export default router;
