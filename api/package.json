@@ -1,5 +1,5 @@
 {
-  "name": "micro-services",
+  "name": "ecommerce-challenge",
   "version": "1.0.0",
   "description": "# Le sujet du projet :",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asma1mokeddes/Micro-services.git"
+    "url": "git+https://github.com/asma1mokeddes/ecommerce-challenge.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/asma1mokeddes/Micro-services/issues"
+    "url": "https://github.com/asma1mokeddes/ecommerce-challenge/issues"
   },
-  "homepage": "https://github.com/asma1mokeddes/Micro-services#readme",
+  "homepage": "https://github.com/asma1mokeddes/ecommerce-challenge#readme",
   "devDependencies": {
     "@types/express": "^4.17.17",
     "typescript": "^5.1.6"

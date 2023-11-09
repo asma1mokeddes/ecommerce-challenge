@@ -1,3 +1,6 @@
 api/node_modules
 front/node_modules
 front/.npm
+db_data/
+api/package-lock.json
+front/package-lock.json

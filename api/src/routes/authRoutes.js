@@ -4,21 +4,23 @@ import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, role } = req.body;
+        const { firstName, lastName, emailAddress, password, role } = req.body;
 
-        if (!(firstName && lastName && email && password && role))
+        if (!(firstName && lastName && emailAddress && password && role))
             throw new Error("Invalid arguments");
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ emailAddress });
         if (existingUser)
-            throw new Error(`L'adresse email ${email} est déjà utilisée`);
+            throw new Error(
+                `L'adresse emailAddress ${emailAddress} est déjà utilisée`
+            );
 
         const user = new User({
             firstName,
             lastName,
-            email,
+            emailAddress,
             password: hashedPassword,
             role,
         });
@@ -51,7 +53,6 @@ export const login = async (req, res) => {
         const { emailAddress, password } = req.body;
 
         const user = await User.findOne({ emailAddress });
-
         if (!user) {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
@@ -82,7 +83,6 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        // La déconnexion se fait côté client en supprimant le jeton.
         res.json({ message: "Déconnexion réussie" });
     } catch (error) {
         res.status(500).json({
