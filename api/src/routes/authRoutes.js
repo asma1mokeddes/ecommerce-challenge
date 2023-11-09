@@ -4,10 +4,35 @@ import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
     try {
-        const { firstName, lastName, emailAddress, password, role } = req.body;
+        const {
+            firstName,
+            lastName,
+            emailAddress,
+            password,
+            role,
+            dateOfBirth,
+        } = req.body;
 
-        if (!(firstName && lastName && emailAddress && password && role))
+        if (
+            !(
+                firstName &&
+                lastName &&
+                emailAddress &&
+                password &&
+                role &&
+                dateOfBirth
+            )
+        )
             throw new Error("Invalid arguments");
+
+        // Calculate age based on dateOfBirth
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        // Check if the user is 18 or older
+        if (age < 18) {
+            throw new Error("Users must be 18 years or older.");
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -26,6 +51,7 @@ export const register = async (req, res) => {
             lastName,
             emailAddress,
             password: hashedPassword,
+            dateOfBirth,
             role,
         });
 
