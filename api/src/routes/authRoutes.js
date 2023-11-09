@@ -26,8 +26,10 @@ export const register = async (req, res) => {
             lastName,
             emailAddress,
             password: hashedPassword,
-            role: "ROLE_USER",
+            role,
         });
+
+        console.log("user", user);
 
         const payload = {
             userId: user._id,
