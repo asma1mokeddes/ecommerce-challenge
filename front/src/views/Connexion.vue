@@ -1,23 +1,57 @@
 <template>
   <div class="login-container">
-    <form>
+    <form @submit.prevent="handleLogin" Method="POST">
         <div class="formGroup">
-            <label for="user_login">Login</label>
-            <input type="text" id="user_login">
+            <label for="email">Login</label>
+            <input type="text" id="email" v-model="state.loginForm.email">
         </div>
         <div class="formGroup">
-            <label for="user_login">Mot de passe</label>
-            <input type="text" id="user_login">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" v-model="state.loginForm.password">
         </div>
-        <div>
-            <div class="formGroup">
-                <button type="submit">Connexion</button>
-            </div>
+        <div class="formGroup">
+            <button type="submit">Connexion</button>
         </div>
     </form>
   </div>
 </template>
-<noframes></noframes>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const state = reactive({
+  loginForm: {
+    email: '',
+    password: ''
+  }
+});
+
+const handleLogin = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(state.loginForm)
+    });
+    const data = await response.json();
+    if (data.status === 401) {
+      throw new Error(data.error);
+    } else {
+    localStorage.setItem('token', data.token);
+    router.push('/produits');
+    }
+  
+  } catch (error) {
+    console.error('Erreur de connexion:', error);
+  }
+}
+</script>
+
+
 
 <style scoped>
 .login-container {
@@ -53,7 +87,7 @@ input[type="password"] {
 
   border-radius: 5px;
   border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: black;
   color: #333;
   font-size: 16px; /* Taille de texte plus grande pour une meilleure lisibilité */
   transition: background-color 0.3s, border-color 0.3s;
@@ -86,4 +120,5 @@ button:active {
   transform: scale(0.98); /* Effet de clic */
 }
 </style>
- 
+
+
