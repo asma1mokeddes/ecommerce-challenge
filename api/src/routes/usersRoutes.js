@@ -50,14 +50,6 @@ export const createUser = async (req, res) => {
 
         await user.save();
 
-        const payload = {
-            userId: user._id,
-        };
-
-        const options = {
-            expiresIn: "12h",
-        };
-
         res.status(201).json({
             message: "Utilisateur créé avec succès",
         });

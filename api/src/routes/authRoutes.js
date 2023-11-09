@@ -31,14 +31,6 @@ export const register = async (req, res) => {
 
         console.log("user", user);
 
-        const payload = {
-            userId: user._id,
-        };
-
-        const options = {
-            expiresIn: "12h",
-        };
-
         await user.save();
 
         res.json({
