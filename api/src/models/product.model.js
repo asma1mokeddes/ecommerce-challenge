@@ -1,32 +1,32 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/db.config.js';
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/db.config.js";
 
 class Product extends Model {}
 
 Product.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,		
-      primaryKey: true,
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        productName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        description: {
+            type: DataTypes.STRING,
+        },
+        price: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
     },
-    productName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-    },
-    price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    timestamps: true,
-    modelName: 'Product',
-  }
+    {
+        sequelize,
+        timestamps: true,
+        modelName: "Product",
+    }
 );
 
 let Category;
@@ -39,7 +39,10 @@ import("./category.model.js")
         Product.belongsTo(Category);
     })
     .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle Category :", error);
+        console.error(
+            "Erreur lors de l'importation du modèle Category :",
+            error
+        );
     });
 
 import("./brand.model.js")

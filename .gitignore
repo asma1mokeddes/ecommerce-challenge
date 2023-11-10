@@ -4,3 +4,4 @@ front/.npm
 db_data/
 api/package-lock.json
 front/package-lock.json
+./package-lock.json

@@ -1,7 +1,15 @@
+import CategoryMongo from "../models/category.js";
+import BrandMongo from "../models/brand.js";
+import ProductMongo from "../models/product.js";
+import PromoMongo from "../models/promo.js";
+
 import Product from "../models/product.model.js";
+import Category from "../models/category.model.js";
+import Brand from "../models/brand.model.js";
+import Promo from "../models/promo.model.js";
 
 export const getProduits = (req, res) => {
-    Promo.findAll()
+    Product.findAll()
         .then((data) => {
             res.send(data);
         })
@@ -9,7 +17,7 @@ export const getProduits = (req, res) => {
             res.status(500).send({
                 message:
                     err.message ||
-                    "Une erreur s'est produite lors de la récupération des promotions.",
+                    "Une erreur s'est produite lors de la récupération des produits.",
             });
         });
 };
@@ -34,32 +42,155 @@ export const getProduit = (req, res) => {
         });
 };
 
-export const createProduit = (req, res) => {
-    const { productName, description, price } = req.body;
+export const createProduit = async (req, res) => {
+    const { productName, description, price, variants } = req.body;
 
-    if (!productName || !description || !price) {
+    if (!productName || !description || !price || !variants) {
         return res.status(400).json({
             message:
-                "Champs requis manquants. Veuillez fournir le code produit et la date d'expiration.",
+                "Champs requis manquants. Veuillez fournir le nom du produit et sa description",
         });
     }
 
-    Product.create({
-        productName,
-        description,
-        price,
-    })
-        .then((product) => {
-            res.status(201).json({
-                message: "Produit créée avec succès",
-                product,
-            });
-        })
-        .catch((error) => {
-            res.status(500).json({
-                error: `Une erreur est survenue lors de la création du produit : ${error}`,
-            });
+    try {
+        const { category, brand, promo } = variants;
+
+        // Vérification que la catégorie n'existe pas dans psql
+        let createdCategoryPsql = await Category.findOne({
+            where: { categoryName: category.categoryName },
         });
+
+        if (!createdCategoryPsql) {
+            await Category.create({
+                categoryName: category.categoryName,
+            });
+        }
+
+        // Vérification que la marque n'existe pas dans psql
+        let createdBrandPsql = await Brand.findOne({
+            where: { brandName: brand.brandName },
+        });
+
+        if (!createdBrandPsql) {
+            await Brand.create({
+                brandName: brand.brandName,
+            });
+        } else {
+            res.status(500).json({
+                error: `Cette marque existe déjà`,
+            });
+        }
+
+        // Vérification que la promo n'existe pas
+        let createdPromoPsql = await Promo.findOne({
+            where: {
+                promoCode: promo.promoCode,
+                expirationDate: promo.expirationDate,
+            },
+        });
+
+        if (!createdPromoPsql) {
+            await Promo.create({
+                promoCode: promo.promoCode,
+                expirationDate: promo.expirationDate,
+            });
+        } else {
+            res.status(500).json({
+                error: `Ce code promo existe déjà`,
+            });
+        }
+
+        // Vérification que la produit n'existe pas
+        let createdProduitPsql = await Product.findOne({
+            where: {
+                productName,
+                description,
+                price,
+            },
+        });
+
+        if (!createdProduitPsql) {
+            createdProduitPsql = await Product.create({
+                productName,
+                description,
+                price,
+            });
+        } else {
+            res.status(500).json({
+                error: `Ce produit existe déjà`,
+            });
+        }
+
+        // Vérification que la catégorie n'existe pas en MongoDB
+        let createdCategory = await CategoryMongo.findOne({
+            categoryName: category.categoryName,
+        });
+
+        if (!createdCategory) {
+            createdCategory = await CategoryMongo.create(category);
+        } else {
+            res.status(500).json({
+                error: `Cette catégorie existe déjà`,
+            });
+        }
+
+        // Vérification que la marque n'existe pas en MongoDB
+        let createdBrand = await BrandMongo.findOne({
+            brandName: brand.brandName,
+        });
+
+        if (!createdBrand) {
+            createdBrand = await BrandMongo.create(brand);
+        } else {
+            res.status(500).json({
+                error: `Cette marque existe déjà`,
+            });
+        }
+
+        // Vérification que la promo n'existe pas en MongoDB
+        let createdPromo = await PromoMongo.findOne({
+            promoCode: promo.promoCode,
+        });
+
+        if (!createdPromo) {
+            createdPromo = await PromoMongo.create(promo);
+        } else {
+            res.status(500).json({
+                error: `Ce code promo existe déjà`,
+            });
+        }
+
+        // Crée le produit dans la base de données MongoDB
+        let createdProduitMongo = await ProductMongo.findOne({
+            productName,
+            description,
+            price,
+            category: createdCategory._id,
+            brand: createdBrand._id,
+            promo: createdPromo._id,
+        });
+
+        if (!createdProduitMongo) {
+            createdProduitMongo = await ProductMongo.create({
+                productName,
+                description,
+                price,
+                category: createdCategory._id,
+                brand: createdBrand._id,
+                promo: createdPromo._id,
+            });
+        }
+
+        res.status(201).json({
+            message: "Produit créé avec succès",
+            createdProduitPsql,
+            createdProduitMongo,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: `Une erreur est survenue lors de la création du produit : ${error}`,
+        });
+    }
 };
 
 export const updateProduit = (req, res) => {
