@@ -38,6 +38,11 @@ User.init(
                 "ROLE_ADMIN"
             ),
         },
+        cartItems: {
+            type: DataTypes.ARRAY,
+            allowNull: true,
+            defaultValue: [],
+        },
     },
     {
         sequelize,

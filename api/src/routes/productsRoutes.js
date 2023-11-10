@@ -54,49 +54,27 @@ export const createProduit = async (req, res) => {
 
     try {
         const { category, brand, promo } = variants;
-
-        // Vérification que la catégorie n'existe pas dans psql
-        let createdCategoryPsql = await Category.findOne({
-            where: { categoryName: category.categoryName },
-        });
-
-        if (!createdCategoryPsql) {
-            await Category.create({
-                categoryName: category.categoryName,
+        try {
+            // Vérification que la catégorie n'existe pas dans psql
+            await Category.findOne({
+                where: { categoryName: category.categoryName },
             });
-        }
 
-        // Vérification que la marque n'existe pas dans psql
-        let createdBrandPsql = await Brand.findOne({
-            where: { brandName: brand.brandName },
-        });
-
-        if (!createdBrandPsql) {
-            await Brand.create({
-                brandName: brand.brandName,
+            // Vérification que la marque n'existe pas dans psql
+            await Brand.findOne({
+                where: { brandName: brand.brandName },
             });
-        } else {
+
+            // Vérification que la promo n'existe pas
+            await Promo.findOne({
+                where: {
+                    promoCode: promo.promoCode,
+                    expirationDate: promo.expirationDate,
+                },
+            });
+        } catch {
             res.status(500).json({
-                error: `Cette marque existe déjà`,
-            });
-        }
-
-        // Vérification que la promo n'existe pas
-        let createdPromoPsql = await Promo.findOne({
-            where: {
-                promoCode: promo.promoCode,
-                expirationDate: promo.expirationDate,
-            },
-        });
-
-        if (!createdPromoPsql) {
-            await Promo.create({
-                promoCode: promo.promoCode,
-                expirationDate: promo.expirationDate,
-            });
-        } else {
-            res.status(500).json({
-                error: `Ce code promo existe déjà`,
+                error: `Ce code promo, marque ou catégorie existe déjà`,
             });
         }
 
@@ -121,44 +99,20 @@ export const createProduit = async (req, res) => {
             });
         }
 
-        // Vérification que la catégorie n'existe pas en MongoDB
-        let createdCategory = await CategoryMongo.findOne({
+        // Vérification que la catégorie existe sur MongoDB
+        await CategoryMongo.findOne({
             categoryName: category.categoryName,
         });
 
-        if (!createdCategory) {
-            createdCategory = await CategoryMongo.create(category);
-        } else {
-            res.status(500).json({
-                error: `Cette catégorie existe déjà`,
-            });
-        }
-
-        // Vérification que la marque n'existe pas en MongoDB
-        let createdBrand = await BrandMongo.findOne({
+        // Vérification que la marque existe sur MongoDB
+        await BrandMongo.findOne({
             brandName: brand.brandName,
         });
 
-        if (!createdBrand) {
-            createdBrand = await BrandMongo.create(brand);
-        } else {
-            res.status(500).json({
-                error: `Cette marque existe déjà`,
-            });
-        }
-
-        // Vérification que la promo n'existe pas en MongoDB
-        let createdPromo = await PromoMongo.findOne({
+        // Vérification que la promo existe sur MongoDB
+        await PromoMongo.findOne({
             promoCode: promo.promoCode,
         });
-
-        if (!createdPromo) {
-            createdPromo = await PromoMongo.create(promo);
-        } else {
-            res.status(500).json({
-                error: `Ce code promo existe déjà`,
-            });
-        }
 
         // Crée le produit dans la base de données MongoDB
         let createdProduitMongo = await ProductMongo.findOne({
