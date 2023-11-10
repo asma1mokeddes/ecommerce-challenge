@@ -1,11 +1,15 @@
 <template>
   <div id="page-wrap">
-    <ProductsGrid :products="products" />
+    <ProductsGrid v-if="products.length>0" :products="products" />
+    <div v-else>
+      <h1>Aucun produits trouvés</h1>
+    </div>
   </div>
 
 </template>
 
 <script>
+import axios from 'axios'
 import { products } from '../fake-data';
 import ProductsGrid from '../components/ProductsGrid.vue';
 
@@ -16,8 +20,13 @@ export default {
       },
     data() {
       return {
-        products
+        products: []
       };
+    },
+    async created() {
+      const response = await axios.get('http://localhost:3000/products');
+      const products = response.data;
+      this.products = products;
     }
 };
 </script>
