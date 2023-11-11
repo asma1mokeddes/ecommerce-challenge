@@ -39,7 +39,7 @@ User.init(
             ),
         },
         cartItems: {
-            type: DataTypes.ARRAY,
+            type: DataTypes.ARRAY(DataTypes.STRING),
             allowNull: true,
             defaultValue: [],
         },

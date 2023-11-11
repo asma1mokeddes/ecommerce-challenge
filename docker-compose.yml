@@ -35,6 +35,5 @@ services:
       POSTGRES_DB: ecommerce
       POSTGRES_USER: ecommerce-user
       POSTGRES_PASSWORD: ChangeMe
-    restart: always
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - ./new_db_data:/var/lib/postgresql/data
