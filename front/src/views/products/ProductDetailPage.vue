@@ -20,14 +20,23 @@
 </template>
 
 <script>
-import { products } from '../fake-data';
+import axios from 'axios'
 
 export default {
     name: 'ProductDetailPage',
     data() {
       return {
-        product: products.find((p) => p.id === this.$route.params.id),
+        product: {},
       };
+    }, 
+    methods: {
+      async addToCart() { 
+      }
+    },
+    async created(){
+      const result = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
+      const product = result.data;
+      this.product = product;
     }
 };
 </script>
