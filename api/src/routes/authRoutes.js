@@ -1,44 +1,61 @@
-import User from "../models/user.js";
+import UserMongo from "../models/user.js";
+import User from "../models/user.model.js";
+
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
     try {
-        const { firstName, lastName, emailAddress, password, role } = req.body;
+        const { firstName, lastName, emailAddress, dateOfBirth, password } =
+            req.body;
 
-        if (!(firstName && lastName && emailAddress && password && role))
+        if (!(firstName && lastName && emailAddress && password && dateOfBirth))
             throw new Error("Invalid arguments");
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const existingUser = await User.findOne({
+        let createdUserPsql = await User.findOne({
             where: {
                 emailAddress: emailAddress,
             },
         });
-        if (existingUser)
-            throw new Error(
-                `L'adresse email ${emailAddress} est déjà utilisée`
-            );
 
-        const user = new User({
-            firstName,
-            lastName,
+        let createdUserMongo = await UserMongo.findOne({
             emailAddress,
-            password: hashedPassword,
-            role,
         });
 
-        console.log("user", user);
+        if (!createdUserPsql && !createdUserMongo) {
+            await User.create({
+                firstName,
+                lastName,
+                emailAddress,
+                dateOfBirth,
+                password: hashedPassword,
+                passwordModificationDate: new Date(),
+                role: `ROLE_USER`,
+            });
 
-        await user.save();
+            await UserMongo.create({
+                firstName,
+                lastName,
+                emailAddress,
+                dateOfBirth,
+                role: `ROLE_USER`,
+            });
 
-        res.json({
-            message: "Utilisateur créé avec succès",
-        });
+            res.status(201).json({
+                message: "Compte créé avec succès",
+            });
+        } else {
+            res.status(409).json({
+                error: "Un utilisateur ayant un compte avec cette adresse email existe déjà",
+            });
+        }
     } catch (error) {
         res.status(500).json({
-            error: `Une erreur est survenue lors de la création de l'utilisateur : ${error}`,
+            error: `Une erreur est survenue lors de la création de l'utilisateur : ${
+                error.message || error
+            }`,
         });
     }
 };
@@ -48,6 +65,7 @@ export const login = async (req, res) => {
         const { emailAddress, password } = req.body;
 
         const user = await User.findOne({ emailAddress });
+
         if (!user) {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
@@ -63,12 +81,12 @@ export const login = async (req, res) => {
         };
 
         const options = {
-            expiresIn: "12h",
+            expiresIn: "2h",
         };
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
 
-        res.json({ user, token });
+        res.json({ email: user.emailAddress, token });
     } catch (error) {
         res.status(500).json({
             error: `Une erreur est survenue lors de la connexion : ${error}`,
@@ -78,6 +96,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
+        res.clearCookie("token");
         res.json({ message: "Déconnexion réussie" });
     } catch (error) {
         res.status(500).json({
