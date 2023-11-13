@@ -17,6 +17,7 @@ export const register = async (req, res) => {
         let createdUserPsql = await User.findOne({
             where: {
                 emailAddress: emailAddress,
+                password: hashedPassword,
             },
         });
 
@@ -78,6 +79,7 @@ export const login = async (req, res) => {
 
         const payload = {
             userId: user._id,
+            role: user.role,
         };
 
         const options = {
@@ -86,7 +88,7 @@ export const login = async (req, res) => {
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
 
-        res.json({ email: user.emailAddress, token });
+        res.json({ email: emailAddress, token });
     } catch (error) {
         res.status(500).json({
             error: `Une erreur est survenue lors de la connexion : ${error}`,

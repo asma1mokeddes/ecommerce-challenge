@@ -71,17 +71,17 @@ export const createBrand = async (req, res) => {
                 brandName,
             });
         } else {
-            res.status(409).json({
+            return res.status(409).json({
                 error: `Cette marque existe déjà`,
             });
         }
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "Marque créé avec succès",
             createdMarqueMongo,
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             error: `Une erreur est survenue lors de la création de la marque : ${error}`,
         });
     }

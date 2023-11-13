@@ -13,9 +13,6 @@ const authMiddleware = (req, res, next) => {
             req.auth = {
                 userId: userId,
             };
-            if (authRole !== "ROLE_ADMIN") {
-                res.status(403).send("Access denied.");
-            }
             next();
         } catch (error) {
             res.status(401).send("Token invalide");

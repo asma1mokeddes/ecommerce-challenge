@@ -1,17 +1,11 @@
-const userManagementMiddleware = (req, res, next) => {
+// Middleware pour l'administrateur
+export const adminMiddleware = (req, res, next) => {
+    console.log("role =====", req.user.role);
     try {
-        // Assurez-vous que l'utilisateur est authentifié et que le rôle est défini
-        if (req.user && req.user.role) {
-            const userRole = req.user.role;
-
-            // Accordé l'accès uniquement aux utilisateurs avec le rôle 'ROLE_ADMIN'
-            if (userRole === "ROLE_ADMIN") {
-                next(); // Autorise l'accès
-            } else {
-                res.status(403).send("Accès interdit pour cet utilisateur");
-            }
+        if (req.user && req.user.role === "ROLE_ADMIN") {
+            next();
         } else {
-            res.status(401).send("Non autorisé. Veuillez vous connecter.");
+            res.status(403).send("Accès interdit pour cet utilisateur");
         }
     } catch (error) {
         console.error(error);
@@ -21,4 +15,52 @@ const userManagementMiddleware = (req, res, next) => {
     }
 };
 
-export default userManagementMiddleware;
+// Middleware pour le magasinier
+export const storeKeeperMiddleware = (req, res, next) => {
+    try {
+        if (req.user && req.user.role === "ROLE_STORE_KEEPER") {
+            next();
+        } else {
+            res.status(403).send("Accès interdit pour cet utilisateur");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(
+            "Une erreur est survenue lors de la vérification des autorisations."
+        );
+    }
+};
+
+// Middleware pour l'utilisateur
+export const userMiddleware = (req, res, next) => {
+    try {
+        if (req.user && req.user.role === "ROLE_USER") {
+            next();
+        } else {
+            res.status(403).send("Accès interdit pour cet utilisateur");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(
+            "Une erreur est survenue lors de la vérification des autorisations."
+        );
+    }
+};
+
+export const adminOrStoreKeeperMiddleware = (req, res, next) => {
+    try {
+        const userRole = req.user && req.user.role;
+
+        console.log("userRole ==", userRole);
+        if (userRole === "ROLE_ADMIN" || userRole === "ROLE_STORE_KEEPER") {
+            next(); // Autorise l'accès
+        } else {
+            res.status(403).send("Accès interdit pour cet utilisateur");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(
+            "Une erreur est survenue lors de la vérification des autorisations."
+        );
+    }
+};

@@ -7,13 +7,24 @@ import {
     deleteProduct,
 } from "../routes/productsRoutes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import { adminOrStoreKeeperMiddleware } from "../middlewares/userManagementMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getProducts);
-router.post("/", createProduct);
 router.get("/:productId", getProduct);
-router.put("/:productId", updateProduct);
-router.delete("/:productId", deleteProduct);
+router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createProduct);
+router.put(
+    "/:productId",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    updateProduct
+);
+router.delete(
+    "/:productId",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    deleteProduct
+);
 
 export default router;
