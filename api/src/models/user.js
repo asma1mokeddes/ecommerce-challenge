@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    dateOfBirth: {
+        type: Date,
+        required: true,
+    },
     role: {
         type: String,
         enum: ["ROLE_USER", "ROLE_STORE_KEEPER", "ROLE_ADMIN"],
@@ -30,6 +34,7 @@ const userSchema = new mongoose.Schema({
         default: [],
     },
 });
+
 // Fonction pour générer un nouvel ID auto-incrémenté
 userSchema.pre("save", async function (next) {
     try {
@@ -42,6 +47,7 @@ userSchema.pre("save", async function (next) {
         next(error);
     }
 });
-const UserMongo = mongoose.model("User", userSchema);
+
+const UserMongo = mongoose.model("UserMongo", userSchema);
 
 export default UserMongo;

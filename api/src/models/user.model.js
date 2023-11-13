@@ -23,6 +23,10 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        dateOfBirth: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
         password: {
             type: DataTypes.STRING,
             allowNull: false,

@@ -93,20 +93,18 @@ export const updatePromo = async (req, res) => {
         const promoId = req.params.promoId;
         const { promoCode, expirationDate } = req.body;
 
-        // Vérifier si une catégorie avec le même nom existe déjà
+        // Vérifier si un code promo  existe
         const existingPromo = await Promo.findOne({
             where: {
-                id: promoId,
                 promoCode: promoCode,
             },
         });
 
-        if (!existingPromo) {
+        if (existingPromo) {
             return res.status(409).json({
-                message: "Ce code promo n'existe pas.",
+                message: "Ce code promo existe déjà.",
             });
         }
-
         // Mise à jour dans PostgreSQL
         const [numPsql, updatedPromoPsql] = await Promo.update(
             { promoCode, expirationDate },

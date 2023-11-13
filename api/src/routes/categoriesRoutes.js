@@ -91,14 +91,13 @@ export const updateCategory = async (req, res) => {
         // Vérifier si une catégorie avec le même nom existe déjà
         const existingCategory = await Category.findOne({
             where: {
-                categoryName: categoryName,
-                id: { [Op.not]: categoryId }, // Exclure la catégorie actuelle de la recherche
+                categoryName: categoryName, // Exclure la catégorie actuelle de la recherche
             },
         });
 
-        if (!existingCategory) {
+        if (existingCategory) {
             return res.status(409).json({
-                message: "Une catégorie avec ce nom n'existe pas.",
+                message: `La catégorie ayant pour nom ${categoryName} existe déjà.`,
             });
         }
 

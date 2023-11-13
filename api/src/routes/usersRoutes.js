@@ -32,6 +32,7 @@ export const getUser = async (req, res) => {
                     userId: data.userId,
                     firstName: data.firstName,
                     lastName: data.lastName,
+                    dateOfBirth: data.dateOfBirth,
                     emailAddress: data.emailAddress,
                     role: data.role,
                 };
@@ -52,12 +53,36 @@ export const getUser = async (req, res) => {
 export const createUser = async (req, res) => {
     try {
         // Validate request
-        const { firstName, lastName, emailAddress, password, role } = req.body;
-        if (!firstName || !lastName || !emailAddress || !password) {
+        const {
+            firstName,
+            lastName,
+            emailAddress,
+            dateOfBirth,
+            password,
+            role,
+        } = req.body;
+        if (
+            !firstName ||
+            !lastName ||
+            !emailAddress ||
+            !password ||
+            !dateOfBirth
+        ) {
             return res.status(400).json({
                 message:
-                    "Champs requis manquants. Veuillez fournir firstName, lastName, emailAddress et password.",
+                    "Champs requis manquants. Veuillez fournir nom, prénom, email, dateDeNaissance et motDePasse.",
             });
+        }
+
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+
+        // Check if the user is 18 or older
+        if (age < 18) {
+            throw new Error(
+                "Les utilisateurs doivent avoir minimum 18 ans pour s'inscrire."
+            );
         }
 
         if (!validatePassword(password)) {
@@ -65,6 +90,7 @@ export const createUser = async (req, res) => {
                 message: `Mot de passe invalide.`,
             });
         }
+
         // Vérifiez si l'utilisateur existe déjà
         let createdUserPsql = await User.findOne({
             where: {
@@ -83,6 +109,7 @@ export const createUser = async (req, res) => {
                 firstName,
                 lastName,
                 emailAddress,
+                dateOfBirth,
                 password: hashedPassword,
                 passwordModificationDate: new Date(),
                 role: role,
@@ -91,6 +118,7 @@ export const createUser = async (req, res) => {
                 firstName,
                 lastName,
                 emailAddress,
+                dateOfBirth,
                 role: role,
             });
 
@@ -99,6 +127,7 @@ export const createUser = async (req, res) => {
                 firstName: createdUserMongo.firstName,
                 lastName: createdUserMongo.lastName,
                 emailAddress: createdUserMongo.emailAddress,
+                dateOfBirth: createdUserMongo.dateOfBirth,
             });
         } else {
             res.status(409).json({
@@ -115,24 +144,42 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const { firstName, lastName, emailAddress, password, role } = req.body;
+        const {
+            firstName,
+            lastName,
+            emailAddress,
+            dateOfBirth,
+            password,
+            role,
+        } = req.body;
+
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+
+        // Check if the user is 18 or older
+        if (age < 18) {
+            throw new Error(
+                "Les utilisateurs doivent avoir minimum 18 ans pour s'inscrire."
+            );
+        }
 
         // Vérifier si un utilisateur existe avec la même adresse email
         const existingUser = await User.findOne({
             where: {
-                id: userId,
+                emailAddress: emailAddress,
             },
         });
 
-        if (!existingUser) {
+        if (existingUser) {
             return res.status(409).json({
-                message: "Cet utilisateur n'existe pas.",
+                message: "Cet utilisateur existe déjà.",
             });
         }
 
         // Mise à jour dans PostgreSQL
         const [numPsql, updatedUserPsql] = await User.update(
-            { firstName, lastName, emailAddress, password, role },
+            { firstName, lastName, emailAddress, dateOfBirth, password, role },
             { where: { id: userId } }
         );
 
@@ -143,6 +190,7 @@ export const updateUser = async (req, res) => {
                 firstName: firstName,
                 lastName: lastName,
                 emailAddress: emailAddress,
+                dateOfBirth: dateOfBirth,
                 role: role,
             },
             { new: true }
@@ -153,6 +201,7 @@ export const updateUser = async (req, res) => {
                 userId: updatedUserMongo.userId,
                 firstName: updatedUserMongo.firstName,
                 lastName: updatedUserMongo.lastName,
+                dateOfBirth: updatedUserMongo.dateOfBirth,
                 emailAddress: updatedUserMongo.emailAddress,
                 role: updatedUserMongo.role,
             };
@@ -182,7 +231,6 @@ export const deleteUser = async (req, res) => {
                 id: userId,
             },
         });
-        console.log("existingUser", existingUser);
 
         if (!existingUser) {
             return res.status(409).json({
@@ -194,14 +242,10 @@ export const deleteUser = async (req, res) => {
             where: { id: userId },
         });
 
-        console.log("deletedUserPsql", deletedUserPsql);
-
         // Delete category in MongoDB
         const deletedUserMongo = await UserMongo.findOneAndDelete({
             userId: userId,
         });
-
-        console.log("deletedUserMongo", deletedUserMongo);
 
         if (deletedUserPsql === 1 && deletedUserMongo) {
             res.json({

@@ -77,6 +77,18 @@ export const createProduct = async (req, res) => {
             },
         });
 
+        let categoryMongo = await CategoryMongo.findOne({
+            categoryName: category.categoryName,
+        });
+
+        let brandMongo = await BrandMongo.findOne({
+            brandName: brand.brandName,
+        });
+        let promoMongo = await PromoMongo.findOne({
+            promoCode: promo.promoCode,
+            expirationDate: promo.expirationDate,
+        });
+
         // Vérification que le produit n'existe pas dans PostgreSQL
         let createdProductPsql = await Product.findOne({
             where: {
@@ -86,7 +98,18 @@ export const createProduct = async (req, res) => {
             },
         });
 
-        if (!createdProductPsql) {
+        // Vérification que le produit n'existe pas dans MongoDB
+        let createdProductMongo = await ProductMongo.findOne({
+            productName,
+            description,
+            price,
+            category: categoryMongo,
+            brand: brandMongo,
+            promo: promoMongo,
+        });
+
+        if (!createdProductPsql && !createdProductMongo) {
+            //Création du produit dans  Psql
             createdProductPsql = await Product.create({
                 productName,
                 description,
@@ -95,33 +118,22 @@ export const createProduct = async (req, res) => {
                 BrandId: brandPsql.id,
                 PromoId: promoPsql.id,
             });
-        } else {
-            return res.status(409).json({
-                error: "Ce produit existe déjà dans PostgreSQL.",
-            });
-        }
 
-        let createdProductMongo = await ProductMongo.findOne({
-            productName,
-            description,
-            price,
-            category: categoryPsql,
-            brand: brandPsql,
-            promo: promoPsql,
-        });
-
-        if (!createdProductMongo) {
+            // Création du produit dans Mongo
             createdProductMongo = await ProductMongo.create({
                 productName,
                 description,
                 price,
                 category: categoryPsql,
-                brand: brandPsql,
-                promo: promoPsql,
+                brand: brandMongo,
+                promo: promoMongo,
             });
+
+            console.log("createdProductPsql===", createdProductPsql);
+            console.log("createdProductMongo===", createdProductMongo);
         } else {
             return res.status(409).json({
-                error: "Ce produit existe déjà dans MongoDB.",
+                error: "Ce produit existe déjà.",
             });
         }
 

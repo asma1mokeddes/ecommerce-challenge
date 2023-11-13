@@ -93,17 +93,17 @@ export const updateBrand = async (req, res) => {
         const brandId = req.params.brandId;
         const { brandName } = req.body;
 
-        // Vérifier si une catégorie avec le même nom existe déjà
+        // Vérifier si une marque ayant le nom brandName existe
+
         const existingBrand = await Brand.findOne({
             where: {
                 brandName: brandName,
-                id: { [Op.not]: brandId }, // Exclure la catégorie actuelle de la recherche
             },
         });
 
-        if (!existingBrand) {
+        if (existingBrand) {
             return res.status(409).json({
-                message: "Une marque avec ce nom n'existe pas.",
+                message: `Une marque ayant ce nom ${brandName} existe déjà.`,
             });
         }
 
