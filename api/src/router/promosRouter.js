@@ -11,9 +11,9 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.get("/", getPromos); // Obtenir toutes les promotions
-router.get("/:id", getPromo); // Obtenir une promotion par ID
-router.post("/", authMiddleware, createPromo); // Créer une nouvelle promotion
-router.put("/:id", authMiddleware, updatePromo); // Mettre à jour une promotion par ID
-router.delete("/:id", authMiddleware, deletePromo); // Supprimer une promotion par ID
+router.get("/:promoId", getPromo); // Obtenir une promotion par ID
+router.post("/", createPromo); // Créer une nouvelle promotion
+router.put("/:promoId", updatePromo); // Mettre à jour une promotion par ID
+router.delete("/:promoId", deletePromo); // Supprimer une promotion par ID
 
 export default router;

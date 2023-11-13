@@ -4,6 +4,10 @@ import "./brand.js";
 import "./promo.js";
 
 const productSchema = new mongoose.Schema({
+    productId: {
+        type: Number,
+        unique: true,
+    },
     productName: {
         type: String,
         required: true,
@@ -30,6 +34,18 @@ const productSchema = new mongoose.Schema({
     },
 });
 
+// Fonction pour générer un nouvel ID auto-incrémenté
+productSchema.pre("save", async function (next) {
+    try {
+        if (!this.productId) {
+            const count = await ProductMongo.countDocuments();
+            this.productId = count + 1;
+        }
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 const ProductMongo = mongoose.model("Product", productSchema);
 
 export default ProductMongo;

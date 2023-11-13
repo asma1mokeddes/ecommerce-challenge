@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    userId: {
+        type: Number,
+        unique: true,
+    },
     firstName: {
         type: String,
         required: true,
@@ -26,7 +30,18 @@ const userSchema = new mongoose.Schema({
         default: [],
     },
 });
+// Fonction pour générer un nouvel ID auto-incrémenté
+userSchema.pre("save", async function (next) {
+    try {
+        if (!this.userId) {
+            const count = await UserMongo.countDocuments();
+            this.userId = count + 1;
+        }
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+const UserMongo = mongoose.model("User", userSchema);
 
-const User = mongoose.model("User", userSchema);
-
-export default User;
+export default UserMongo;

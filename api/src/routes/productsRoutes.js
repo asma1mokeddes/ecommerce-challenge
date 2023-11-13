@@ -8,78 +8,77 @@ import Category from "../models/category.model.js";
 import Brand from "../models/brand.model.js";
 import Promo from "../models/promo.model.js";
 
-export const getProduits = (req, res) => {
-    Product.findAll()
-        .then((data) => {
-            res.send(data);
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message:
-                    err.message ||
-                    "Une erreur s'est produite lors de la récupération des produits.",
-            });
+export const getProducts = async (req, res) => {
+    try {
+        const productsMongo = await ProductMongo.find();
+        res.json(productsMongo);
+    } catch (err) {
+        res.status(500).json({
+            message:
+                err.message ||
+                "Une erreur est survenue lors de la récupération des produits.",
         });
+    }
 };
 
-export const getProduit = (req, res) => {
-    const id = req.params.id;
+export const getProduct = (req, res) => {
+    const productId = req.params.productId;
 
-    Product.findByPk(id)
-        .then((product) => {
-            if (product) {
+    ProductMongo.findOne({ productId: productId })
+        .then((data) => {
+            if (data) {
+                const product = {
+                    productId: data.productId,
+                    productName: data.productName,
+                    description: data.description,
+                    price: data.price,
+                    category: data.category,
+                    brand: data.brand,
+                    promo: data.promo,
+                };
                 res.send(product);
             } else {
                 res.status(404).send({
-                    message: `Impossible de trouver le produit avec l'ID ${id}.`,
+                    message: `Le produit avec l'id=${productId} n'existe pas.`,
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: `Erreur lors de la récupération du produit avec l'ID ${id}.`,
+                message: `Une erreur est survenue lors de la récupération du produit avec l'id=${categoryId} : ${error}`,
             });
         });
 };
 
-export const createProduit = async (req, res) => {
-    const { productName, description, price, variants } = req.body;
-
-    if (!productName || !description || !price || !variants) {
-        return res.status(400).json({
-            message:
-                "Champs requis manquants. Veuillez fournir le nom du produit et sa description",
-        });
-    }
-
+export const createProduct = async (req, res) => {
     try {
-        const { category, brand, promo } = variants;
-        try {
-            // Vérification que la catégorie n'existe pas dans psql
-            await Category.findOne({
-                where: { categoryName: category.categoryName },
-            });
+        const { productName, description, price, variants } = req.body;
 
-            // Vérification que la marque n'existe pas dans psql
-            await Brand.findOne({
-                where: { brandName: brand.brandName },
-            });
-
-            // Vérification que la promo n'existe pas
-            await Promo.findOne({
-                where: {
-                    promoCode: promo.promoCode,
-                    expirationDate: promo.expirationDate,
-                },
-            });
-        } catch {
-            res.status(500).json({
-                error: `Ce code promo, marque ou catégorie existe déjà`,
+        if (!productName || !description || !price || !variants) {
+            return res.status(400).json({
+                message:
+                    "Champs requis manquants. Veuillez fournir le nom du produit, sa description, son prix et ses variantes.",
             });
         }
 
-        // Vérification que la produit n'existe pas
-        let createdProduitPsql = await Product.findOne({
+        const { category, brand, promo } = variants;
+        let categoryPsql = await Category.findOne({
+            where: { categoryName: category.categoryName },
+        });
+
+        let brandPsql = await Brand.findOne({
+            where: { brandName: brand.brandName },
+        });
+
+        let promoPsql = await Promo.findOne({
+            where: {
+                promoCode: promo.promoCode,
+                expirationDate: new Date(promo.expirationDate),
+            },
+        });
+
+        // Vérification que le produit n'existe pas dans PostgreSQL
+        let createdProductPsql = await Product.findOne({
             where: {
                 productName,
                 description,
@@ -87,58 +86,49 @@ export const createProduit = async (req, res) => {
             },
         });
 
-        if (!createdProduitPsql) {
-            createdProduitPsql = await Product.create({
+        if (!createdProductPsql) {
+            createdProductPsql = await Product.create({
                 productName,
                 description,
                 price,
+                CategoryId: categoryPsql.id,
+                BrandId: brandPsql.id,
+                PromoId: promoPsql.id,
             });
         } else {
-            res.status(500).json({
-                error: `Ce produit existe déjà`,
+            return res.status(409).json({
+                error: "Ce produit existe déjà dans PostgreSQL.",
             });
         }
 
-        // Vérification que la catégorie existe sur MongoDB
-        await CategoryMongo.findOne({
-            categoryName: category.categoryName,
-        });
-
-        // Vérification que la marque existe sur MongoDB
-        await BrandMongo.findOne({
-            brandName: brand.brandName,
-        });
-
-        // Vérification que la promo existe sur MongoDB
-        await PromoMongo.findOne({
-            promoCode: promo.promoCode,
-        });
-
-        // Crée le produit dans la base de données MongoDB
-        let createdProduitMongo = await ProductMongo.findOne({
+        let createdProductMongo = await ProductMongo.findOne({
             productName,
             description,
             price,
-            category: createdCategory._id,
-            brand: createdBrand._id,
-            promo: createdPromo._id,
+            category: categoryPsql,
+            brand: brandPsql,
+            promo: promoPsql,
         });
 
-        if (!createdProduitMongo) {
-            createdProduitMongo = await ProductMongo.create({
+        if (!createdProductMongo) {
+            createdProductMongo = await ProductMongo.create({
                 productName,
                 description,
                 price,
-                category: createdCategory._id,
-                brand: createdBrand._id,
-                promo: createdPromo._id,
+                category: categoryPsql,
+                brand: brandPsql,
+                promo: promoPsql,
+            });
+        } else {
+            return res.status(409).json({
+                error: "Ce produit existe déjà dans MongoDB.",
             });
         }
 
         res.status(201).json({
             message: "Produit créé avec succès",
-            createdProduitPsql,
-            createdProduitMongo,
+            createdProductPsql,
+            createdProductMongo,
         });
     } catch (error) {
         res.status(500).json({
@@ -147,7 +137,7 @@ export const createProduit = async (req, res) => {
     }
 };
 
-export const updateProduit = (req, res) => {
+export const updateProduct = (req, res) => {
     const id = req.params.id;
 
     Product.update(req.body, {
@@ -171,26 +161,43 @@ export const updateProduit = (req, res) => {
         });
 };
 
-export const deleteProduit = (req, res) => {
-    const id = req.params.id;
+export const deleteProduct = async (req, res) => {
+    try {
+        const productId = req.params.productId;
 
-    Product.destroy({
-        where: { id: id },
-    })
-        .then((num) => {
-            if (num == 1) {
-                res.send({
-                    message: "Produit supprimée avec succès.",
-                });
-            } else {
-                res.status(404).send({
-                    message: `Impossible de supprimer la produit avec l'ID ${id}.`,
-                });
-            }
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: `Impossible de supprimer la produit avec l'ID ${id}.`,
-            });
+        const existingProduct = await Product.findOne({
+            where: {
+                id: productId,
+            },
         });
+
+        if (!existingProduct) {
+            return res.status(409).json({
+                message: "Ce produit n'existe pas.",
+            });
+        }
+        // Delete product in PostgreSQL
+        const deletedProductPsql = await Product.destroy({
+            where: { id: productId },
+        });
+
+        // Delete product in MongoDB
+        const deletedProductMongo = await ProductMongo.findOneAndDelete({
+            productId: productId,
+        });
+
+        if (deletedProductPsql === 1 && deletedProductMongo) {
+            res.json({
+                message: "Le produit a bien été supprimé !",
+            });
+        } else {
+            res.status(404).json({
+                message: `Impossible de supprimer le produit avec id=${categoryId}.`,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: `Erreur lors de la suppression du produit`,
+        });
+    }
 };

@@ -1,123 +1,179 @@
 import Category from "../models/category.model.js";
+import CategoryMongo from "../models/category.js";
+import { Op } from "sequelize";
 
-export const createCategory = async (req, res) => {
+export const getCategories = async (req, res) => {
     try {
-        // Validate request
-        const { categoryName } = req.body;
-        if (!categoryName) {
-            return res.status(400).json({
-                message:
-                    "Champs requis manquants. Veuillez fournir categoryName.",
-            });
-        }
-
-        // Vérifiez si la category existe déjà
-        const existingCategory = await Category.findOne({
-            where: {
-                categoryName: categoryName,
-            },
-        });
-        if (existingCategory) {
-            return res.status(409).json({
-                message: `La catégorie ${categoryName} est déjà utilisée.`,
-            });
-        }
-
-        // Créer une catégorie
-        const category = new Category({
-            categoryName,
-        });
-
-        await category.save();
-
-        res.status(201).json({
-            message: "Category créé avec succès",
-        });
-    } catch (error) {
+        const categoriesMongo = await CategoryMongo.find();
+        res.json(categoriesMongo);
+    } catch (err) {
         res.status(500).json({
-            error: `Une erreur est survenue lors de la création de la category : ${error}`,
+            message:
+                err.message ||
+                "Une erreur est survenue lors de la récupération des catégories.",
         });
     }
 };
 
-export const getCategories = (req, res) => {
-    Category.findAll()
-        .then((data) => {
-            res.send(data);
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message:
-                    err.message ||
-                    "Some error occurred while retrieving categories.",
-            });
-        });
-};
-
 export const getCategory = (req, res) => {
-    const id = req.params.id;
+    const categoryId = req.params.categoryId;
 
-    Category.findByPk(id)
+    CategoryMongo.findOne({ categoryId: categoryId })
         .then((data) => {
             if (data) {
-                res.send(data);
+                const category = {
+                    categoryId: data.categoryId,
+                    categoryName: data.categoryName,
+                };
+                res.send(category);
             } else {
                 res.status(404).send({
-                    message: `Cannot find Category with id=${id}.`,
+                    message: `La catégorie avec l'id=${categoryId} n'existe pas.`,
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: "Error retrieving Category with id=" + id,
+                message: `Une erreur est survenue lors de la récupération de la catégorie avec l'id=${categoryId} : ${error}`,
             });
         });
 };
 
-export const updateCategory = (req, res) => {
-    const id = req.params.id;
-
-    Category.update(req.body, {
-        where: { id: id },
-    })
-        .then((num) => {
-            if (num == 1) {
-                res.send({
-                    message: "Category was updated successfully.",
-                });
-            } else {
-                res.send({
-                    message: `Cannot update Category with id=${id}. Maybe Category was not found or req.body is empty!`,
-                });
-            }
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: "Error updating Category with id=" + id,
+export const createCategory = async (req, res) => {
+    try {
+        const { categoryName } = req.body;
+        if (!categoryName) {
+            return res.status(400).json({
+                message:
+                    "Champs requis manquants. Veuillez fournir le nom de la catégorie.",
             });
+        }
+
+        let createdCategoryPsql = await Category.findOne({
+            where: {
+                categoryName: categoryName,
+            },
         });
+
+        let createdCategoryMongo = await CategoryMongo.findOne({
+            categoryName,
+        });
+
+        if (!createdCategoryMongo && !createdCategoryPsql) {
+            await Category.create({
+                categoryName,
+            });
+            createdCategoryMongo = await CategoryMongo.create({
+                categoryName,
+            });
+        } else {
+            res.status(409).json({
+                error: `Cette catégorie existe déjà`,
+            });
+        }
+
+        res.status(201).json({
+            message: "Catégorie créé avec succès",
+            createdCategoryMongo,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: `Une erreur est survenue lors de la création de la catégorie : ${error}`,
+        });
+    }
 };
 
-export const deleteCategory = (req, res) => {
-    const id = req.params.id;
+export const updateCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.categoryId;
+        const { categoryName } = req.body;
 
-    Category.destroy({
-        where: { id: id },
-    })
-        .then((num) => {
-            if (num == 1) {
-                res.send({
-                    message: "Category was deleted successfully!",
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete Category with id=${id}. Maybe Category was not found!`,
-                });
-            }
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: "Could not delete Category with id=" + id,
-            });
+        // Vérifier si une catégorie avec le même nom existe déjà
+        const existingCategory = await Category.findOne({
+            where: {
+                categoryName: categoryName,
+                id: { [Op.not]: categoryId }, // Exclure la catégorie actuelle de la recherche
+            },
         });
+
+        if (!existingCategory) {
+            return res.status(409).json({
+                message: "Une catégorie avec ce nom n'existe pas.",
+            });
+        }
+
+        // Mise à jour dans PostgreSQL
+        const [numPsql, updatedCategoryPsql] = await Category.update(
+            { categoryName },
+            { where: { id: categoryId } }
+        );
+
+        // Mise à jour dans MongoDB
+        const updatedCategoryMongo = await CategoryMongo.findOneAndUpdate(
+            { categoryId: categoryId },
+            { categoryName },
+            { new: true }
+        );
+
+        if (updatedCategoryMongo && numPsql === 1) {
+            const category = {
+                categoryId: updatedCategoryMongo.categoryId,
+                categoryName: updatedCategoryMongo.categoryName,
+            };
+
+            return res.json({
+                message: "La catégorie a bien été mise à jour.",
+                category,
+            });
+        } else {
+            return res.status(404).json({
+                message: `La catégorie avec l'ID ${categoryId} n'existe pas.`,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: `Une erreur est survenue lors de la modification de la catégorie : ${error}`,
+        });
+    }
+};
+
+export const deleteCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.categoryId;
+
+        const existingCategory = await Category.findOne({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        if (!existingCategory) {
+            return res.status(409).json({
+                message: "Cette catégorie n'existe pas.",
+            });
+        }
+        // Delete category in PostgreSQL
+        const deletedCategoryPsql = await Category.destroy({
+            where: { id: categoryId },
+        });
+
+        // Delete category in MongoDB
+        const deletedCategoryMongo = await CategoryMongo.findOneAndDelete({
+            categoryId: categoryId,
+        });
+
+        if (deletedCategoryPsql === 1 && deletedCategoryMongo) {
+            res.json({
+                message: "La catégorie a bien été supprimée!",
+            });
+        } else {
+            res.status(404).json({
+                message: `Impossible de supprimer la catégorie avec id=${categoryId}.`,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: `Erreur lors de la suppression de la catégorie`,
+        });
+    }
 };

@@ -1,125 +1,185 @@
 import Brand from "../models/brand.model.js";
+import BrandMongo from "../models/brand.js";
+import { Op } from "sequelize";
 
-// Créer une marque
-export const createBrand = async (req, res) => {
-  try {
-    // Valider la requête
-    const { brandName } = req.body;
-    if (!brandName) {
-      return res.status(400).json({
-        message: "Champs requis manquants. Veuillez fournir brandName."
-      });
+// Get all brands
+export const getBrands = async (req, res) => {
+    try {
+        const brandsMongo = await BrandMongo.find();
+        res.json(brandsMongo);
+    } catch (err) {
+        res.status(500).json({
+            message:
+                err.message ||
+                "Une erreur est survenue lors de la récupération des marques.",
+        });
     }
-
-    // Vérifiez si la marque existe déjà
-    const existingBrand = await Brand.findOne({
-      where: {
-        brandName: brandName
-      }
-    });
-
-    if (existingBrand) {
-      return res.status(409).json({
-        message: `La marque ${brandName} est déjà utilisée.`
-      });
-    }
-
-    // Créer une nouvelle marque
-    const brand = await Brand.create({
-      brandName
-    });
-
-    res.status(201).json({
-      message: "Marque créée avec succès",
-      brand: brand
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: `Une erreur est survenue lors de la création de la marque : ${error}`,
-    });
-  }
 };
 
-// Obtenir toutes les marques
-export const getBrands = (req, res) => {
-  Brand.findAll()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || "Une erreur s'est produite lors de la récupération des marques."
-      });
-    });
-};
-
-// Obtenir une marque par ID
+// Get a brand by ID
 export const getBrand = (req, res) => {
-  const id = req.params.id;
+    const brandId = req.params.brandId;
 
-  Brand.findByPk(id)
-    .then(data => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Impossible de trouver la marque avec l'ID ${id}.`
+    BrandMongo.findOne({ brandId: brandId })
+        .then((data) => {
+            if (data) {
+                const brand = {
+                    brandId: data.brandId,
+                    brandName: data.brandName,
+                };
+                res.send(brand);
+            } else {
+                res.status(404).send({
+                    message: `La marque avec l'id=${brandId} n'existe pas.`,
+                });
+            }
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: `Une erreur est survenue lors de la récupération de la marque avec l'id=${brandId} : ${error}`,
+            });
         });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Erreur lors de la récupération de la marque avec l'ID " + id
-      });
-    });
 };
 
-// Mettre à jour une marque
-export const updateBrand = (req, res) => {
-  const id = req.params.id;
+// Create a new brand
 
-  Brand.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Marque mise à jour avec succès."
+export const createBrand = async (req, res) => {
+    try {
+        const { brandName } = req.body;
+        if (!brandName) {
+            return res.status(400).json({
+                message:
+                    "Champs requis manquants. Veuillez fournir le nom de la marque.",
+            });
+        }
+
+        let createdMarquePsql = await Brand.findOne({
+            where: {
+                brandName: brandName,
+            },
         });
-      } else {
-        res.send({
-          message: `Impossible de mettre à jour la marque avec l'ID ${id}. Peut-être que la marque n'a pas été trouvée ou req.body est vide !`
+
+        let createdMarqueMongo = await BrandMongo.findOne({
+            brandName,
         });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Erreur lors de la mise à jour de la marque avec l'ID " + id
-      });
-    });
+
+        if (!createdMarqueMongo && !createdMarquePsql) {
+            await Brand.create({
+                brandName,
+            });
+            createdMarqueMongo = await BrandMongo.create({
+                brandName,
+            });
+        } else {
+            res.status(409).json({
+                error: `Cette marque existe déjà`,
+            });
+        }
+
+        res.status(201).json({
+            message: "Marque créé avec succès",
+            createdMarqueMongo,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: `Une erreur est survenue lors de la création de la marque : ${error}`,
+        });
+    }
 };
 
-// Supprimer une marque
-export const deleteBrand = (req, res) => {
-  const id = req.params.id;
+// Update a brand by ID
+export const updateBrand = async (req, res) => {
+    try {
+        const brandId = req.params.brandId;
+        const { brandName } = req.body;
 
-  Brand.destroy({
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Marque supprimée avec succès !"
+        // Vérifier si une catégorie avec le même nom existe déjà
+        const existingBrand = await Brand.findOne({
+            where: {
+                brandName: brandName,
+                id: { [Op.not]: brandId }, // Exclure la catégorie actuelle de la recherche
+            },
         });
-      } else {
-        res.send({
-          message: `Impossible de supprimer la marque avec l'ID ${id}. Peut-être que la marque n'a pas été trouvée !`
+
+        if (!existingBrand) {
+            return res.status(409).json({
+                message: "Une marque avec ce nom n'existe pas.",
+            });
+        }
+
+        // Mise à jour dans PostgreSQL
+        const [numPsql, updatedMarquePsql] = await Brand.update(
+            { brandName },
+            { where: { id: brandId } }
+        );
+
+        // Mise à jour dans MongoDB
+        const updatedBrandMongo = await BrandMongo.findOneAndUpdate(
+            { brandId: brandId },
+            { brandName },
+            { new: true }
+        );
+
+        if (updatedBrandMongo && numPsql === 1) {
+            const brand = {
+                brandId: updatedBrandMongo.brandId,
+                brandName: updatedBrandMongo.brandName,
+            };
+
+            return res.json({
+                message: "La marque a bien été mise à jour.",
+                brand,
+            });
+        } else {
+            return res.status(404).json({
+                message: `La catégorie avec l'ID ${brandId} n'existe pas.`,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: `Une erreur est survenue lors de la modification de la marque : ${error}`,
         });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Impossible de supprimer la marque avec l'ID " + id
-      });
-    });
+    }
+};
+
+// Delete a brand by ID
+export const deleteBrand = async (req, res) => {
+    try {
+        const brandId = req.params.brandId;
+
+        const existingBrand = await Brand.findOne({
+            where: {
+                id: brandId,
+            },
+        });
+
+        if (!existingBrand) {
+            return res.status(409).json({
+                message: "Cette marque n'existe pas.",
+            });
+        }
+        // Delete category in PostgreSQL
+        const deletedBrandPsql = await Brand.destroy({
+            where: { id: brandId },
+        });
+
+        // Delete category in MongoDB
+        const deletedBrandMongo = await BrandMongo.findOneAndDelete({
+            brandId: brandId,
+        });
+
+        if (deletedBrandPsql === 1 && deletedBrandMongo) {
+            res.json({
+                message: "La marque a bien été supprimée!",
+            });
+        } else {
+            res.status(404).json({
+                message: `Impossible de supprimer la marque avec id=${brandId}.`,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: `Erreur lors de la suppression de la marque`,
+        });
+    }
 };
