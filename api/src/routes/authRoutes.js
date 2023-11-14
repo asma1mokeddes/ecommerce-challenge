@@ -1,5 +1,6 @@
 import UserMongo from "../models/user.js";
 import User from "../models/user.model.js";
+import { sendActivationEmail } from "./emailsRoutes.js";
 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -44,7 +45,10 @@ export const register = async (req, res) => {
                 role: `ROLE_USER`,
             });
 
-            res.status(201).json({
+            // Appel à la fonction sendActivationEmail pour confirmer l'activation de compte
+            await sendActivationEmail(req, res);
+
+            return res.status(201).json({
                 message: "Compte créé avec succès",
             });
         } else {
