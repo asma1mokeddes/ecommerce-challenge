@@ -1,9 +1,11 @@
 <template>
   <div id="page-wrap">
-    <h1>Shopping Cart</h1>
-    <ProductsList :products="cartItems"/>
+    <h1>Panier</h1>
+    <ProductsList
+      :products="cartItems"
+      v-on:remove-from-cart="removeFromCart($event)"/>
     <h3 id="total-price">Total: ${{ totalPrice }}</h3>
-    <button id="checkout-button">Proceed to Checkout</button>
+    <button id="checkout-button">Procéder au paiement</button>
   </div>
 </template>
 
@@ -27,6 +29,12 @@ export default {
           (sum, item) => sum + Number(item.price),
           0,
         );
+      }
+    },
+    methods: {
+      async removeFromCart(productId) {
+        const result = await axios.delete(`/api/users/12345/cart/${productId}`);
+        this.cartItems = result.data;
       }
     },
     async created(){

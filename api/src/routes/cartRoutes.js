@@ -1,8 +1,6 @@
 import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
 
-import { productsData, cartItems } from "../../app.js";
-
 export const getCart = async (req, res) => {
     const { userId } = req.params;
     try{
@@ -31,8 +29,9 @@ export const addCart = async (req, res) => {
             { where: { id: userId } }
           );
         const updatedUser = await User.findOne({ where: { id: userId } });
+        const products = await Product.findAll();
         const cartItemIds = updatedUser.cartItems;
-        const cardItems = cartItemIds.map(id => productsData.find(product => product.id === id));
+        const cardItems = cartItemIds.map(id => products.find(product => product.id === id));
         res.status(200).json(cardItems);
     } catch (error) {
         console.error(error);
@@ -49,8 +48,9 @@ export const deleteCart = async (req, res) => {
             { where: { id: userId } }
           );
         const updatedUser = await User.findOne({ where: { id: userId } });
+        const products = await Product.findAll();
         const cartItemIds = updatedUser.cartItems;
-        const cartItems = cartItemIds.map(id => productsData.find(product => product.id === id));
+        const cartItems = cartItemIds.map(id => products.find(product => product.id === id));
         res.status(200).json(cartItems);
     } catch (error) {
         console.error(error);

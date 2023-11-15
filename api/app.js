@@ -14,6 +14,9 @@ import cors from "cors";
 import sequelize from "./src/config/db.config.js";
 import path from "path";
 
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 app.use('/images', express.static(path.join(__dirname, '../assets')));

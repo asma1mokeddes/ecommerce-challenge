@@ -5,7 +5,10 @@
         <h3>{{ product.name }}</h3>
         <p>${{ product.price }}</p>
       </div>
-      <button class="remove-button">Retirer du panier</button>
+      <button
+        class="remove-button"
+        v-on:click="$emit('remove-from-cart', product.id)"
+      >Retirer du panier</button>
     </div>
 </template>
 

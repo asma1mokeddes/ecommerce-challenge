@@ -10,7 +10,21 @@
           <h1>{{ product.name }}</h1>
           <h3 id="price">{{ product.price }}€</h3>
           <p>Average rating: {{ product.averageRating }}</p>
-          <button id="add-to-cart">Add to Cart</button>
+          <button
+            id="add-to-cart"
+            v-if="!itemIsInCart && !showSuccessMessage"
+            v-on:click="addToCart"
+          >Ajouter au panier</button>
+          <button
+            id="add-to-cart"
+            class="green-button"
+            v-if="!itemIsInCart && showSuccessMessage"
+          >Votre produit a été ajouté au panier !</button>
+          <button
+            id="add-to-cart"
+            class="grey-button"
+            v-if="itemIsInCart"
+          >Ce produit est déjà dans votre panier</button>
           <h4>Description</h4>
           <p>{{ product.description }}</p>
         </div>
@@ -27,16 +41,32 @@ export default {
     data() {
       return {
         product: {},
+        cartItems: [],
+        showSuccessMessage: false,
       };
     }, 
+    computed: {
+      itemsInCart() {
+        return this.cartItems.some(item => item.id === this.product.id);
+      },
+    },
     methods: {
-      async addToCart() { 
-      }
+      async addToCart() {
+        await axios.post('/api/users/1/cart', {
+          productId: this.$route.params.id,
+        });
+        this.showSuccessMessage = true;
+        setTimeout(() => {
+          this.$router.push('/products');
+        }, 1500);
+      },
     },
     async created(){
-      const result = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
-      const product = result.data;
+      const { data: product } = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
       this.product = product;
+
+      const { data: cartItems } = await axios.get(`http://localhost:3000/cart/users/1/cart`);
+      this.cartItems = cartItems;
     }
 };
 </script>
@@ -87,5 +117,11 @@ export default {
     position: absolute;
     top: 24px;
     right: 16px;
+  }
+  .green-button {
+    background-color: green;
+  }
+  .grey-button {
+    background-color: #888;
   }
 </style>
