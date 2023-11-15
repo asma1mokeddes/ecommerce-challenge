@@ -1,5 +1,7 @@
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import User from "../models/user.js";
+import UserMongo from "../models/user.model.js";
+
 import jwt from "jsonwebtoken";
 
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
@@ -47,11 +49,37 @@ export const reset = async (req, res) => {
     }
 };
 
-export const sendActivationEmail = async (req, res) => {
+// Route pour activer le compte
+export const activate = async (req, res) => {
+    const token = req.query.token;
+
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userEmail = decodedToken.emailAddress;
+
+        // Mettez à jour le statut du compte dans la base de données
+        await User.update(
+            { activated: true },
+            { where: { emailAddress: userEmail } }
+        );
+        await UserMongo.findOneAndUpdate(
+            { emailAddress: userEmail },
+            { activated: true }
+        );
+
+        res.send(
+            "Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter."
+        );
+    } catch (error) {
+        res.status(400).send("Lien d'activation non valide.");
+    }
+};
+
+export const sendActivationEmail = async (req, res, activationLink) => {
     // Définir les valeurs spécifiques pour to et sender
     const to = req.body.emailAddress; // Remplacez avec le champ approprié
 
-    await sendEmailWithTemplate(res, 1, to, sender);
+    await sendEmailWithTemplate(res, 1, to, sender, activationLink);
 };
 
 // Confirmation d'activation de compte
@@ -66,7 +94,13 @@ export const sendPasswordResetEmail = async (req, res) => {
 };
 
 // Fonction générique pour envoyer des e-mails avec différents templates
-export const sendEmailWithTemplate = async (res, templateId, to, sender) => {
+export const sendEmailWithTemplate = async (
+    res,
+    templateId,
+    to,
+    sender,
+    activationLink
+) => {
     try {
         // Configure API key authorization: api-key
         let apiKey = defaultClient.authentications["api-key"];
@@ -87,6 +121,9 @@ export const sendEmailWithTemplate = async (res, templateId, to, sender) => {
                 },
             ],
             templateId,
+            params: {
+                activationLink: activationLink, // Ajoutez le lien d'activation aux paramètres du modèle
+            },
             headers: {
                 "X-Mailin-custom":
                     "custom_header_1:custom_value_1|custom_header_2:custom_value_2",

@@ -1,9 +1,9 @@
 import express from "express";
-import { sendActivatedAccountEmail, reset } from "../routes/emailsRoutes.js";
+import { reset, activate } from "../routes/emailsRoutes.js";
 
 const router = express.Router();
 
-router.post("/activate", sendActivatedAccountEmail);
+router.get("/activate", activate);
 router.post("/reset-password", reset);
 
 export default router;

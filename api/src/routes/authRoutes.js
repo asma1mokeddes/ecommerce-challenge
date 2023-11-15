@@ -46,7 +46,17 @@ export const register = async (req, res) => {
             });
 
             // Appel à la fonction sendActivationEmail pour confirmer l'activation de compte
-            await sendActivationEmail(req, res);
+            // Génération du lien d'activation
+            const activationToken = jwt.sign(
+                { email: emailAddress },
+                process.env.SECRET_KEY,
+                {
+                    expiresIn: "1h",
+                }
+            );
+
+            const activationLink = `https://localhost:3002/activate?token=${activationToken}`;
+            await sendActivationEmail(req, res, activationLink);
 
             return res.status(201).json({
                 message: "Compte créé avec succès",
@@ -80,6 +90,9 @@ export const login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
+        if (!user.activated) {
+            return res.status(401).json({ message: "Compte invalide" });
+        }
 
         const payload = {
             userId: user._id,
@@ -87,7 +100,7 @@ export const login = async (req, res) => {
         };
 
         const options = {
-            expiresIn: "2h",
+            expiresIn: "1h",
         };
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);

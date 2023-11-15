@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
         required: false,
         default: [],
     },
+    activated: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 // Fonction pour générer un nouvel ID auto-incrémenté
