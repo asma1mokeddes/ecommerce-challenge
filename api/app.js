@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import sequelize from "./src/config/db.config.js";
 
+dotenv.config();
+
 const app = express();
 
 // Configurez le middleware CORS pour autoriser les requêtes depuis localhost:4200
@@ -20,10 +22,6 @@ app.use(
         credentials: true, // Si vous utilisez des cookies ou des en-têtes d'authentification, activez ceci
     })
 );
-
-app.listen(3002, () => console.log("Server is running on localhost:3002"));
-
-dotenv.config();
 
 app.use(express.json());
 
@@ -66,5 +64,7 @@ try {
 } catch (e) {
     console.error("Unable to connect to the database:", e);
 }
+
+app.listen(3000, () => console.log("Server is running on localhost:3000"));
 
 export default app;
