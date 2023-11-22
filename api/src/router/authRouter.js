@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-router.post("/logout", authMiddleware, logout);
+router.post("/logout", authMiddleware, logout); // ? pourquoi authMiddleware ici ?
 router.post("/reset-password", reset);
 
 export default router;

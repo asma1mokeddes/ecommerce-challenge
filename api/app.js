@@ -10,7 +10,9 @@ import emails from "./src/router/emailsRouter.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
-import sequelize from "./src/config/db.config.js";
+import sequelize from "./src/config/config.js";
+
+dotenv.config();
 
 const app = express();
 
@@ -21,10 +23,6 @@ app.use(
         credentials: true, // Si vous utilisez des cookies ou des en-têtes d'authentification, activez ceci
     })
 );
-
-app.listen(3002, () => console.log("Server is running on localhost:3002"));
-
-dotenv.config();
 
 app.use(express.json());
 
@@ -68,5 +66,7 @@ try {
 } catch (e) {
     console.error("Unable to connect to the database:", e);
 }
+
+app.listen(3000, () => console.log("Server is running on localhost:3000"));
 
 export default app;

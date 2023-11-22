@@ -1,70 +1,40 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/db.config.js";
+import { BOOLEAN, DataTypes, Model } from "sequelize";
+import sequelize from "../config/config.js";
 
 class Product extends Model {}
 
 Product.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        productName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        description: {
-            type: DataTypes.STRING,
-        },
-        price: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
+  {
+    productID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-        sequelize,
-        timestamps: true,
-        modelName: "Product",
-    }
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    description: {
+        type: DataTypes.TEXT,
+        required: false,
+    },
+    price: {
+        type: DataTypes.DECIMAL,
+        required: false,
+    },
+    stockQuantity: {
+        type: DataTypes.INTEGER,
+        required: false,
+    },
+    categoryID: DataTypes.INTEGER,
+    brandID: DataTypes.INTEGER,
+    isPromotion: {
+        type: BOOLEAN,
+        required: false,
+    },
+    // Add other relevant fields
+  },
+  { sequelize, modelName: "Product" }
 );
-
-let Category;
-let Brand;
-let Promo;
-import("./category.model.js")
-    .then((module) => {
-        Category = module.default;
-
-        Product.belongsTo(Category);
-    })
-    .catch((error) => {
-        console.error(
-            "Erreur lors de l'importation du modèle Category :",
-            error
-        );
-    });
-
-import("./brand.model.js")
-    .then((module) => {
-        Brand = module.default;
-
-        Product.belongsTo(Brand);
-    })
-    .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle Brand :", error);
-    });
-import("./promo.model.js")
-    .then((module) => {
-        Promo = module.default;
-
-        Product.belongsToMany(Promo, {
-            as: "promos",
-            through: "Promos_Models",
-        });
-    })
-    .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle Promo :", error);
-    });
 
 export default Product;
