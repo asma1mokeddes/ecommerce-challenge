@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/db.config.js";
+import sequelize from "../config/config.js";
 
 class Promo extends Model {}
 
@@ -12,8 +12,14 @@ Promo.init(
     },
     description: DataTypes.TEXT,
     discountRate: DataTypes.DECIMAL,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
     productID: DataTypes.INTEGER,
     // Additional fields as necessary
   },

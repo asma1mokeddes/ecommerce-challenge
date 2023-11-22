@@ -10,7 +10,7 @@ import emails from "./src/router/emailsRouter.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
-import sequelize from "./src/config/db.config.js";
+import sequelize from "./src/config/config.js";
 
 dotenv.config();
 
