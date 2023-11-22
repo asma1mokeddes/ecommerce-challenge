@@ -4,22 +4,17 @@ import sequelize from "../config/db.config.js";
 class Brand extends Model {}
 
 Brand.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        brandName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
+  {
+    brandID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-        sequelize,
-        timestamps: false,
-        modelName: "Brand",
-    }
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+    websiteURL: DataTypes.STRING,
+  },
+  { sequelize, modelName: "Brand" }
 );
 
 export default Brand;

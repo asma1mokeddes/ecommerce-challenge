@@ -1,26 +1,19 @@
 import { DataTypes, Model } from "sequelize";
-import Sequelize from "sequelize";
 import sequelize from "../config/db.config.js";
 
 class Category extends Model {}
 
 Category.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        categoryName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
+  {
+    categoryID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-        sequelize,
-        timestamps: false,
-        modelName: "Category",
-    }
+    name: DataTypes.STRING,
+    description: DataTypes.TEXT,
+  },
+  { sequelize, modelName: "Category" }
 );
 
 export default Category;
