@@ -24,6 +24,6 @@ categorySchema.pre("save", async function (next) {
     }
 });
 
-const CategoryMongo = mongoose.model("Categories", categorySchema);
+const CategoryMongo = mongoose.model("Category", categorySchema);
 
 export default CategoryMongo;

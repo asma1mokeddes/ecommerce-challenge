@@ -27,6 +27,6 @@ promoSchema.pre("save", async function (next) {
         next(error);
     }
 });
-const PromoMongo = mongoose.model("Promos", promoSchema);
+const PromoMongo = mongoose.model("Promo", promoSchema);
 
 export default PromoMongo;
