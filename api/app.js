@@ -7,12 +7,15 @@ import categories from "./src/router/categoriesRouter.js";
 import promos from "./src/router/promosRouter.js";
 import brands from "./src/router/brandsRouter.js";
 import emails from "./src/router/emailsRouter.js";
+import shipments from "./src/router/shipmentsRoutes.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
 import sequelize from "./src/config/db.config.js";
 
 const app = express();
+
+dotenv.config();
 
 // Configurez le middleware CORS pour autoriser les requêtes depuis localhost:4200
 app.use(
@@ -22,9 +25,9 @@ app.use(
     })
 );
 
-app.listen(3002, () => console.log("Server is running on localhost:3002"));
+app.listen(3000, () => console.log("Server is running on localhost:3000"));
 
-dotenv.config();
+
 
 app.use(express.json());
 
@@ -48,6 +51,7 @@ app.use("/categories", categories);
 app.use("/promos", promos);
 app.use("/brands", brands);
 app.use("/emails", emails);
+app.use("/shipments", shipments);
 
 try {
     console.log("process.env.DB_URI ====", process.env.DB_URI);
