@@ -153,7 +153,7 @@ export const deletePromo = async (req, res) => {
 
         if (!existingPromo) {
             return res.status(409).json({
-                message: "Ce code promo catégorie n'existe pas.",
+                message: "Ce code promo n'existe pas.",
             });
         }
         // Delete Promo in PostgreSQL

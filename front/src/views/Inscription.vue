@@ -142,7 +142,7 @@ export default {
             <button type="submit" class="formGroup">Register</button>
 
             <small class="text-right text-xs">
-                Already have an account? Login
+                Vous avez déjà un compte? Connectez-vous
                 <router-link
                     to="/connexion"
                     class="text-primary hover:underline"

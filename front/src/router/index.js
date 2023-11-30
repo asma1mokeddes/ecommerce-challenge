@@ -6,8 +6,14 @@ import NotFoundPage from "../views/NotFoundPage.vue";
 import HomePage from "../views/HomePage.vue";
 import Connexion from "../views/Connexion.vue";
 import Inscription from "../views/Inscription.vue";
+import PromoManagement from "../views/PromoManagement.vue";
 
 const routes = [
+    {
+        path: "/promos",
+        name: "Promos",
+        component: PromoManagement,
+    },
     {
         path: "/home",
         name: "Home",

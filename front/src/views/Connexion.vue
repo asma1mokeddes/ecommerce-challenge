@@ -14,7 +14,7 @@
         </div>
 
         <small class="text-right text-xs"
-                >You don't have an account? Register
+                >Vous n'avez pas de compte? Inscrivez-vous
                 <router-link to="/inscription" class="text-primary hover:underline"
                     >Here</router-link
                 >.</small
@@ -49,7 +49,7 @@
         throw new Error(data.error);
       } else {
         localStorage.setItem('token', data.token);
-        router.push('/produits');
+        router.push('/connexion');
       }
   
     } catch (error) {
