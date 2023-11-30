@@ -38,7 +38,7 @@ const routes = [
         component: NotFoundPage,
     },
     {
-        path: "/login",
+        path: "/connexion",
         name: "Connexion",
         component: Connexion,
     },

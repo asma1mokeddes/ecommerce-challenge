@@ -50,11 +50,14 @@
 <script>
 import BottomBar from './views/BottomBar.vue';
 import NavBar from './views/NavBar.vue';
+import Connexion from './views/Connexion.vue';
 
 export default {
   components: {
         BottomBar,
-        NavBar
+        Connexion,
+        NavBar,
+
   },
   data() {
     return {
