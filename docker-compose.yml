@@ -19,7 +19,7 @@ services:
     ports:
       - "3000:3000"
     command: sh -c "npm install && node server.js"
-  
+   
   adminer:
     image: adminer:4.8.1
     container_name: adminer
