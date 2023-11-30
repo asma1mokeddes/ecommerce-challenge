@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import UserMongo from "../models/user.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export function validatePassword(password) {

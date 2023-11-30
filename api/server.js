@@ -7,4 +7,4 @@ app.set('port', PORT);
 const server = http.createServer(app);
 
 console.log(`listening on port ${PORT}`)
-server.listen(PORT);
+server.listen(0, () => console.log(server.address().port))
