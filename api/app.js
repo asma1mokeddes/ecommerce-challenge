@@ -14,6 +14,8 @@ import sequelize from "./src/config/db.config.js";
 
 const app = express();
 
+dotenv.config();
+
 // Configurez le middleware CORS pour autoriser les requêtes depuis localhost:4200
 app.use(
     cors({
@@ -22,9 +24,9 @@ app.use(
     })
 );
 
-app.listen(3002, () => console.log("Server is running on localhost:3002"));
+app.listen(3000, () => console.log("Server is running on localhost:3000"));
 
-dotenv.config();
+
 
 app.use(express.json());
 
