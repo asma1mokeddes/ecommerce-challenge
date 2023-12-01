@@ -8,6 +8,9 @@ import Connexion from "../views/Connexion.vue";
 import Inscription from "../views/Inscription.vue";
 import PromoManagement from "../views/PromoManagement.vue";
 import PromoCreation from "../views/CreatePromo.vue";
+import CategoriesManagement from "../views/CategoryManagement.vue";
+import CategoriesCreation from "../views/CreateCategory.vue";
+
 const routes = [
     {
         path: "/promos",
@@ -18,6 +21,16 @@ const routes = [
         path: "/promos/create",
         name: "PromoCreation",
         component: PromoCreation,
+    },
+    {
+        path: "/categories",
+        name: "Categories",
+        component: CategoriesManagement,
+    },
+    {
+        path: "/categories/create",
+        name: "CategoriesCreation",
+        component: CategoriesCreation,
     },
     {
         path: "/home",
