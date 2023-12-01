@@ -13,7 +13,12 @@ const router = express.Router();
 
 router.get("/", getProducts);
 router.get("/:productId", getProduct);
-router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createProduct);
+router.post(
+    "/create",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    createProduct
+);
 router.put(
     "/:productId",
     authMiddleware,

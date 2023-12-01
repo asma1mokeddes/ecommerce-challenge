@@ -19,7 +19,12 @@ router.get("/:brandId", getBrand);
 
 // Créer une nouvelle marque
 
-router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createBrand);
+router.post(
+    "/create",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    createBrand
+);
 // Mettre à jour une marque par ID
 
 router.put(

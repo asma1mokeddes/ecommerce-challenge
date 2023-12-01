@@ -13,7 +13,12 @@ const router = express.Router();
 
 router.get("/", getCategories); // Obtenir toutes les catégories
 router.get("/:categoryId", getCategory); // Obtenir une catégorie par ID
-router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createCategory); // Créer une nouvelle catégorie
+router.post(
+    "/create",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    createCategory
+); // Créer une nouvelle catégorie
 router.put(
     "/:categoryId",
     authMiddleware,

@@ -16,7 +16,12 @@ const router = express.Router();
 
 router.get("/", authMiddleware, adminOrStoreKeeperMiddleware, getPromos); // Obtenir toutes les promotions
 router.get("/:promoId", authMiddleware, adminOrStoreKeeperMiddleware, getPromo); // Obtenir une promotion par ID
-router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createPromo); // Créer une nouvelle promotion
+router.post(
+    "/create",
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
+    createPromo
+); // Créer une nouvelle promotion
 router.put(
     "/:promoId",
     authMiddleware,

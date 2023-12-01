@@ -2,7 +2,7 @@
     <div>
         <h2 class="promo-table">Liste des utilisateurs</h2>
         <div class="create-promo-container">
-        <router-link to="/promos/create" class="create-promo-link"
+        <router-link to="/users/create" class="create-promo-link"
             >Créer un utilisateur</router-link
         >
         </div>
@@ -64,7 +64,7 @@
 
                         <button
                             v-if="user.editing"
-                            @click="saveUpdatedPromoUser(user)"
+                            @click="saveUpdatedUser(user)"
                             class="circle-button green"
                         >
                             <i class="fas fa-check"></i>
@@ -84,8 +84,6 @@
 </template>
 
 <script>
-import { format } from "date-fns";
-
 const BASE_URL = "http://localhost:3002";
 
 export default {
@@ -116,7 +114,7 @@ export default {
                     }),
                 });
 
-                // Actualiser la liste des promotions après la mise à jour
+                // Actualiser la liste des users après la mise à jour
                 this.getUsers();
 
                 // Réinitialiser le mode d'édition
@@ -126,7 +124,7 @@ export default {
             }
         },
 
-        editPromo(user) {
+        editUser(user) {
             // Activer le mode d'édition
             user.editing = true;
             // Initialiser les champs de mise à jour
