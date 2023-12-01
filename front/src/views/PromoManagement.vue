@@ -2,7 +2,7 @@
     <div>
         <h2 class="promo-table">Liste des promotions</h2>
         <div class="create-promo-container">
-        <router-link to="/brands/create" class="create-promo-link"
+        <router-link to="/promos/create" class="create-promo-link"
             >Créer une promotion</router-link
         >
         </div>

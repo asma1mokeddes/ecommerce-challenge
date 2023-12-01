@@ -7,12 +7,17 @@ import HomePage from "../views/HomePage.vue";
 import Connexion from "../views/Connexion.vue";
 import Inscription from "../views/Inscription.vue";
 import PromoManagement from "../views/PromoManagement.vue";
-
+import PromoCreation from "../views/CreatePromo.vue";
 const routes = [
     {
         path: "/promos",
         name: "Promos",
         component: PromoManagement,
+    },
+    {
+        path: "/promos/create",
+        name: "PromoCreation",
+        component: PromoCreation,
     },
     {
         path: "/home",
