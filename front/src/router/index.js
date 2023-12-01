@@ -14,7 +14,7 @@ import BrandsManagement from "../views/BrandManagement.vue";
 import BrandsCreation from "../views/CreateBrand.vue";
 import UserManagement from "../views/UserManagement.vue";
 import UserCreation from "../views/CreateUser.vue";
-
+import ProductCreation from "../views/ProductCreation.vue";
 const routes = [
     {
         path: "/users",
@@ -25,6 +25,11 @@ const routes = [
         path: "/users/create",
         name: "UserCreation",
         component: UserCreation,
+    },
+    {
+        path: "/products/create",
+        name: "ProductCreation",
+        component: ProductCreation,
     },
     {
         path: "/promos",
