@@ -12,8 +12,20 @@ import CategoriesManagement from "../views/CategoryManagement.vue";
 import CategoriesCreation from "../views/CreateCategory.vue";
 import BrandsManagement from "../views/BrandManagement.vue";
 import BrandsCreation from "../views/CreateBrand.vue";
+import UserManagement from "../views/UserManagement.vue";
+import UserCreation from "../views/CreateUser.vue";
 
 const routes = [
+    {
+        path: "/users",
+        name: "Users",
+        component: UserManagement,
+    },
+    {
+        path: "/users/create",
+        name: "UserCreation",
+        component: UserCreation,
+    },
     {
         path: "/promos",
         name: "Promos",

@@ -1,61 +1,77 @@
 <template>
     <div>
-        <h2 class="promo-table">Liste des promotions</h2>
+        <h2 class="promo-table">Liste des utilisateurs</h2>
         <div class="create-promo-container">
         <router-link to="/promos/create" class="create-promo-link"
-            >Créer une promotion</router-link
+            >Créer un utilisateur</router-link
         >
         </div>
         <table class="promo-table">
             <thead>
                 <tr>
-                    <th>Code promo</th>
-                    <th>Date d'expiration</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de naissance</th>
+                    <th>Addresse email</th>
+                    <th>Role</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="promo in promos" :key="promo.promoId">
+                <tr v-for="user in users" :key="user.userId">
                     <td>
-                        <span v-if="!promo.editing">{{ promo.promoCode }}</span>
-                        <input v-else v-model="promo.updatedPromoCode" />
+                        <span v-if="!user.editing">{{ user.firstName }}</span>
+                        <input v-else v-model="user.updatedFirstName" />
                     </td>
+
                     <td>
-                        <span v-if="!promo.editing">{{
-                            formatPromoExpiry(promo.expirationDate)
-                        }}</span>
-                        <input
-                            v-else
-                            v-model="promo.updatedExpirationDate"
-                            type="datetime-local"
-                        />
+                        <span v-if="!user.editing">{{ user.lastName }}</span>
+                        <input v-else v-model="user.updatedLastName" />
                     </td>
+
+                    <td>
+                        <span v-if="!user.editing">{{ user.dateOfBirth }}</span>
+                        <input v-else v-model="user.updatedDateOfBirth" />
+                    </td>
+
+                    <td>
+                        <span v-if="!user.editing">{{ user.emailAddress }}</span>
+                        <input v-else v-model="user.updatedEmailAddress" />
+                    </td>
+
+                    <td>
+                        <span v-if="!user.editing">{{ user.role }}</span>
+                        <input v-else v-model="user.updatedRole" />
+                    </td>
+                   
+                   
+
                     <td class="button-container">
                         <button
-                            v-if="!promo.editing"
-                            @click="deletePromo(promo.promoId)"
+                            v-if="!user.editing"
+                            @click="deleteUser(user.userId)"
                             class="circle-button red"
                         >
                             <i class="fas fa-times"></i>
                         </button>
                         <button
-                            v-if="!promo.editing"
-                            @click="editPromo(promo)"
+                            v-if="!user.editing"
+                            @click="editUser(user)"
                             class="circle-button orange"
                         >
                             <i class="fas fa-pencil-alt"></i>
                         </button>
 
                         <button
-                            v-if="promo.editing"
-                            @click="saveUpdatedPromo(promo)"
+                            v-if="user.editing"
+                            @click="saveUpdatedPromoUser(user)"
                             class="circle-button green"
                         >
                             <i class="fas fa-check"></i>
                         </button>
                         <button
-                            v-if="promo.editing"
-                            @click="cancelEdit(promo)"
+                            v-if="user.editing"
+                            @click="cancelEdit(user)"
                             class="circle-button yellow"
                         >
                             <i class="fas fa-undo"></i>
@@ -75,56 +91,61 @@ const BASE_URL = "http://localhost:3002";
 export default {
     data() {
         return {
-            promos: [],
+            users: [],
         };
     },
 
     mounted() {
-        this.getPromos();
+        this.getUsers();
     },
 
     methods: {
-        async saveUpdatedPromo(promo) {
+        async saveUpdatedUser(user) {
             try {
-                await fetch(`${BASE_URL}/promos/${promo.promoId}`, {
+                await fetch(`${BASE_URL}/users/${user.userId}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        promoCode: promo.updatedPromoCode,
-                        expirationDate: promo.updatedExpirationDate,
+                        firstName: user.updatedFirstName,
+                        lastName: user.updatedLastName,
+                        dateOfBirth: user.updatedDateOfBirth,
+                        emailAddress: user.updatedEmailAddress,
+                        role: user.updatedRole,
                     }),
                 });
 
                 // Actualiser la liste des promotions après la mise à jour
-                this.getPromos();
+                this.getUsers();
 
                 // Réinitialiser le mode d'édition
-                promo.editing = false;
+                user.editing = false;
             } catch (error) {
-                console.error("Error updating promotion:", error);
+                console.error("Error updating user:", error);
             }
         },
 
-        editPromo(promo) {
+        editPromo(user) {
             // Activer le mode d'édition
-            promo.editing = true;
+            user.editing = true;
             // Initialiser les champs de mise à jour
-            promo.updatedPromoCode = promo.promoCode;
+            user.updatedFirstName = user.firstName;
+            user.updatedLastName = user.lastName;
+            user.updatedDateOfBirth = user.dateOfBirth;
+            user.updatedEmailAddress = user.emailAddress;
+            user.updatedRole = user.role;
 
-            // Formater la date sans le fuseau horaire
-            promo.updatedExpirationDate = promo.expirationDate;
         },
 
-        cancelEdit(promo) {
-            promo.editing = false;
+        cancelEdit(user) {
+            user.editing = false;
         },
 
-        async getPromos() {
+        async getUsers() {
             try {
-                console.log("Fetching promotions...");
-                const response = await fetch(`${BASE_URL}/promos`, {
+                console.log("Fetching users...");
+                const response = await fetch(`${BASE_URL}/users`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -133,37 +154,31 @@ export default {
 
                 const data = await response.json();
 
-                console.log("Promotions response:", data);
+                console.log("Users response:", data);
                 // Ajouter une propriété "editing" à chaque promotion
-                this.promos = data.map((promo) => ({
-                    ...promo,
+                this.users = data.map((user) => ({
+                    ...user,
                     editing: false,
                 }));
             } catch (error) {
-                console.error("Error fetching promotions:", error);
+                console.error("Error fetching users:", error);
             }
         },
 
-        formatPromoExpiry(expirationDate) {
-            const date = new Date(expirationDate);
-            const formattedDate = format(date, "MM/dd/yyyy 'à' HH:mm:ss a");
-            return formattedDate;
-        },
-
-        async deletePromo(promoId) {
+        async deleteUser(userId) {
             try {
                 // Envoyer une requête de suppression à l'API
-                await fetch(`${BASE_URL}/promos/${promoId}`, {
+                await fetch(`${BASE_URL}/users/${userId}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
                     },
                 });
 
-                // Actualiser la liste des promotions après la suppression
-                this.getPromos();
+                // Actualiser la liste des users après la suppression
+                this.getUsers();
             } catch (error) {
-                console.error("Error deleting promotion:", error);
+                console.error("Error deleting users:", error);
             }
         },
     },

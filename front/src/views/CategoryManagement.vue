@@ -10,7 +10,7 @@
             <thead>
                 <tr>
                     <th>Nom de la catégorie</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
