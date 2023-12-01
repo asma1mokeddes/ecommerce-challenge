@@ -10,6 +10,8 @@ import PromoManagement from "../views/PromoManagement.vue";
 import PromoCreation from "../views/CreatePromo.vue";
 import CategoriesManagement from "../views/CategoryManagement.vue";
 import CategoriesCreation from "../views/CreateCategory.vue";
+import BrandsManagement from "../views/BrandManagement.vue";
+import BrandsCreation from "../views/CreateBrand.vue";
 
 const routes = [
     {
@@ -31,6 +33,17 @@ const routes = [
         path: "/categories/create",
         name: "CategoriesCreation",
         component: CategoriesCreation,
+    },
+
+    {
+        path: "/brands",
+        name: "Brands",
+        component: BrandsManagement,
+    },
+    {
+        path: "/brands/create",
+        name: "BrandsCreation",
+        component: BrandsCreation,
     },
     {
         path: "/home",
