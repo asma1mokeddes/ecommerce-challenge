@@ -16,7 +16,7 @@
         <small class="text-right text-xs"
                 >Vous n'avez pas de compte? Inscrivez-vous
                 <router-link to="/inscription" class="text-primary hover:underline"
-                    >Here</router-link
+                    >Ici</router-link
                 >.</small
             >
       </form>

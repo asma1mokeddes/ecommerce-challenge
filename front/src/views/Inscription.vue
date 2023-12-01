@@ -146,7 +146,7 @@ export default {
                 <router-link
                     to="/connexion"
                     class="text-primary hover:underline"
-                    >Here</router-link
+                    >Ici</router-link
                 >.
             </small>
         </form>
