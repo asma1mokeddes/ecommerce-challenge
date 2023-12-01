@@ -12,11 +12,10 @@ export const getProducts = async (req, res) => {
     try {
         const productsMongo = await ProductMongo.find();
         res.json(productsMongo);
-    } catch (err) {
+    } catch (error) {
         res.status(500).json({
-            message:
-                err.message ||
-                "Une erreur est survenue lors de la récupération des produits.",
+            success: false,
+            message: error.message,
         });
     }
 };
@@ -45,7 +44,8 @@ export const getProduct = (req, res) => {
         })
         .catch((error) => {
             res.status(500).send({
-                message: `Une erreur est survenue lors de la récupération du produit avec l'id=${categoryId} : ${error}`,
+                success: false,
+                message: error.message,
             });
         });
 };
@@ -144,7 +144,8 @@ export const createProduct = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            error: `Une erreur est survenue lors de la création du produit : ${error}`,
+            success: false,
+            message: error.message,
         });
     }
 };
@@ -166,9 +167,10 @@ export const updateProduct = (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: "Error updating Produit with id=" + id,
+                success: false,
+                message: error.message,
             });
         });
 };
@@ -207,9 +209,10 @@ export const deleteProduct = async (req, res) => {
                 message: `Impossible de supprimer le produit avec id=${categoryId}.`,
             });
         }
-    } catch (err) {
+    } catch (error) {
         res.status(500).json({
-            message: `Erreur lors de la suppression du produit`,
+            success: false,
+            message: error.message,
         });
     }
 };

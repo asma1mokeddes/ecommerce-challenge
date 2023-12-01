@@ -2,8 +2,7 @@
     <nav>
         <div class="container">
             <div>
-                <router-link to="/home"
-                    ></router-link>
+                <router-link to="/home"></router-link>
                 <div class="menu" :class="{ 'nav-toggle': isNavToggled }">
                     <ul>
                         <li>
@@ -27,11 +26,15 @@
                             class="search"
                             placeholder="Rechercher..."
                         />
-
-                        <router-link to="/connexion">
-                            <i class="fas fa-user"></i>
-                        </router-link>
                     </form>
+
+                    <button @click="logout" v-if="isUserLoggedIn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                    <!-- Affiche le bouton de connexion seulement si l'utilisateur n'est pas connecté -->
+                    <router-link v-if="!isUserLoggedIn" to="/connexion">
+                        <i class="fas fa-user"></i>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -39,8 +42,44 @@
 </template>
 
 <script>
+import axios from "axios"; // Assurez-vous que vous avez importé axios
+
 export default {
     name: "NavBar",
+    data() {
+        return {
+            isUserLoggedIn: false,
+        };
+    },
+    mounted() {
+        this.checkUserLoggedIn();
+    },
+    methods: {
+        async checkUserLoggedIn() {
+            const token = localStorage.getItem("token");
+            if (token) {
+                this.isUserLoggedIn = true;
+                console.log("isUserLoggedIn.value", this.isUserLoggedIn);
+            }
+        },
+        async logout() {
+            try {
+                await axios({
+                    baseURL: "http://localhost:3002",
+                    method: "POST",
+                    url: "/auth/logout",
+                });
+
+                // Mettez à jour le statut de connexion côté client
+                this.isUserLoggedIn = false;
+
+                // Redirigez l'utilisateur vers la page de connexion
+                this.$router.push("/connexion");
+            } catch (error) {
+                console.error("Error deconnexion user:", error);
+            }
+        },
+    },
 };
 </script>
 

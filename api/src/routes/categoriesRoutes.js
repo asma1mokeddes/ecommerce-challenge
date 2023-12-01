@@ -1,6 +1,5 @@
 import Category from "../models/category.model.js";
 import CategoryMongo from "../models/category.js";
-import { Op } from "sequelize";
 
 export const getCategories = async (req, res) => {
     try {
@@ -8,9 +7,8 @@ export const getCategories = async (req, res) => {
         res.json(categoriesMongo);
     } catch (err) {
         res.status(500).json({
-            message:
-                err.message ||
-                "Une erreur est survenue lors de la récupération des catégories.",
+            success: false,
+            message: err.message,
         });
     }
 };
@@ -34,7 +32,8 @@ export const getCategory = (req, res) => {
         })
         .catch((error) => {
             res.status(500).send({
-                message: `Une erreur est survenue lors de la récupération de la catégorie avec l'id=${categoryId} : ${error}`,
+                success: false,
+                message: error.message,
             });
         });
 };
@@ -73,12 +72,13 @@ export const createCategory = async (req, res) => {
         }
 
         res.status(201).json({
+            success: true,
             message: "Catégorie créé avec succès",
-            createdCategoryMongo,
         });
     } catch (error) {
         res.status(500).json({
-            error: `Une erreur est survenue lors de la création de la catégorie : ${error}`,
+            success: false,
+            message: error.message,
         });
     }
 };
@@ -121,6 +121,7 @@ export const updateCategory = async (req, res) => {
             };
 
             return res.json({
+                success: true,
                 message: "La catégorie a bien été mise à jour.",
                 category,
             });
@@ -131,7 +132,8 @@ export const updateCategory = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({
-            message: `Une erreur est survenue lors de la modification de la catégorie : ${error}`,
+            success: false,
+            message: error.message,
         });
     }
 };
@@ -172,7 +174,8 @@ export const deleteCategory = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({
-            message: `Erreur lors de la suppression de la catégorie`,
+            success: false,
+            message: err.message,
         });
     }
 };

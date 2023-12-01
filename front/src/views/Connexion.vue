@@ -45,11 +45,14 @@
         body: JSON.stringify(state.loginForm)
       });
       const data = await response.json();
+
+      console.log('Response from server:', data);
+
       if (data.status === 401) {
         throw new Error(data.error);
       } else {
         localStorage.setItem('token', data.token);
-        router.push('/connexion');
+        router.push('/products');
       }
   
     } catch (error) {
