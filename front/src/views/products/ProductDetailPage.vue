@@ -31,10 +31,16 @@
       </div>
       </div>
   </div>
+  <p>Bienvenue, {{ loggedInUsername }}</p>
+
 </template>
 
 <script>
-import axios from 'axios'
+import { ref, onMounted } from 'vue';
+import axios from 'axios'; 
+const BASE_URL = "http://localhost:3002";
+
+import VueJwtDecode from 'vue-jwt-decode';
 
 export default {
     name: 'ProductDetailPage',
@@ -67,7 +73,21 @@ export default {
 
       const { data: cartItems } = await axios.get(`http://localhost:3000/cart/users/1/cart`);
       this.cartItems = cartItems;
-    }
+    },
+    setup() {
+      const loggedInUsername = ref("");
+
+      onMounted(async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const decodedToken = VueJwtDecode.decode(token);
+          loggedInUsername.value = decodedToken.userId;
+        }
+      });
+      return {
+      loggedInUsername,
+    };
+    },
 };
 </script>
 

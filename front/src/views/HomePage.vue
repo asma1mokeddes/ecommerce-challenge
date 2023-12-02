@@ -18,6 +18,8 @@
       </div>
     </div>
 
+    <p>Bienvenue, {{ loggedInUsername }}</p>
+
     <div class="body-footer">
       <div class="social">
         <a href="#"><i class="fab fa-facebook"></i></a>
@@ -55,6 +57,11 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import axios from 'axios'; 
+const BASE_URL = "http://localhost:3002";
+
+import VueJwtDecode from 'vue-jwt-decode';
 import { products } from '../fake-data';
 import BottomBar from '../components/BottomBar.vue';
 import ProductsGrid from '../components/ProductsGrid.vue';
@@ -69,7 +76,29 @@ export default {
       return {
         products: products.filter(product => product.new === true)
       };
-    }
+    },
+    setup() {
+      const loggedInUsername = ref("");
+
+      onMounted(async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const decodedToken = VueJwtDecode.decode(token);
+          loggedInUsername.value = decodedToken.userId;
+
+          try {
+            const response = await axios.get(`${BASE_URL}/users/${decodedToken.userId}`);
+            console.log(response.data);
+            loggedInUsername.value = response.data.firstName;
+          } catch (error) {
+            console.error("Erreur lors de la récupération du nom d'utilisateur :", error);
+          }
+        }
+      });
+      return {
+      loggedInUsername,
+    };
+    },
 };
 </script>
 
