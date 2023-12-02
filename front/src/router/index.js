@@ -6,6 +6,7 @@ import NotFoundPage from "../views/NotFoundPage.vue";
 import HomePage from "../views/HomePage.vue";
 import Connexion from "../views/Connexion.vue";
 import Inscription from "../views/Inscription.vue";
+import Shipment from "../views/Shipment.vue";
 
 const routes = [
     {
@@ -46,6 +47,11 @@ const routes = [
         path: "/inscription",
         name: "Inscription",
         component: Inscription,
+    },
+    {
+        path: "/shipment",
+        name: "Shipment",
+        component: Shipment,
     },
 ];
 

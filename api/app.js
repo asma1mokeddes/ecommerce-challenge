@@ -7,6 +7,7 @@ import categories from "./src/router/categoriesRouter.js";
 import promos from "./src/router/promosRouter.js";
 import brands from "./src/router/brandsRouter.js";
 import emails from "./src/router/emailsRouter.js";
+import shipments from "./src/router/shipmentsRouter.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
@@ -50,6 +51,7 @@ app.use("/categories", categories);
 app.use("/promos", promos);
 app.use("/brands", brands);
 app.use("/emails", emails);
+app.use("/shipments", shipments);
 
 try {
     console.log("process.env.DB_URI ====", process.env.DB_URI);
