@@ -1,40 +1,20 @@
 <template>
     <nav>
         <div class="container">
-            <div>
-                <router-link to="/home"></router-link>
+            <div class="navbar-content">
+                <router-link to="/home" class="logo-link"><img src="logo.png" alt="Logo" class="logo"></router-link>
                 <div class="menu" :class="{ 'nav-toggle': isNavToggled }">
                     <ul>
-                        <li>
-                            <router-link to="/products">Femmes</router-link>
-                        </li>
-
-                        <li>
-                            <router-link to="/products">Hommes</router-link>
-                        </li>
-
-                        <li>
-                            <router-link to="/about">Marques</router-link>
-                        </li>
+                        <li><router-link to="/products">Femmes</router-link></li>
+                        <li><router-link to="/products">Hommes</router-link></li>
+                        <li><router-link to="/about">Marques</router-link></li>
                     </ul>
                     <form action="">
-                        <div class="search-icon">
-                            <i class="fas fas fa-search"></i>
-                        </div>
-                        <input
-                            type="text"
-                            class="search"
-                            placeholder="Rechercher..."
-                        />
+                        <div class="search-icon"><i class="fas fa-search"></i></div>
+                        <input type="text" class="search" placeholder="Rechercher...">
                     </form>
-
-                    <button @click="logout" v-if="isUserLoggedIn">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                    <!-- Affiche le bouton de connexion seulement si l'utilisateur n'est pas connecté -->
-                    <router-link v-if="!isUserLoggedIn" to="/connexion">
-                        <i class="fas fa-user"></i>
-                    </router-link>
+                    <button @click="logout" v-if="isUserLoggedIn"><i class="fas fa-sign-out-alt"></i></button>
+                    <router-link v-if="!isUserLoggedIn" to="/connexion"><i class="fas fa-user"></i></router-link>
                 </div>
             </div>
         </div>
@@ -42,7 +22,7 @@
 </template>
 
 <script>
-import axios from "axios"; // Assurez-vous que vous avez importé axios
+import axios from "axios";
 
 export default {
     name: "NavBar",
@@ -69,11 +49,7 @@ export default {
                     method: "POST",
                     url: "/auth/logout",
                 });
-
-                // Mettez à jour le statut de connexion côté client
                 this.isUserLoggedIn = false;
-
-                // Redirigez l'utilisateur vers la page de connexion
                 this.$router.push("/connexion");
             } catch (error) {
                 console.error("Error deconnexion user:", error);
@@ -83,6 +59,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 nav {
     background: rgb(120, 115, 178);
@@ -91,67 +68,60 @@ nav {
     position: relative;
 }
 
-nav a {
-    text-decoration: none;
-}
-
 nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1150px;
     padding: 1em;
     margin: 0 auto;
 }
 
-nav .container > div {
-    display: grid;
-    gap: 15px;
-    grid-template-columns: 1fr 6fr;
+nav .navbar-content {
+    display: flex;
+    justify-content: center;
     align-items: center;
-}
-
-nav .container img {
-    width: 50px;
-    height: 50px;
+    width: 100%;
 }
 
 nav .menu,
-nav form,
-.footer,
-.watch {
+nav form {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
 }
 
 nav ul li {
-    display: inline-block;
-    margin: 0 0.5em;
+    margin: 0 15px;
 }
 
 nav ul a {
-    font-size: 0.8em;
+    font-size: 1em;
     text-transform: uppercase;
-    transition: 0.2s;
     color: white;
+    transition: color 0.2s;
 }
 
 nav ul a:hover {
-    color: rgb(255, 255, 255);
+    color: #ffffff;
 }
-nav form {
-    margin-right: 2em;
+
+nav .search-form {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    margin-left: auto;
 }
 
 nav form input {
     background: rgba(254, 254, 254, 0.155);
-    color: rgb(255, 255, 255);
+    color: white;
     width: 15em;
     padding: 0.5em 1em;
     border: none;
@@ -159,7 +129,7 @@ nav form input {
 }
 
 nav form input::placeholder {
-    color: rgb(255, 255, 255);
+    color: white;
 }
 
 .logo {
@@ -167,100 +137,6 @@ nav form input::placeholder {
     display: inline-block;
 }
 
-.nav-btn {
-    background: #71c9ce;
-    margin-left: 5px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 1em;
-}
+/* ... styles responsives ... */
 
-.nav-btn:hover {
-    background: #090909;
-}
-
-nav .container .menu-btn {
-    display: none;
-}
-
-#page-wrap {
-    margin: auto;
-    max-width: 800px;
-    min-height: 100vh;
-}
-
-@media screen and (max-width: 1000px) {
-    nav .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    nav .container > div {
-        grid-template-columns: 1fr;
-    }
-
-    nav .menu {
-        flex-direction: column;
-        align-items: flex-start;
-        height: 0;
-        overflow: hidden;
-        transition: 0.7s;
-    }
-
-    nav ul li {
-        display: block;
-        margin: 0.5em 0;
-    }
-
-    nav ul li:nth-child(1) {
-        margin-top: 1.5em;
-    }
-
-    nav .container .menu-btn {
-        display: inline-block;
-        font-size: 1.4em;
-        cursor: pointer;
-    }
-
-    nav .container .nav-toggle {
-        height: 16em;
-    }
-}
-
-@media screen and (max-width: 800px) {
-    html {
-        font-size: 14px;
-    }
-    .footer {
-        flex-direction: column;
-        margin-top: 3em;
-    }
-}
-
-button {
-    background-color: black;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    outline: 0;
-    padding: 16px;
-}
-
-.navbar i {
-    font-size: 1.5em;
-    color: white;
-    cursor: pointer;
-    margin-right: 1em;
-}
-
-.navbar i:hover {
-    color: #ffffff;
-}
 </style>

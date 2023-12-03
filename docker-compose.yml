@@ -19,16 +19,16 @@ services:
     ports:
       - "3000:3000"
     command: sh -c "npm install && node server.js"
-  
+   
   adminer:
     image: adminer:4.8.1
     container_name: adminer
     ports:
       - 8080:8080
     
-  postgresdb:
+  db:
     image: postgres:15.2-alpine
-    container_name: postgresdb
+    container_name: db
     ports:
       - "5432:5432"
     environment:
@@ -36,4 +36,7 @@ services:
       POSTGRES_USER: ecommerce-user
       POSTGRES_PASSWORD: ChangeMe
     volumes:
-      - ./new_db_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:

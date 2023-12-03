@@ -2,30 +2,17 @@
     <header>
     <div class="body">
         <div>
-          <h1>Nike SuperRep Go</h1>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-          </div>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, odio cumque. Ab nulla ipsum adipisci, pariatur id quas dignissimos perferendis. Provident nemo qui reiciendis, voluptates perspiciatis sapiente natus hic. Dicta.</p>
-          <a href="#" class="btn">Ajouter au panier</a>
+          <h1>Marche Magique</h1>
+          <p><h4>
+Bienvenue chez Marche Magique, votre destination incontournable pour des chaussures de qualité supérieure. Notre boutique propose une vaste sélection de chaussures pour hommes et femmes, allant des classiques intemporels aux dernières tendances. Chaque paire est soigneusement choisie pour garantir confort, style et durabilité. Que vous cherchiez des escarpins élégants, des baskets confortables ou des bottes robustes, Marche Magique vous accompagne à chaque étape de votre journée.</h4></p>
+          
         </div>  
         <div>
           <img src="../assets/shoe.png" alt="Modele chaussure">
         </div>
       </div>
   
-      <div class="body-footer">
-        <div class="social">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-        </div>
-  
-      </div>
+      
     </header>
   
     <div id="page-wrap">
@@ -51,20 +38,7 @@
 
     </div>
   
-    <section class="feature-section">
-        <div class="image-container">
-            <img src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-01.jpg" alt="Desk" class="feature-image">
-        </div>
-        <div class="content-container">
-            <div class="content-overlay">
-                <div class="content-inner">
-                    <h2 class="feature-heading">Level up your desk</h2>
-                    <p class="feature-text">Make your desk beautiful and organized. Post a picture to social media and watch it get more likes than life-changing announcements. Reflect on the shallow nature of existence. At least you have a really nice desk setup.</p>
-                    <a href="#" class="feature-button">Shop Workspace</a>
-                </div>
-            </div>
-        </div>
-    </section>
+   
   </template>
   
   <script>
