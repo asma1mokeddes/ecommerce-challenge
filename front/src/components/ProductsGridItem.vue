@@ -1,20 +1,34 @@
 <template>
-    <div class="product-item">
-        <img v-bind:src="product.imageUrl">
-        <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">{{ product.price }}€</p>
-        <router-link v-bind:to="'/products/' + product.id">
-          <button class="btn">Détails</button>
-        </router-link>
-    </div>
+  <div class="product-item">
+    <img :src="imageURL" alt="Product Image">
+    <h3 class="product-name">{{ product.productName }}</h3>
+    <p class="product-price">{{ product.price }}€</p>
+    <router-link :to="'/products/' + product.productId">
+      <button class="btn">Détails</button>
+    </router-link>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'ProductsGridItem',
-    props: ['product'],
-}
+  name: 'ProductsGridItem',
+  props: ['product'],
+  data() {
+    return {
+      baseURL: 'http://localhost:3000'
+    };
+  },
+  computed: {
+    imageRelativePath() {
+      return `/uploads/${this.product.image}`;
+    },
+    imageURL() {
+      return `${this.baseURL}${this.imageRelativePath}`;
+    },
+  },
+};
 </script>
+
 
 <style scoped>
 .product-item {

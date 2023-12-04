@@ -8,6 +8,7 @@ import {
 } from "../routes/productsRoutes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { adminOrStoreKeeperMiddleware } from "../middlewares/userManagementMiddleware.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -15,20 +16,21 @@ router.get("/", getProducts);
 router.get("/:productId", getProduct);
 router.post(
     "/create",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
+    upload.single("image"),
     createProduct
 );
 router.put(
     "/:productId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
     updateProduct
 );
 router.delete(
     "/:productId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
     deleteProduct
 );
 

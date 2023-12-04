@@ -21,6 +21,10 @@ Product.init(
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        image: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
     {
         sequelize,
@@ -54,14 +58,12 @@ import("./brand.model.js")
     .catch((error) => {
         console.error("Erreur lors de l'importation du modèle Brand :", error);
     });
+
 import("./promo.model.js")
     .then((module) => {
         Promo = module.default;
 
-        Product.belongsToMany(Promo, {
-            as: "promos",
-            through: "Promos_Models",
-        });
+        Product.belongsTo(Promo);
     })
     .catch((error) => {
         console.error("Erreur lors de l'importation du modèle Promo :", error);

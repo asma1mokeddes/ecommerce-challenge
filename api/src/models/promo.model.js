@@ -26,16 +26,4 @@ Promo.init(
     }
 );
 
-let Product;
-import("./product.model.js")
-    .then((module) => {
-        Product = module.default;
-
-        // Définir l'association avec Product
-        Promo.hasMany(Product, { foreignKey: "promoId" });
-    })
-    .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle Promo :", error);
-    });
-
 export default Promo;

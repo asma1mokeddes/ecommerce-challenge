@@ -22,7 +22,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = (req, res) => {
     const productId = req.params.productId;
-
+        
     ProductMongo.findOne({ productId: productId })
         .then((data) => {
             if (data) {
@@ -31,10 +31,12 @@ export const getProduct = (req, res) => {
                     productName: data.productName,
                     description: data.description,
                     price: data.price,
+                    image: data.image,
                     category: data.category,
                     brand: data.brand,
                     promo: data.promo,
                 };
+                console.log("product===", product);
                 res.send(product);
             } else {
                 res.status(404).send({
@@ -52,7 +54,7 @@ export const getProduct = (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { productName, description, price, variants } = req.body;
+        const { productName, description, price, image, variants } = req.body;
 
         if (!productName || !description || !price || !variants) {
             return res.status(400).json({
@@ -62,32 +64,39 @@ export const createProduct = async (req, res) => {
         }
 
         const { category, brand, promo } = variants;
+
         let categoryPsql = await Category.findOne({
-            where: { categoryName: category.categoryName },
+            where: { categoryName: category },
         });
 
         let brandPsql = await Brand.findOne({
-            where: { brandName: brand.brandName },
+            where: { brandName: brand },
         });
 
-        let promoPsql = await Promo.findOne({
-            where: {
-                promoCode: promo.promoCode,
-                expirationDate: new Date(promo.expirationDate),
-            },
-        });
-
+        // Recherche de la catégorie dans MongoDB
         let categoryMongo = await CategoryMongo.findOne({
-            categoryName: category.categoryName,
+            categoryName: category,
         });
 
+        // Recherche de la marque dans MongoDB
         let brandMongo = await BrandMongo.findOne({
-            brandName: brand.brandName,
+            brandName: brand,
         });
-        let promoMongo = await PromoMongo.findOne({
-            promoCode: promo.promoCode,
-            expirationDate: promo.expirationDate,
-        });
+
+        let promoPsql = null;
+        let promoMongo = null;
+
+        if (promo) {
+            promoPsql = await Promo.findOne({
+                where: {
+                    promoCode: promo,
+                },
+            });
+
+            promoMongo = await PromoMongo.findOne({
+                promoCode: promo,
+            });
+        } 
 
         // Vérification que le produit n'existe pas dans PostgreSQL
         let createdProductPsql = await Product.findOne({
@@ -108,15 +117,17 @@ export const createProduct = async (req, res) => {
             promo: promoMongo,
         });
 
+
         if (!createdProductPsql && !createdProductMongo) {
-            //Création du produit dans  Psql
+            // Création du produit dans  Psql
             createdProductPsql = await Product.create({
                 productName,
                 description,
                 price,
+                image,
                 CategoryId: categoryPsql.id,
                 BrandId: brandPsql.id,
-                PromoId: promoPsql.id,
+                PromoId: promoPsql ? promoPsql.id : null,
             });
 
             // Création du produit dans Mongo
@@ -124,9 +135,10 @@ export const createProduct = async (req, res) => {
                 productName,
                 description,
                 price,
-                category: categoryPsql,
-                brand: brandMongo,
-                promo: promoMongo,
+                image,
+                category: categoryMongo.id,
+                brand: brandMongo.id,
+                promo: promoMongo ? promoMongo.id : null,
             });
 
             console.log("createdProductPsql===", createdProductPsql);
@@ -140,7 +152,7 @@ export const createProduct = async (req, res) => {
         res.status(201).json({
             message: "Produit créé avec succès",
             createdProductPsql,
-            createdProductMongo,
+            // createdProductMongo,
         });
     } catch (error) {
         res.status(500).json({
@@ -149,6 +161,7 @@ export const createProduct = async (req, res) => {
         });
     }
 };
+
 
 export const updateProduct = (req, res) => {
     const id = req.params.id;

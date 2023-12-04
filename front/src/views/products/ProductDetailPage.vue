@@ -4,12 +4,11 @@
     <div id="page-wrap">
       <div class="product-wrap">
         <div id="img-wrap">
-          <img v-bind:src="product.imageUrl" />
+          <img v-bind:src="imageURL" />
         </div>
         <div id="product-details">
-          <h1>{{ product.name }}</h1>
+          <h1>{{ product.productName }}</h1>
           <h3 id="price">{{ product.price }}€</h3>
-          <p>Average rating: {{ product.averageRating }}</p>
           <button
             id="add-to-cart"
             v-if="!itemIsInCart && !showSuccessMessage"
@@ -32,6 +31,7 @@
       </div>
   </div>
   <p>Bienvenue, {{ loggedInUsername }}</p>
+  <p>produit n : {{ productId }}</p>
 
 </template>
 
@@ -42,24 +42,33 @@ const BASE_URL = "http://localhost:3002";
 
 import VueJwtDecode from 'vue-jwt-decode';
 
+
 export default {
     name: 'ProductDetailPage',
     data() {
       return {
+        productId: parseInt(this.$route.params.id, 10),
         product: {},
         cartItems: [],
         showSuccessMessage: false,
+        baseURL: 'http://localhost:3000'
       };
-    }, 
+    },
     computed: {
       itemsInCart() {
         return this.cartItems.some(item => item.id === this.product.id);
       },
+      imageRelativePath() {
+      return `/uploads/${this.product.image}`;
+    },
+      imageURL() {
+        return `${this.baseURL}${this.imageRelativePath}`;
+      },
     },
     methods: {
       async addToCart() {
-        await axios.post('/api/users/1/cart', {
-          productId: this.$route.params.id,
+        await axios.post(`/api/users/${this.loggedInUsername}/cart`, {
+          productId: this.productId,
         });
         this.showSuccessMessage = true;
         setTimeout(() => {
@@ -71,7 +80,7 @@ export default {
       const { data: product } = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
       this.product = product;
 
-      const { data: cartItems } = await axios.get(`http://localhost:3000/cart/users/1/cart`);
+      const { data: cartItems } = await axios.get(`http://localhost:3000/cart/users/${this.loggedInUsername}/cart`);
       this.cartItems = cartItems;
     },
     setup() {
@@ -129,10 +138,13 @@ export default {
     line-height: 28px;
   }
   #add-to-cart {
-    width: 50%;
+    width: 100%;
     background: #71C9CE;
+    transition: 0.3s;
   }
-
+  #add-to-cart:hover {
+    background: #A6E3E9;
+  }
   #price {
     position: absolute;
     top: 24px;

@@ -15,20 +15,20 @@ router.get("/", getCategories); // Obtenir toutes les catégories
 router.get("/:categoryId", getCategory); // Obtenir une catégorie par ID
 router.post(
     "/create",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
     createCategory
 ); // Créer une nouvelle catégorie
 router.put(
     "/:categoryId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
     updateCategory
 ); // Mettre à jour une catégorie par ID
 router.delete(
     "/:categoryId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
     deleteCategory
 ); // Supprimer une catégorie par ID
 

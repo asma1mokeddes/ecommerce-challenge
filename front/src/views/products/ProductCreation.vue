@@ -18,13 +18,18 @@
           <label for="price">Prix</label>
           <input type="number" id="price" v-model="state.productForm.price" required>
         </div>
+
+        <div class="formGroup">
+          <label for="image">Nom de l'image</label>
+          <input type="file" name="image" @change="handleImageChange" />
+        </div>
   
         <!-- Category Dropdown -->
         <div class="formGroup">
           <label for="category">Catégorie</label>
           <select id="category" v-model="state.productForm.category">
             <option disabled value="">Sélectionner une catégorie</option>
-            <option v-for="category in categories" :key="category._id" :value="category._id">
+            <option v-for="category in categories" :key="category._id" :value="category.categoryName">
               {{ category.categoryName }}
             </option>
           </select>
@@ -35,7 +40,7 @@
           <label for="brand">Marque</label>
           <select id="brand" v-model="state.productForm.brand">
             <option disabled value="">Sélectionner une marque</option>
-            <option v-for="brand in brands" :key="brand._id" :value="brand._id">
+            <option v-for="brand in brands" :key="brand._id" :value="brand.brandName">
               {{ brand.brandName }}
             </option>
           </select>
@@ -46,8 +51,8 @@
           <label for="promo">Promo</label>
           <select id="promo" v-model="state.productForm.promo">
             <option disabled value="">Sélectionner une promo</option>
-            <option v-for="promo in promos" :key="promo._id" :value="promo._id">
-              {{ promo.promoName }} <!-- Replace with actual field name -->
+            <option v-for="promo in promos" :key="promo._id" :value="promo.promoCode">
+              {{ promo.promoCode }}
             </option>
           </select>
         </div>
@@ -61,21 +66,27 @@
   
   
   <script setup lang="ts">
-  import { reactive, onMounted } from 'vue';
+  import { reactive, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
   
   const router = useRouter();
   const categories = reactive([]);
   const brands = reactive([]);
   const promos = reactive([]);
-  
+
+  const imageInput = ref("");
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    imageInput.value = file ? file.name : '';
+  };
+
   const fetchResource = async (resource, targetArray) => {
     try {
       const response = await fetch(`http://localhost:3000/${resource}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          // Include the Authorization header if necessary
         }
       });
       if (!response.ok) {
@@ -114,7 +125,17 @@
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(state.productForm)
+        body: JSON.stringify({
+            productName: state.productForm.productName,
+            description: state.productForm.description,
+            price: state.productForm.price,
+            image: imageInput.value,
+            variants: {
+                category: state.productForm.category,
+                brand: state.productForm.brand,
+                promo: state.productForm.promo,
+            }
+        })      
       });
       const data = await response.json();
       if (response.status !== 201) {
