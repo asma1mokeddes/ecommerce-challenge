@@ -76,7 +76,7 @@ export default {
                 });
 
                 await this.$router.push({
-                    path: "/connexion",
+                    path: "/login",
                 });
             } catch (e) {
                 console.log(e);
@@ -107,11 +107,14 @@ export default {
 </script>
 
 <template>
-    <div class="login-container">
-        <!-- Ajoutez cette section pour afficher les erreurs -->
+    <div class="login-container auth-form">
         <div v-if="errors.message" class="error-message">
             {{ errors.message }}
         </div>
+
+        <div >
+                <label for="text"> Formulaire d'inscription </label>
+            </div>
 
         <form @submit.prevent="register" Method="POST">
             <div class="formGroup">
@@ -144,7 +147,7 @@ export default {
             <small class="text-right text-xs">
                 Vous avez déjà un compte? Connectez-vous
                 <router-link
-                    to="/connexion"
+                    to="/login"
                     class="text-primary hover:underline"
                     >Ici</router-link
                 >.
@@ -222,4 +225,74 @@ button:active {
     color: rgb(199, 33, 33);
     margin-bottom: 10px;
 }
+
+/* styles.css (ou dans la section <style> de votre composant Vue) */
+
+.auth-form {
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: #f0f0f0;
+    min-width: -webkit-fill-available;
+}
+
+.auth-form .formGroup {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.auth-form label {
+    display: block;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"],
+.auth-form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="password"]:focus,
+.auth-form input[type="email"]:focus,
+.auth-form input[type="date"]:focus {
+    border-color: #6aa9af;
+    box-shadow: 0 0 0 2px #6aa9af;
+}
+
+.auth-form button {
+    width: 100%;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: rgb(120, 115, 178);
+    border: none;
+    color: white;
+    transition: transform 0.1s;
+}
+
+.auth-form button:hover {
+    background-color: rgb(120, 115, 178);
+}
+
+.auth-form button:active {
+    transform: scale(0.98);
+}
+
+.auth-form .error-message {
+    color: rgb(199, 33, 33);
+    margin-bottom: 10px;
+}
+
 </style>

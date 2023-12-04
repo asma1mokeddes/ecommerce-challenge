@@ -15,57 +15,69 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        let createdUserPsql = await User.findOne({
+        const existingUserMongo = await UserMongo.findOne({ emailAddress });
+        let existingUserPsql = await User.findOne({
             where: {
                 emailAddress: emailAddress,
-                password: hashedPassword,
             },
         });
 
-        let createdUserMongo = await UserMongo.findOne({
-            emailAddress,
-        });
+        console.log("emailAddress", emailAddress);
 
-        if (!createdUserPsql && !createdUserMongo) {
-            await User.create({
-                firstName,
-                lastName,
-                emailAddress,
-                dateOfBirth,
-                password: hashedPassword,
-                passwordModificationDate: new Date(),
-                role: `ROLE_USER`,
-            });
+        console.log("existingUserMongo", existingUserMongo);
 
-            await UserMongo.create({
-                firstName,
-                lastName,
-                emailAddress,
-                dateOfBirth,
-                role: `ROLE_USER`,
-            });
-
-            // Appel à la fonction sendActivationEmail pour confirmer l'activation de compte
-            // Génération du lien d'activation
-            const activationToken = jwt.sign(
-                { email: emailAddress },
-                process.env.SECRET_KEY,
-                {
-                    expiresIn: "1h",
-                }
+        if (existingUserMongo || existingUserPsql)
+            throw new Error(
+                `L'adresse emailygygugygygygy ${emailAddress} est déjà utilisée`
             );
 
-            const activationLink = `https://localhost:3002/activate?token=${activationToken}`;
-            await sendActivationEmail(req, res, activationLink);
+        const user = await User.create({
+            firstName,
+            lastName,
+            emailAddress,
+            dateOfBirth,
+            password: hashedPassword,
+            passwordModificationDate: new Date(),
+            role: `ROLE_USER`,
+        });
 
-            return res.status(201).json({
-                message: "Compte créé avec succès",
-            });
-        } else {
-            res.status(409).json({
-                error: "Un utilisateur ayant un compte avec cette adresse email existe déjà",
-            });
-        }
+        const userMongo = await UserMongo.create({
+            firstName,
+            lastName,
+            emailAddress,
+            dateOfBirth,
+            role: `ROLE_USER`,
+        });
+
+        // Appel à la fonction sendActivationEmail pour confirmer l'activation de compte
+        // Génération du lien d'activation
+        const activationToken = jwt.sign(
+            { email: emailAddress },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: "1h",
+            }
+        );
+
+        const activationLink = `https://localhost:3002/emails/activate?token=${activationToken}`;
+        await sendActivationEmail(req, res, activationLink);
+
+        const payload = {
+            userId: user._id,
+        };
+
+        const options = {
+            expiresIn: "12h",
+        };
+
+        const token = jwt.sign(payload, process.env.SECRET_KEY, options);
+
+        await user.save();
+
+        res.json({
+            message: "Utilisateur créé avec succès",
+            token: token,
+        });
     } catch (error) {
         res.status(500).json({
             error: `Une erreur est survenue lors de la création de l'utilisateur : ${
@@ -95,8 +107,10 @@ export const login = async (req, res) => {
         }
 
         const payload = {
-            userId: user._id,
-            role: user.role,
+            user: {
+                userId: user._id,
+                role: user.role,
+            },
         };
 
         const options = {
@@ -105,7 +119,15 @@ export const login = async (req, res) => {
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
 
-        res.json({ email: emailAddress, token });
+        res.json({
+            user: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                emailAddress: user.emailAddress,
+                role: user.role,
+            },
+            token,
+        });
     } catch (error) {
         res.status(500).json({
             error: `Une erreur est survenue lors de la connexion : ${error}`,

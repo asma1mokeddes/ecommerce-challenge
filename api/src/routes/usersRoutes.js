@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import UserMongo from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Op from "sequelize";
 
 export function validatePassword(password) {
     const pwdFilter =
@@ -141,19 +142,14 @@ export const createUser = async (req, res) => {
     }
 };
 
+// TO FIX
+
 export const updateUser = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const {
-            firstName,
-            lastName,
-            emailAddress,
-            dateOfBirth,
-            password,
-            role,
-        } = req.body;
 
-        const birthDate = new Date(dateOfBirth);
+        console.log("req.body ====", req.body);
+        const birthDate = new Date(req.body.dateOfBirth);
         const today = new Date();
         const age = today.getFullYear() - birthDate.getFullYear();
 
@@ -167,9 +163,12 @@ export const updateUser = async (req, res) => {
         // Vérifier si un utilisateur existe avec la même adresse email
         const existingUser = await User.findOne({
             where: {
-                emailAddress: emailAddress,
+                id: {
+                    [Op.ne]: userId, // Exclude the current user from the check
+                },
             },
         });
+        console.log("existingUser  ====", existingUser);
 
         if (existingUser) {
             return res.status(409).json({
@@ -178,21 +177,16 @@ export const updateUser = async (req, res) => {
         }
 
         // Mise à jour dans PostgreSQL
-        const [numPsql, updatedUserPsql] = await User.update(
-            { firstName, lastName, emailAddress, dateOfBirth, password, role },
-            { where: { id: userId } }
-        );
+        const { id, ...updateData } = req.body;
+
+        const [numPsql] = await User.update(updateData, {
+            where: { id: userId },
+        });
 
         // Mise à jour dans MongoDB
         const updatedUserMongo = await UserMongo.findOneAndUpdate(
             { userId: userId },
-            {
-                firstName: firstName,
-                lastName: lastName,
-                emailAddress: emailAddress,
-                dateOfBirth: dateOfBirth,
-                role: role,
-            },
+            req.body,
             { new: true }
         );
 
