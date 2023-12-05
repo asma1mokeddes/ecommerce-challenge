@@ -13,6 +13,7 @@ export default {
             gray400: "rgba(147, 147, 147, 1)",
             violet400: "rgb(127, 93, 208)",
             gray50: "rgba(249, 250, 251, 1)",
+            purple800: "rgba(94, 53, 177, 1)",
         },
     },
     plugins: [],

@@ -52,6 +52,14 @@ const routes = [
     },
     {
         meta: {
+            title: "ConditionsGeneralesVente",
+        },
+        path: "/conditions-generales-vente",
+        name: "ConditionsGeneralesVente",
+        component: () => import("@/views/ConditionsGeneralesVente.vue"),
+    },
+    {
+        meta: {
             title: "Mentions légales",
         },
         path: "/mentions-legales",
