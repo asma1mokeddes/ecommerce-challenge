@@ -17,9 +17,7 @@
         <img src="../assets/shoe.png" alt="Modele chaussure">
       </div>
     </div>
-
-    <p>Bienvenue, {{ loggedInUsername }}</p>
-
+    
     <div class="body-footer">
       <div class="social">
         <a href="#"><i class="fab fa-facebook"></i></a>
@@ -74,31 +72,35 @@ export default {
     },
     data() {
       return {
-        products: products.filter(product => product.new === true)
+        products: [],
       };
     },
-    setup() {
-      const loggedInUsername = ref("");
+    async created() {
+      const response = await axios.get('http://localhost:3000/products');
+      const products = response.data;
+      this.products =  products.filter(product => product.new === true);
+    }
+    // setup() {
+    //   const idUser = ref("");
 
-      onMounted(async () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const decodedToken = VueJwtDecode.decode(token);
-          loggedInUsername.value = decodedToken.userId;
+    //   onMounted(async () => {
+    //     const token = localStorage.getItem('token');
+    //     if (token) {
+    //       const decodedToken = VueJwtDecode.decode(token);
+    //       idUser.value = decodedToken.user.userId;
 
-          try {
-            const response = await axios.get(`${BASE_URL}/users/${decodedToken.userId}`);
-            console.log(response.data);
-            loggedInUsername.value = response.data.firstName;
-          } catch (error) {
-            console.error("Erreur lors de la récupération du nom d'utilisateur :", error);
-          }
-        }
-      });
-      return {
-      loggedInUsername,
-    };
-    },
+    //       try {
+    //         const response = await axios.get(`${BASE_URL}/users/${decodedToken.user.userId}`);
+    //         console.log(response);
+    //       } catch (error) {
+    //         console.error("Erreur lors de la récupération du nom d'utilisateur :", error);
+    //       }
+    //     }
+    //   });
+    //   return {
+    //     idUser,
+    // };
+    // },
 };
 </script>
 

@@ -10,7 +10,7 @@
 
 <script>
 import axios from 'axios'
-import ProductsGrid from '../components/ProductsGrid.vue';
+import ProductsGrid from '../../components/ProductsGrid.vue';
 
 export default {
     name: 'ProductsPage',

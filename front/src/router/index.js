@@ -4,12 +4,16 @@ import { usersRoutes } from "./users";
 import { categoriesRoutes } from "./categories";
 import { brandsRoutes } from "./brands";
 import { promosRoutes } from "./promos";
+import { productsRoutes } from "./products";
+import { cartRoutes } from "./cart";
 
 const routes = [
     ...usersRoutes,
     ...categoriesRoutes,
     ...brandsRoutes,
     ...promosRoutes,
+    ...productsRoutes,
+    ...cartRoutes,
     {
         meta: {
             title: "Login",

@@ -25,6 +25,10 @@ Product.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        new: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        }
     },
     {
         sequelize,

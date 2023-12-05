@@ -51,7 +51,8 @@ export default {
         product: {},
         cartItems: [],
         showSuccessMessage: false,
-        baseURL: 'http://localhost:3000'
+        baseURL: 'http://localhost:3000',
+        userId: '',
       };
     },
     computed: {
@@ -67,8 +68,16 @@ export default {
     },
     methods: {
       async addToCart() {
-        await axios.post(`/api/users/${this.loggedInUsername}/cart`, {
-          productId: this.productId,
+        const token = localStorage.getItem('token'); 
+        if (token) {
+             this.userId = VueJwtDecode.decode(token).user.userId;
+        }
+        await axios.post(`http://localhost:3002/cart/users/${this.userId}/cart`, {
+          productId: this.productId
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         this.showSuccessMessage = true;
         setTimeout(() => {
@@ -77,25 +86,25 @@ export default {
       },
     },
     async created(){
-      const { data: product } = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
-      this.product = product;
+      try {
+        const { data: product } = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
+        this.product = product;
 
-      const { data: cartItems } = await axios.get(`http://localhost:3000/cart/users/${this.loggedInUsername}/cart`);
-      this.cartItems = cartItems;
-    },
-    setup() {
-      const loggedInUsername = ref("");
-
-      onMounted(async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); 
         if (token) {
-          const decodedToken = VueJwtDecode.decode(token);
-          loggedInUsername.value = decodedToken.userId;
+             this.userId = VueJwtDecode.decode(token).user.userId;
         }
-      });
-      return {
-      loggedInUsername,
-    };
+        const result = await axios.get(`http://localhost:3002/cart/users/${this.userId}/cart`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const cartItems = result.data;
+        console.log(cartItems);
+        this.cartItems = cartItems;
+      } catch (error) {
+        console.log(error);
+      }
     },
 };
 </script>
