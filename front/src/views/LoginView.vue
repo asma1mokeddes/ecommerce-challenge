@@ -63,12 +63,12 @@ const login = () => {
 		  </div>
 		  <div class="space-y-2">
 			<div>
-			  <button @click="login" type="button" class="w-full px-8 py-3 font-semibold rounded-md bg-purple500 text-gray900">
+			  <button @click.prevent="login" type="button" class="w-full px-8 py-3 font-semibold rounded-md bg-purple500 text-gray900">
 				Connexion
 			  </button>
 			</div>
 			<p class="px-6 text-sm text-center text-gray400">
-			  Vous n'avez pas encore de compte? <a rel="noopener noreferrer" href="inscription" class="hover:underline text-purple500">Inscrivez-vous</a>.
+			  Vous n'avez pas de compte? <a rel="noopener noreferrer" href="inscription" class="hover:underline text-purple500">Inscrivez-vous</a>.
 			</p>
 		  </div>
 		</form>

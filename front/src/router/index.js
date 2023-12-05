@@ -40,6 +40,31 @@ const routes = [
     },
     {
         meta: {
+            title: "Faq",
+        },
+        path: "/faq",
+        name: "faq",
+        component: () => import("@/views/Faq.vue"),
+    },
+    {
+        meta: {
+            title: "Mentions légales",
+        },
+        path: "/mentions-legales",
+        name: "mentionsLegales",
+        component: () => import("@/views/MentionsLegales.vue"),
+    },
+    {
+        meta: {
+            title: "Contact",
+        },
+        path: "/contact",
+        name: "contact",
+        component: () => import("@/views/Contact.vue"),
+    },
+
+    {
+        meta: {
             title: "Error",
         },
         path: "/error",
@@ -68,6 +93,7 @@ router.beforeEach((to, from, next) => {
     }
 }); */
 
+/**
 router.beforeEach((to, from, next) => {
     const isLoginOrInscription =
         to.path === "/login" || to.path === "/inscription";
@@ -92,5 +118,5 @@ router.beforeEach((to, from, next) => {
         }
     }
 });
-
+ */
 export default router;

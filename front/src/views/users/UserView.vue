@@ -1,6 +1,6 @@
 <template>
-    <div class="container p-2 mx-auto sm:p-4 text-gray100">
-        <h3 class="mb-4 text-2xl font-semibold leadi underline">Utilisateurs</h3>
+    <div class="container p-2 mx-auto sm:p-4">
+        <h3 class="mb-4 text-2xl font-semibold leadi">Utilisateurs</h3>
         <div class="overflow-x-auto ">
             <table class="min-w-full text-xs">
                 <colgroup>
@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="user in state.users" :key="user.userId" class="border-b border-opacity-20 border-gray700 bg-gray900"
+                        v-for="user in state.users" :key="user.userId" class="border-b border-opacity-20 border-gray700 "
                     >
                         <td class="p-3">
                             <p>{{ user.firstName }}</p>

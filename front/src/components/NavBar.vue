@@ -1,222 +1,36 @@
 <template>
-<nav>
-      <div class="container">
-        <div>
-          <router-link to="/home"><img src="../assets/logovue.png" alt="logo"></router-link>
-          <div class="menu" :class="{ 'nav-toggle': isNavToggled }">
-            <ul>
-              <li>
-                <router-link to="/home">Accueil</router-link>
-              </li>
+<header class="p-4 dark:bg-gray800 dark:text-gray100">
+	<div class="container flex justify-between h-16 mx-auto">
+		<a rel="noopener noreferrer" href="#" aria-label="Back to homepage" class="flex items-center p-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" class="w-8 h-8 text-violet400">
+				<path d="M27.912 7.289l-10.324-5.961c-0.455-0.268-1.002-0.425-1.588-0.425s-1.133 0.158-1.604 0.433l0.015-0.008-10.324 5.961c-0.955 0.561-1.586 1.582-1.588 2.75v11.922c0.002 1.168 0.635 2.189 1.574 2.742l0.016 0.008 10.322 5.961c0.455 0.267 1.004 0.425 1.59 0.425 0.584 0 1.131-0.158 1.602-0.433l-0.014 0.008 10.322-5.961c0.955-0.561 1.586-1.582 1.588-2.75v-11.922c-0.002-1.168-0.633-2.189-1.573-2.742zM27.383 21.961c0 0.389-0.211 0.73-0.526 0.914l-0.004 0.002-10.324 5.961c-0.152 0.088-0.334 0.142-0.53 0.142s-0.377-0.053-0.535-0.145l0.005 0.002-10.324-5.961c-0.319-0.186-0.529-0.527-0.529-0.916v-11.922c0-0.389 0.211-0.73 0.526-0.914l0.004-0.002 10.324-5.961c0.152-0.090 0.334-0.143 0.53-0.143s0.377 0.053 0.535 0.144l-0.006-0.002 10.324 5.961c0.319 0.185 0.529 0.527 0.529 0.916z"></path>
+				<path d="M22.094 19.451h-0.758c-0.188 0-0.363 0.049-0.515 0.135l0.006-0.004-4.574 2.512-5.282-3.049v-6.082l5.282-3.051 4.576 2.504c0.146 0.082 0.323 0.131 0.508 0.131h0.758c0.293 0 0.529-0.239 0.529-0.531v-0.716c0-0.2-0.11-0.373-0.271-0.463l-0.004-0.002-5.078-2.777c-0.293-0.164-0.645-0.26-1.015-0.26-0.39 0-0.756 0.106-1.070 0.289l0.010-0.006-5.281 3.049c-0.636 0.375-1.056 1.055-1.059 1.834v6.082c0 0.779 0.422 1.461 1.049 1.828l0.009 0.006 5.281 3.049c0.305 0.178 0.67 0.284 1.061 0.284 0.373 0 0.723-0.098 1.027-0.265l-0.012 0.006 5.080-2.787c0.166-0.091 0.276-0.265 0.276-0.465v-0.716c0-0.293-0.238-0.529-0.529-0.529z"></path>
+			</svg>
+		</a>
+		<ul class="items-stretch hidden space-x-3 lg:flex">
+			<li class="flex">
+				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent dark:text-violet400 dark:border-violet400">Link</a>
+			</li>
+			<li class="flex">
+				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Produits</a>
+			</li>
+			<li class="flex">
+				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Hommes</a>
+			</li>
+			<li class="flex">
+				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Femmes</a>
+			</li>
+		</ul>
+    <div class="items-center flex-shrink-0 hidden lg:flex">
+  <a href="/login" class="self-center px-8 py-3 rounded">Se connecter</a>
+  <a href="/inscription" class="self-center px-8 py-3 font-semibold rounded dark:bg-violet400 dark:text-gray900">S'inscrire</a>
+</div>
 
-              <li>
-                <router-link to="/about">Homme</router-link>
-              </li>
-
-              <li>
-                <router-link to="/about">Femme</router-link>
-              </li>
-
-              <li>
-                <router-link to="/about">Catégories</router-link>
-              </li>
-            </ul>
-              <form action="">
-                <div class="search-icon">
-                  <i class="fas fas fa-search"></i>
-                </div>
-                <input 
-                  type="text"
-                  class="search"
-                  placeholder="Rechercher..."
-                  >
-                  <router-link to="/cart">
-                    <button class="nav-btn">
-                      <i class="fas fa-cart-plus"></i>
-                    </button>
-                  </router-link>
-              </form>
-          </div>
-        </div>
-
-        <div class="menu-btn" @click="toggleNav">
-          <i class="fas fa-bars"></i>
-        </div>
-      </div>
-    </nav>
+		<button class="p-4 lg:hidden">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 dark:text-gray100">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+			</svg>
+		</button>
+	</div>
+</header>
 </template>
-  
-  <script>
-  export default {
-      name: 'NavBar',
-  };
-  </script>
-  
-  <style scoped>
-  nav{
-    background: #090909;
-    color: white;
-    z-index: 99;
-    position: relative;
-  }
-  
-  nav a{
-    text-decoration: none;
-  }
-
-  nav .container {
-    max-width: 1150px;
-    padding: 1em;
-    margin: 0 auto;
-  }  
-
-  nav .container > div {
-    display: grid;
-    gap: 15px;
-    grid-template-columns: 1fr 6fr;
-    align-items: center;
-  }
-
-  nav .container img{
-    width: 50px;
-    height: 50px;
-  }
-
-  nav .menu, nav form, .footer, .watch {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-    display: inline-block;
-  }
-
-  nav ul li{
-    display: inline-block;
-    margin: 0 0.5em;
-  }
-
-  nav ul a{
-    font-size: 0.8em;
-    text-transform: uppercase;
-    transition: 0.2s;
-    color: white;
-  }
-
-  nav ul a:hover{
-    color: rgb(80, 78, 78);
-  }
-  nav form {
-    margin-right: 2em;
-    display: flex;
-    gap: 6px;
-  }
-
-  nav form input {
-    background: rgba(128, 126, 126, 0.155);
-    color: grey;
-    width: 15em;
-    padding: 0.5em 1em;
-    border: none;
-    outline: none;
-  }
-
-  nav form input::placeholder{
-    color: grey;
-  }
-
-  .logo{
-    width: 4em;
-    display: inline-block;
-  }
-
-  .nav-btn{
-    background: #71C9CE;
-    margin-left: 5px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 1em;
-  }
-
-  .nav-btn:hover{
-    background: #090909;
-  }
-
-  nav .container .menu-btn {
-    display: none;
-  }
-
-  #page-wrap {
-    margin: auto;
-    max-width: 800px;
-  }
-
-  @media screen and (max-width: 1000px) {
-    nav .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    nav .container > div {
-      grid-template-columns: 1fr;
-    }
-
-    nav .menu {
-      flex-direction: column;
-      align-items: flex-start;
-      height: 0;
-      overflow: hidden;
-      transition: 0.7s;
-    }
-
-    nav ul li {
-      display: block;
-      margin: 0.5em 0;
-    }
-
-    nav ul li:nth-child(1){
-      margin-top: 1.5em;
-    }
-
-    nav .container .menu-btn{
-      display: inline-block;
-      font-size: 1.4em;
-      cursor: pointer;
-    }
-
-    nav .container .nav-toggle {
-      height: 16em;
-    }
-    
-  }
-
-  @media screen and (max-width: 800px) {
-    html{
-      font-size: 14px;
-    }
-    .footer{
-      flex-direction: column;
-      margin-top: 3em;
-    }
-  }
-
-
-  button {
-    background-color: black;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    outline: 0;
-    padding: 16px;
-  }
-  </style>
