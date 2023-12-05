@@ -3,8 +3,33 @@
   <nav-bar />
   <router-view/>
   <bottom-bar />
-
 </template>
+
+<script>
+import Connexion from './views/LoginView.vue';
+import BottomBar from './components/BottomBar.vue';
+import NavBar from './components/NavBar.vue';
+import { RouterView } from "vue-router";
+
+export default {
+  components: {
+        BottomBar,
+        Connexion,
+        NavBar,
+
+  },
+  data() {
+    return {
+      isNavToggled: false,
+    };
+  },
+  methods: {
+    toggleNav() {
+      this.isNavToggled = !this.isNavToggled; // Inverse l'état au clic du bouton
+    },
+  },
+};
+</script>
 
 <style>
   * {
@@ -46,33 +71,3 @@
     padding: 16px;
   }
 </style>
-
-<script setup>
-import Connexion from './views/Connexion.vue';
-import BottomBar from './components/BottomBar.vue';
-import NavBar from './components/NavBar.vue';
-import { RouterView } from "vue-router";
-
-export default {
-  components: {
-        BottomBar,
-        Connexion,
-        NavBar,
-
-  },
-  data() {
-    return {
-      isNavToggled: false,
-    };
-  },
-  methods: {
-    toggleNav() {
-      this.isNavToggled = !this.isNavToggled; // Inverse l'état au clic du bouton
-    },
-  },
-};
-</script>
-
-<template>
-  <RouterView />
-</template>

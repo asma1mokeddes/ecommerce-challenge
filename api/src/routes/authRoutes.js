@@ -59,8 +59,8 @@ export const register = async (req, res) => {
             }
         );
 
-        const activationLink = `https://localhost:3002/emails/activate?token=${activationToken}`;
-        await sendActivationEmail(req, res, activationLink);
+        // const activationLink = `https://localhost:3002/emails/activate?token=${activationToken}`;
+        // await sendActivationEmail(req, res, activationLink);
 
         const payload = {
             userId: user._id,

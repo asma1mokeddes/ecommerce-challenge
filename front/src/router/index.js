@@ -20,6 +20,14 @@ const routes = [
     },
     {
         meta: {
+            title: "Home",
+        },
+        path: "/home",
+        name: "home",
+        component: () => import("@/views/HomePage.vue"),
+    },
+    {
+        meta: {
             title: "Inscription",
         },
         path: "/inscription",

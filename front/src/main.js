@@ -3,7 +3,7 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
-import { useStyleStore } from "@/stores/style.js";
+// import { useStyleStore } from "@/stores/style.js";
 import { darkModeKey } from "@/config.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -25,10 +25,10 @@ app.component("VSelect", vSelect);
 library.add(faEdit, faTrashAlt);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 
-const styleStore = useStyleStore(pinia);
+// const styleStore = useStyleStore(pinia);
 
 /* App style */
-styleStore.setStyle("basic");
+// styleStore.setStyle("basic");
 
 /* Default title tag */
 const defaultDocumentTitle = "Admin One Vue 3 Tailwind";

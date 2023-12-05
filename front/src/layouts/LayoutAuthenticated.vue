@@ -4,7 +4,7 @@ import {ref} from "vue";
 import { useRouter } from "vue-router";
 import menuAside from "@/menuAside.js";
 import menuNavBar from "@/menuNavBar.js";
-import { useStyleStore } from "@/stores/style.js";
+// import { useStyleStore } from "@/stores/style.js";
 import BaseIcon from "@/components/BaseIcon.vue";
 import NavBar from "@/components/NavBar.vue";
 import NavBarItemPlain from "@/components/NavBarItemPlain.vue";
@@ -12,7 +12,7 @@ import AsideMenu from "@/components/AsideMenu.vue";
 
 const layoutAsidePadding = "xl:pl-60";
 
-const styleStore = useStyleStore();
+// const styleStore = useStyleStore();
 
 const router = useRouter();
 
@@ -25,9 +25,9 @@ router.beforeEach(() => {
 });
 
 const menuClick = (event, item) => {
-  if (item.isToggleLightDark) {
-    styleStore.setDarkMode();
-  }
+  // if (item.isToggleLightDark) {
+  //   styleStore.setDarkMode();
+  // }
 
   if (item.isLogout) {
     localStorage.removeItem("token");
@@ -40,7 +40,6 @@ const menuClick = (event, item) => {
 <template>
   <div
     :class="{
-      dark: styleStore.darkMode,
       'overflow-hidden lg:overflow-visible': isAsideMobileExpanded,
     }"
   >

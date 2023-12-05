@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { reactive } from "vue"; // Importez ref pour créer des références réactives
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -206,4 +206,4 @@ init();
   background-color: #d62020;
   margin-left: 50px;
 }
-</style>
+</style> -->

@@ -16,6 +16,16 @@ import path from "path";
 
 const app = express();
 
+// Configurez le middleware CORS pour autoriser les requêtes depuis localhost:4200
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        optionsSuccessStatus: 204,
+    })
+);
+
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 

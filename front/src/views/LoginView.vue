@@ -24,10 +24,6 @@ const login = () => {
   });
 };
 
-const handleLogin = () => {
-  // Appeler la fonction de connexion
-  login();
-};
 </script>
 
 <template>
@@ -47,12 +43,12 @@ const handleLogin = () => {
 						<label for="password" class="text-sm">Mot de passe</label>
 						<a rel="noopener noreferrer" href="#" class="text-xs hover:underline text-gray400">Mot de passe oublié?</a>
 					</div>
-					<input  v-model="form.password" type="password" name="password" @click="handleLogin" id="password" placeholder="*****" class="w-full px-3 py-2 border rounded-md border-gray700 bg-gray900 text-gray100">
+					<input  v-model="form.password" type="password" name="password" id="password" placeholder="*****" class="w-full px-3 py-2 border rounded-md border-gray700 bg-gray900 text-gray100">
 				</div>
 			</div>
 			<div class="space-y-2">
 				<div>
-					<button type="button" class="w-full px-8 py-3 font-semibold rounded-md bg-purple text-gray900">Connexion</button>
+					<button @click="login" type="button" class="w-full px-8 py-3 font-semibold rounded-md bg-purple text-gray900">Connexion</button>
 				</div>
 				<p class="px-6 text-sm text-center text-gray400">Vous n'avez pas encore de compte?
 					<a rel="noopener noreferrer" href="#" class="hover:underline text-purple">Inscrivez-vous</a>.
