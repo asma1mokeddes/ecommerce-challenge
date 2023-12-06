@@ -9,6 +9,7 @@ import Brand from "../models/brand.model.js";
 import Promo from "../models/promo.model.js";
 
 export const getProducts = async (req, res) => {
+    
     try {
         const productsMongo = await ProductMongo.find();
         res.json(productsMongo);
@@ -22,6 +23,13 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = (req, res) => {
     const productId = req.params.productId;
+
+    if (isNaN(Number(productId))) {
+        return res.status(400).json({
+            success: false,
+            message: "L'ID du produit doit être un nombre."
+        });
+    }
         
     ProductMongo.findOne({ productId: productId })
         .then((data) => {
@@ -50,6 +58,33 @@ export const getProduct = (req, res) => {
             });
         });
 };
+
+export const searchProducts = async (req, res) => {
+    try {
+        const searchTerm = req.query.q;
+        const searchResultMongo = await ProductMongo.find({
+            $or: [
+                { productName: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } },
+            ]
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        
+        res.status(200).json({
+            message: "Results Found",
+            searchResultMongo,
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 
 export const createProduct = async (req, res) => {
     try {
@@ -227,4 +262,13 @@ export const deleteProduct = async (req, res) => {
             message: error.message,
         });
     }
+};
+
+export default {
+    getProducts,
+    getProduct,
+    searchProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct
 };
