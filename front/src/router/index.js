@@ -52,6 +52,14 @@ const routes = [
     },
     {
         meta: {
+            title: "Faq",
+        },
+        path: "/politique-de-confidentialite",
+        name: "politiqueDeConfidentialite",
+        component: () => import("@/views/PolitiqueDeConfidentialite.vue"),
+    },
+    {
+        meta: {
             title: "ConditionsGeneralesVente",
         },
         path: "/conditions-generales-vente",

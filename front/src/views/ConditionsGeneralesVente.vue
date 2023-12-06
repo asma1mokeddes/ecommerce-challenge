@@ -50,10 +50,30 @@
 								</div>
 							</div>
 							<div class="ml-4">
-								<h4 class="text-lg font-medium leadi dark:text-gray50">Nulla omittam sadipscing mel ne</h4>
-								<p class="mt-2 dark:text-gray-400">At sed possim oporteat probatus, justo graece ne nec, minim commodo legimus ut vix. Ut eos iudico quando soleat, nam modus.</p>
+								<h4 class="text-lg font-medium leadi dark:text-gray50">Commandes</h4>
+                                <p class="mt-2 dark:text-gray-400"> Passation de Commande : Les étapes pour passer une commande sur le site.</p>
+								<p class="mt-2 dark:text-gray-400"> Confirmation de Commande : Un récapitulatif de la commande est envoyé à l'acheteur par email.</p>
+
 							</div>
 						</div>
+
+                        <div class="flex">
+							<div class="flex-shrink-0">
+								<div class="flex items-center justify-center w-12 h-12 rounded-md dark:bg-violet400 dark:text-gray900">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-7 h-7">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+									</svg>
+								</div>
+							</div>
+							<div class="ml-4">
+								<h4 class="text-lg font-medium leadi dark:text-gray50">Paiement</h4>
+                                <p class="mt-2 dark:text-gray-400">  Modes de Paiement : Les moyens de paiement acceptés (carte bancaire, etc.)</p>
+								<p class="mt-2 dark:text-gray-400">  Sécurité des Transactions : Mesures de sécurité mises en place pour protéger les transactions. </p>
+
+							</div>
+						</div>
+                        
+
 					</div>
 				</div>
 				<div aria-hidden="true" class="mt-10 lg:mt-0">
@@ -63,8 +83,9 @@
 			<div>
 				<div class="grid lg:gap-8 lg:grid-cols-2 lg:items-center">
 					<div class="lg:col-start-2">
-						<h3 class="text-2xl font-bold tracki sm:text-3xl dark:text-gray50">Eam nibh gloriatur ex</h3>
-						<p class="mt-3 text-lg dark:text-gray-400">Per odio fabellas consulatu cu. Utroque detracto mel ea, quo te latine theophrastus. Ea his tale nibh dissentias, mei exerci tamquam euripidis cu.</p>
+						<h3 class="text-2xl font-bold tracki sm:text-3xl dark:text-gray50">Garantie</h3>
+                        <p class="mt-3 text-lg dark:text-gray-400"> Garantie Légale de Conformité : Informations sur la garantie légale de conformité.</p>
+                        <p class="mt-3 text-lg dark:text-gray-400"> Garantie des Vices Cachés : Informations sur la garantie des vices cachés.</p>
 						<div class="mt-12 space-y-12">
 							<div class="flex">
 								<div class="flex-shrink-0">
@@ -75,8 +96,8 @@
 									</div>
 								</div>
 								<div class="ml-4">
-									<h4 class="text-lg font-medium leadi dark:text-gray-50">Cibo augue offendit has ad</h4>
-									<p class="mt-2 dark:text-gray-400">An per velit appellantur, ut utinam minimum nominavi sit, odio nostro habemus ne nec. Ne sonet regione contentiones est.</p>
+									<h4 class="text-lg font-medium leadi dark:text-gray-50">Responsabilité du Vendeur :</h4>
+									<p class="mt-2 dark:text-gray-400">Limitation de la responsabilité du vendeur.</p>
 								</div>
 							</div>
 							<div class="flex">
@@ -88,8 +109,8 @@
 									</div>
 								</div>
 								<div class="ml-4">
-									<h4 class="text-lg font-medium leadi dark:text-gray-50">At eum ferri luptatum lobortis</h4>
-									<p class="mt-2 dark:text-gray-400">Te per quidam maiorum ocurreret, etiam delicatissimi usu ad. Ne has quod periculis. Te sit primis iisque efficiantur.</p>
+									<h4 class="text-lg font-medium leadi dark:text-gray-50">Collecte et Traitement des Données</h4>
+									<p class="mt-2 dark:text-gray-400">Politique de confidentialité concernant les données personnelles.</p>
 								</div>
 							</div>
 							<div class="flex">
@@ -101,8 +122,8 @@
 									</div>
 								</div>
 								<div class="ml-4">
-									<h4 class="text-lg font-medium leadi dark:text-gray50">Dicunt verterem evertitur eu sea</h4>
-									<p class="mt-2 dark:text-gray-400">Audire principes rationibus eam an, autem nominavi luptatum per te. Sumo fabulas vim eu, sonet saperet eleifend ut vix.</p>
+									<h4 class="text-lg font-medium leadi dark:text-gray50">Coordonnées du Vendeur</h4>
+									<p class="mt-2 dark:text-gray-400">marchemagique@gmail.com</p>
 								</div>
 							</div>
 						</div>
