@@ -22,14 +22,8 @@ export const register = async (req, res) => {
             },
         });
 
-        console.log("emailAddress", emailAddress);
-
-        console.log("existingUserMongo", existingUserMongo);
-
         if (existingUserMongo || existingUserPsql)
-            throw new Error(
-                `L'adresse emailygygugygygygy ${emailAddress} est déjà utilisée`
-            );
+            throw new Error(`L'adresse ${emailAddress} est déjà utilisée`);
 
         const user = await User.create({
             firstName,
@@ -59,11 +53,9 @@ export const register = async (req, res) => {
             }
         );
 
-        // const activationLink = `https://localhost:3002/emails/activate?token=${activationToken}`;
-        // await sendActivationEmail(req, res, activationLink);
-
         const payload = {
-            userId: user._id,
+            userId: user.id,
+            userEmail: user.emailAddress,
         };
 
         const options = {
@@ -71,6 +63,8 @@ export const register = async (req, res) => {
         };
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
+        const activationLink = `https://localhost:3002/emails/activate?token=${token}`;
+        await sendActivationEmail(req, res, activationLink);
 
         await user.save();
 

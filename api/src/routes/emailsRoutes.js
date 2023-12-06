@@ -1,6 +1,7 @@
 import SibApiV3Sdk from "sib-api-v3-sdk";
-import User from "../models/user.js";
-import UserMongo from "../models/user.model.js";
+import User from "../models/user.model.js";
+import UserMongo from "../models/user.js";
+import sequelize from "../config/db.config.js";
 
 import jwt from "jsonwebtoken";
 
@@ -20,10 +21,10 @@ export const reset = async (req, res) => {
 
         // Générer un jeton pour la réinitialisation du mot de passe
         const resetToken = jwt.sign(
-            { userId: user._id },
+            { userId: user.id },
             process.env.SECRET_KEY,
             {
-                expiresIn: "1h", // Durée de validité du jeton de réinitialisation
+                expiresIn: "1h",
             }
         );
 
@@ -53,24 +54,32 @@ export const reset = async (req, res) => {
 export const activate = async (req, res) => {
     const token = req.query.token;
 
-    try {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const userEmail = decodedToken.emailAddress;
+    const t = await sequelize.transaction();
 
-        // Mettez à jour le statut du compte dans la base de données
-        await User.update(
+    try {
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+
+        const userId = decodedToken.userId;
+
+        // Mettez à jour le statut du compte dans les bases de données :
+        const [numPsql] = await User.update(
             { activated: true },
-            { where: { emailAddress: userEmail } }
+            { where: { id: userId } },
+            { transaction: t }
         );
         await UserMongo.findOneAndUpdate(
-            { emailAddress: userEmail },
+            { userId: userId },
             { activated: true }
         );
+
+        await t.commit();
 
         res.send(
             "Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter."
         );
     } catch (error) {
+        await t.rollback();
+        console.error("Erreur lors de l'activation du compte :", error);
         res.status(400).send("Lien d'activation non valide.");
     }
 };
