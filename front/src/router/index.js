@@ -23,6 +23,10 @@ const routes = [
         component: () => import("@/views/LoginView.vue"),
     },
     {
+        path: "/",
+        redirect: "/home",
+    },
+    {
         meta: {
             title: "Home",
         },

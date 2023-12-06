@@ -1,24 +1,19 @@
 import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
+import ProductMongo from "../models/product.js";
 import { getUserIdFromToken } from "../utils/auth.js"; 
+import Sequelize from 'sequelize';
 
-export const getCart = async (req, res) => {    
+export const getCart = async (req, res) => {     
+    const userId = req.params.userId;
     try{
-        const token = req.headers.authorization.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: "Token manquant dans l'en-tête Authorization" });
-        }
-
-        const userId = getUserIdFromToken(token);
-
         const user = await User.findOne({ where: { id: userId } });
 
         if(!user){
             return res.status(404).json('Could not find user!');
         }
-        const products = await Product.findAll();
         const cartItemIds = user.cartItems;
-        const cartItems = cartItemIds.map(id => products.find(product => product.id === id));
+        const cartItems = await ProductMongo.find({ productId: { $in: cartItemIds } });
         res.status(200).json(cartItems);
     }catch (error){
         console.error(error);
@@ -28,24 +23,20 @@ export const getCart = async (req, res) => {
 
 export const addCart = async (req, res) => {
     const { productId } = req.body;
+    const userId = req.params.userId;
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: "Token manquant dans l'en-tête Authorization" });
-        }
-
-        const userId = getUserIdFromToken(token);
-        console.log(userId);    
 
         await User.update(
-            { cartItems: Sequelize.fn('array_append', Sequelize.col('cartItems'), productId) },
-            { where: { id: 1 } }
+            { cartItems: Sequelize.literal(`"cartItems" || ARRAY[${productId}]::varchar[]`) },
+            { where: { id: userId } }
           );
+          
         const updatedUser = await User.findOne({ where: { id: userId } });
-        const products = await Product.findAll();
         const cartItemIds = updatedUser.cartItems;
-        const cardItems = cartItemIds.map(id => products.find(product => product.id === id));
-        res.status(200).json(cardItems);
+        const products = await ProductMongo.find({ productId: { $in: cartItemIds } });
+        const cartItems = cartItemIds.map(id => products.find(product => product.productId.toString() === id));
+        
+        res.status(200).json(cartItems);
     } catch (error) {
         console.error(error);
         res.status(500).json('Internal Server Error');
@@ -53,7 +44,8 @@ export const addCart = async (req, res) => {
 };
 
 export const deleteCart = async (req, res) => {
-    const { userId, productId } = req.params;
+    const productId = req.params.productId;
+    const userId = req.params.userId;
 
     try {
         await User.update(
@@ -61,9 +53,10 @@ export const deleteCart = async (req, res) => {
             { where: { id: userId } }
           );
         const updatedUser = await User.findOne({ where: { id: userId } });
-        const products = await Product.findAll();
+        
         const cartItemIds = updatedUser.cartItems;
-        const cartItems = cartItemIds.map(id => products.find(product => product.id === id));
+        const products = await ProductMongo.find({ productId: { $in: cartItemIds } });
+        const cartItems = cartItemIds.map(id => products.find(product => product.productId.toString() === id));
         res.status(200).json(cartItems);
     } catch (error) {
         console.error(error);

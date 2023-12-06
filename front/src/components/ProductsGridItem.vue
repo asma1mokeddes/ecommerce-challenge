@@ -75,7 +75,8 @@ export default {
 
     .btn {
       padding: 0.7em 1.5em;
-      background: #71C9CE;
+      background: #7F5DD0;
+      color: white;
       border-radius: 3em;
       letter-spacing: 1px;
       font-size: 1em;
@@ -83,6 +84,6 @@ export default {
     }
   
     .btn:hover{
-      background: #A6E3E9;
+      background: #5d4497;
     }
 </style>

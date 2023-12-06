@@ -31,13 +31,26 @@ export default {
           (sum, item) => sum + Number(item.price),
           0,
         );
-      }
+      },
     },
     methods: {
       async removeFromCart(productId) {
-        const result = await axios.delete(`/api/${userId}/12345/cart/${productId}`);
+        try {
+        const token = localStorage.getItem('token'); 
+        if (token) {
+             this.userId = VueJwtDecode.decode(token).user.userId;
+        }
+        const result = await axios.delete(`http://localhost:3002/cart/users/${this.userId}/cart/${productId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         this.cartItems = result.data;
+        this.$forceUpdate();  // Forcer la mise à jour du rendu
+      } catch (error) {
+        console.log(error);
       }
+      },
     },
     async created(){
       try {

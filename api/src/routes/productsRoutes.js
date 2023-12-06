@@ -36,7 +36,6 @@ export const getProduct = (req, res) => {
                     brand: data.brand,
                     promo: data.promo,
                 };
-                console.log("product===", product);
                 res.send(product);
             } else {
                 res.status(404).send({

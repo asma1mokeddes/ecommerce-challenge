@@ -30,8 +30,6 @@
       </div>
       </div>
   </div>
-  <p>Bienvenue, {{ loggedInUsername }}</p>
-  <p>produit n : {{ productId }}</p>
 
 </template>
 

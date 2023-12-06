@@ -80,27 +80,6 @@ export default {
       const products = response.data;
       this.products =  products.filter(product => product.new === true);
     }
-    // setup() {
-    //   const idUser = ref("");
-
-    //   onMounted(async () => {
-    //     const token = localStorage.getItem('token');
-    //     if (token) {
-    //       const decodedToken = VueJwtDecode.decode(token);
-    //       idUser.value = decodedToken.user.userId;
-
-    //       try {
-    //         const response = await axios.get(`${BASE_URL}/users/${decodedToken.user.userId}`);
-    //         console.log(response);
-    //       } catch (error) {
-    //         console.error("Erreur lors de la récupération du nom d'utilisateur :", error);
-    //       }
-    //     }
-    //   });
-    //   return {
-    //     idUser,
-    // };
-    // },
 };
 </script>
 
@@ -124,7 +103,7 @@ header {
     position: absolute;
     top: 0;
     right: -40em;
-    background: linear-gradient(45deg, #71C9CE, #CBF1F5);
+    background: linear-gradient(45deg, #7F5DD0, rgb(122, 106, 162));
     width: 100%;
     height: 120%;
     transform: rotate(70deg);
@@ -164,7 +143,7 @@ header {
 
   .btn {
     padding: 0.7em 1.5em;
-    background: #71C9CE;
+    background: #7F5DD0;
     border-radius: 3em;
     letter-spacing: 1px;
     font-size: 1em;
@@ -172,7 +151,7 @@ header {
   }
 
   .btn:hover{
-    background: #A6E3E9;
+    background: #5d4497;
   }
 
   .body > div:nth-child(2){
@@ -216,13 +195,13 @@ header {
   }
 
   .title-page-wrap span a{
-    color: #71C9CE; 
+    color: #7F5DD0; 
     text-decoration: none;
     transition: 0.3s;
   }
 
   .title-page-wrap span a:hover{
-    color: #55a8ad; 
+    color: #5d4497; 
   }
 
   /* Styles de la section */
