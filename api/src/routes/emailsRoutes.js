@@ -20,21 +20,20 @@ export const reset = async (req, res) => {
         }
 
         // Générer un jeton pour la réinitialisation du mot de passe
-        const resetToken = jwt.sign(
-            { userId: user.id },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: "1h",
-            }
-        );
+        const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+            expiresIn: "1h",
+        });
 
-        // Enregistrer le jeton dans la base de données (vous devrez ajouter un champ à votre modèle utilisateur pour stocker le jeton)
+        // Enregistrer le jeton dans la base de données
         user.resetToken = resetToken;
         await user.save();
 
-        // Appel à la fonction sendPasswordResetEmail pour envoyer le mail de rénitialisation de mot de passe
-        await sendPasswordResetEmail(req, res);
+        const resetLink = `https://localhost:3002/emails/reset?token=${resetToken}`;
 
+        // Appel à la fonction sendPasswordResetEmail pour envoyer le mail de réinitialisation de mot de passe
+        await sendPasswordResetEmail(req, res, resetLink);
+
+        // Envoyer la réponse JSON réussie ici
         res.json({
             message:
                 "Le e-mail de réinitialisation de mot de passe a été envoyé avec succès",
@@ -44,6 +43,7 @@ export const reset = async (req, res) => {
             "Erreur lors de la réinitialisation du mot de passe :",
             error
         );
+        // Envoyer la réponse JSON d'erreur ici
         res.status(500).json({
             error: "Une erreur est survenue lors de la réinitialisation du mot de passe",
         });
@@ -85,10 +85,16 @@ export const activate = async (req, res) => {
 };
 
 export const sendActivationEmail = async (req, res, activationLink) => {
-    // Définir les valeurs spécifiques pour to et sender
-    const to = req.body.emailAddress; // Remplacez avec le champ approprié
+    const to = req.body.emailAddress;
 
-    await sendEmailWithTemplate(res, 1, to, sender, activationLink);
+    await sendEmailWithTemplate(
+        res,
+        1,
+        to,
+        sender,
+        activationLink,
+        "activation"
+    );
 };
 
 // Confirmation d'activation de compte
@@ -97,9 +103,10 @@ export const sendActivatedAccountEmail = async (req, res) => {
     await sendEmailWithTemplate(res, 4, to, sender);
 };
 
-export const sendPasswordResetEmail = async (req, res) => {
-    const to = req.body.emailAddress;
-    await sendEmailWithTemplate(res, 2, to, sender);
+export const sendPasswordResetEmail = async (req, res, resetToken) => {
+    const to = req.body.email;
+
+    await sendEmailWithTemplate(res, 2, to, sender, resetToken, "reset");
 };
 
 // Fonction générique pour envoyer des e-mails avec différents templates
@@ -108,21 +115,19 @@ export const sendEmailWithTemplate = async (
     templateId,
     to,
     sender,
-    activationLink
+    token,
+    type
 ) => {
     try {
         // Configure API key authorization: api-key
         let apiKey = defaultClient.authentications["api-key"];
         apiKey.apiKey = process.env.BREVO_API_KEY;
 
-        // Uncomment below two lines to configure authorization using: partner-key
-        // let partnerKey = defaultClient.authentications['partner-key'];
-        // partnerKey.apiKey = 'YOUR API KEY';
-
         let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-        let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
+        let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
+        console.log("sendSmtpEmail ===", sendSmtpEmail);
         sendSmtpEmail = {
             to: [
                 {
@@ -131,13 +136,15 @@ export const sendEmailWithTemplate = async (
             ],
             templateId,
             params: {
-                activationLink: activationLink, // Ajoutez le lien d'activation aux paramètres du modèle
+                [type === "reset" ? "resetToken" : "activationLink"]: token,
             },
             headers: {
                 "X-Mailin-custom":
                     "custom_header_1:custom_value_1|custom_header_2:custom_value_2",
             },
         };
+
+        console.log("sendSmtpEmail ===", sendSmtpEmail);
 
         await apiInstance.sendTransacEmail(sendSmtpEmail);
     } catch (error) {

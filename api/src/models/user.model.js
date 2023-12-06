@@ -51,6 +51,10 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        resetToken: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,

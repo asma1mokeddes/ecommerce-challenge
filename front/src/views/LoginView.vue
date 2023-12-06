@@ -49,7 +49,7 @@ const login = () => {
 			<div>
 			  <div class="flex justify-between mb-2">
 				<label for="password" class="text-sm">Mot de passe</label>
-				<a rel="noopener noreferrer" href="#" class="text-xs hover:underline text-gray400">Mot de passe oublié?</a>
+				<a rel="noopener noreferrer" href="/reset-password" class="text-xs hover:underline text-gray400">Mot de passe oublié?</a>
 			  </div>
 			  <input
 				v-model="form.password"
