@@ -4,11 +4,11 @@
             class="grid max-w-6xl grid-cols-1 px-6 mx-auto lg:px-8 md:grid-cols-2 md:divide-x bg-gray900 text-gray100"
         >
             <div class="py-6 md:py-0 md:px-6">
-                    <h1 class="text-4xl font-bold mb-4">Contactez-nous</h1>
-                    <p class="pt-2 pb-4 mb-4">
-                        Avez-vous des questions ou des commentaires? Nous
-                        serions ravis d'entendre parler de vous.
-                    </p>
+                <h1 class="text-4xl font-bold mb-4">Contactez-nous</h1>
+                <p class="pt-2 pb-4 mb-4">
+                    Avez-vous des questions ou des commentaires? Nous serions
+                    ravis d'entendre parler de vous.
+                </p>
                 <div class="space-y-4">
                     <p class="flex items-center">
                         <svg
@@ -68,6 +68,22 @@
                         class="w-full px-3 py-2 border rounded-md border-gray700 bg-gray900 text-gray100"
                     />
                 </label>
+
+                <label class="block">
+                    <span class="block mb-2 text-sm">Type de demandes</span>
+                    <select
+                        class="w-full px-3 py-2 border rounded-md border-gray700 bg-gray900 text-gray100"
+                    >
+                        <option value="Question">
+                            Question sur un produit
+                        </option>
+                        <option value="Commande">Suivi de commande</option>
+                        <option value="Retour">Demande de retour</option>
+                        <option value="Réclamation">Réclamation</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </label>
+
                 <label class="block">
                     <span class="block mb-2 text-sm">Adresse email</span>
                     <input

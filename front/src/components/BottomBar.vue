@@ -1,5 +1,5 @@
 <template>
-	<footer class="px-4 divide-y dark:bg-gray800 dark:text-gray100">
+  <footer class="px-4 divide-y dark:bg-gray800 dark:text-gray100 mt-auto">
 		<div class="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
 			<div class="lg:w-1/3">
 				<a rel="noopener noreferrer" href="#" class="flex justify-center space-x-3 lg:justify-start">
@@ -16,10 +16,7 @@
 					<h3 class="tracki uppercase dark:text-gray50">Product</h3>
 					<ul class="space-y-1">
 						<li>
-							<a rel="noopener noreferrer" href="/contact">Coordonnées de contact</a>
-						</li>
-						<li>
-							<a rel="noopener noreferrer" href="#">Service client</a>
+							<a rel="noopener noreferrer" href="/contact">Service client</a>
 						</li>
 						<li>
 							<a rel="noopener noreferrer" href="#">Plan du site</a>
