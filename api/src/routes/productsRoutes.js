@@ -53,7 +53,7 @@ export const getProduct = (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { productName, description, price, image, variants } = req.body;
+        const { productName, description, price, image, newProduct, variants } = req.body;
 
         if (!productName || !description || !price || !variants) {
             return res.status(400).json({
@@ -124,6 +124,7 @@ export const createProduct = async (req, res) => {
                 description,
                 price,
                 image,
+                newProduct,
                 CategoryId: categoryPsql.id,
                 BrandId: brandPsql.id,
                 PromoId: promoPsql ? promoPsql.id : null,
@@ -131,10 +132,12 @@ export const createProduct = async (req, res) => {
 
             // Création du produit dans Mongo
             createdProductMongo = await ProductMongo.create({
+                productId: createdProductPsql.id,
                 productName,
                 description,
                 price,
                 image,
+                newProduct,
                 category: categoryMongo.id,
                 brand: brandMongo.id,
                 promo: promoMongo ? promoMongo.id : null,

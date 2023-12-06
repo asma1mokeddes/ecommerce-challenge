@@ -1,60 +1,65 @@
-// models/order.js
-
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.config.js";
 
-class Order extends Model{}
+class Order extends Model {}
 
 Order.init(
-{
-    id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  products: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
-    allowNull: false,
-  },
-  totalAmount: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  orderDate: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    allowNull: false,
-  },
+	{
+	  orderId: {
+			type: DataTypes.INTEGER,
+            autoIncrement: true,
+			primaryKey: true,
+		},
+		addressUser: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			},
+      orderStatus: { 
+        type: DataTypes.ENUM(
+          "en attente de paiement",
+          "paiement échoué",
+          "payé",
+          "en cours d'expédition",
+          "expédié",
+          "livré"
+        ),
+        allowNull: false,
+        validate: {
+          isIn: {
+            args: [["en attente de paiement",
+            "paiement échoué",
+            "payé",
+            "en cours d'expédition",
+            "expédié",
+            "livré"]],
+          },
+        }
+      },
+		},
+	{
+		sequelize, 
+		timestamps: true,
+		modelName: "Order",  
+	}
+);
+
+
+import User from "./user.model.js";
+import OrdersProducts from "./order-product.js"; 
+import Product from "./product.model.js";
+
+Order.belongsTo(User, {
+	as: "user",
 });
 
-let User;
-import("./user.model.js")
-    .then((module) => {
-        User = module.default;
+Order.belongsToMany(Product, {
+	as: "products",
+	through: OrdersProducts, 
+});
 
-        Order.belongsTo(User, { foreignKey: "userId" });
-    })
-    .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle User :", error);
-    });
+Product.belongsToMany(Order, {
+	as: "orders",
+	through: OrdersProducts,
+});
 
-let Product;
-import("./product.model.js")
-    .then((module) => {
-        Product = module.default;
-
-        Order.belongsToMany(Product, {
-            through: "OrderProducts", // Nom de la table de liaison
-            foreignKey: "orderId",
-            otherKey: "productId",
-        });
-    })
-    .catch((error) => {
-        console.error("Erreur lors de l'importation du modèle Product :", error);
-    });
-
-export default Order;
+export default Order;  

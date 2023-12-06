@@ -64,7 +64,7 @@ export const register = async (req, res) => {
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
         const activationLink = `https://localhost:3002/emails/activate?token=${token}`;
-        await sendActivationEmail(req, res, activationLink);
+        // await sendActivationEmail(req, res, activationLink);
 
         await user.save();
 

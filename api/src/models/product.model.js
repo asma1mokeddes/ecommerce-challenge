@@ -25,7 +25,7 @@ Product.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        new: {
+        newProduct: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         }

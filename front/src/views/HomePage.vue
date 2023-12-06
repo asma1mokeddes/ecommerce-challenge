@@ -78,7 +78,7 @@ export default {
     async created() {
       const response = await axios.get('http://localhost:3000/products');
       const products = response.data;
-      this.products =  products.filter(product => product.new === true);
+      this.products =  products.filter(product => product.newProduct === true);
     }
 };
 </script>

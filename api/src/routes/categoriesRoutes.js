@@ -59,10 +59,11 @@ export const createCategory = async (req, res) => {
         });
 
         if (!createdCategoryMongo && !createdCategoryPsql) {
-            await Category.create({
+            createdCategoryPsql = await Category.create({
                 categoryName,
             });
             createdCategoryMongo = await CategoryMongo.create({
+                categoryId: createdCategoryPsql.id,
                 categoryName,
             });
         } else {

@@ -8,6 +8,7 @@ import promos from "./src/router/promosRouter.js";
 import brands from "./src/router/brandsRouter.js";
 import emails from "./src/router/emailsRouter.js";
 import cart from "./src/router/cartRouter.js";
+import order from "./src/router/orderRouter.js";
 
 import dotenv from "dotenv";
 import cors from "cors";
@@ -43,6 +44,7 @@ app.use("/promos", promos);
 app.use("/brands", brands);
 app.use("/emails", emails);
 app.use("/cart", cart);
+app.use("/order", order);
 
 app.use((error, req, res, next) => {
     console.log("error===", error);

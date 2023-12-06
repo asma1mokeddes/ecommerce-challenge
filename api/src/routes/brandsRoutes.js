@@ -64,10 +64,11 @@ export const createBrand = async (req, res) => {
         });
 
         if (!createdMarqueMongo && !createdMarquePsql) {
-            await Brand.create({
+            createdMarquePsql = await Brand.create({
                 brandName,
             });
             createdMarqueMongo = await BrandMongo.create({
+                brandId: createdMarquePsql.id,
                 brandName,
             });
         } else {

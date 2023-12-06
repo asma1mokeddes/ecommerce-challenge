@@ -3,28 +3,35 @@ import {
     getOrders,
     createOrder,
     getOrder,
+    getOrdersUser,
     updateOrder,
     deleteOrder,
-} from "../routes/categoriesRoutes.js";
+} from "../routes/ordersRoutes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { adminOrStoreKeeperMiddleware } from "../middlewares/userManagementMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getOrders); 
-router.get("/:orderId", getOrder);
-router.post("/", authMiddleware, adminOrStoreKeeperMiddleware, createOrder); 
-router.put(
-    "/:orderId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
-    updateOrder
-); 
-router.delete(
-    "/:orderId",
-    authMiddleware,
-    adminOrStoreKeeperMiddleware,
-    deleteOrder
-);
+router.get("/", 
+// authMiddleware,
+//  adminOrStoreKeeperMiddleware,
+  getOrders);
+router.get("/:orderId", 
+// authMiddleware,
+ getOrder);
+router.get("/user/:userId",
+//  authMiddleware,
+  getOrdersUser);
+router.post("/",
+//  authMiddleware,
+  createOrder);
+router.put("/:orderId", 
+// authMiddleware, 
+// adminOrStoreKeeperMiddleware, 
+updateOrder);
+router.delete("/:orderId",
+//  authMiddleware,
+//   adminOrStoreKeeperMiddleware,
+   deleteOrder);
 
 export default router;
