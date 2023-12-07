@@ -1,20 +1,41 @@
 import express from "express";
 import {
-    getPromos,
-    createPromo,
-    getPromo,
-    updatePromo,
-    deletePromo,
-} from "../routes/promosRoutes.js";
+    getProducts,
+    createProduct,
+    getProduct,
+    updateProduct,
+    deleteProduct,
+    searchProducts,
+} from "../routes/productsRoutes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import { adminMiddleware } from "../middlewares/userManagementMiddleware.js";
+import { adminOrStoreKeeperMiddleware } from "../middlewares/userManagementMiddleware.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, adminMiddleware, getPromos); // Obtenir toutes les promotions
-router.get("/:promoId", authMiddleware, adminMiddleware, getPromo); // Obtenir une promotion par ID
-router.post("/create", authMiddleware, adminMiddleware, createPromo); // Créer une nouvelle promotion
-router.put("/:promoId", authMiddleware, adminMiddleware, updatePromo); // Mettre à jour une promotion par ID
-router.delete("/:promoId", authMiddleware, adminMiddleware, deletePromo); // Supprimer une promotion par ID
+router.get("/search", searchProducts);
+
+router.get("/:productId", getProduct);
+
+router.get("/", getProducts);
+router.post(
+    "/create",
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
+    upload.single("image"),
+    createProduct
+);
+router.put(
+    "/:productId",
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
+    updateProduct
+);
+router.delete(
+    "/:productId",
+    // authMiddleware,
+    // adminOrStoreKeeperMiddleware,
+    deleteProduct
+);
 
 export default router;
