@@ -72,6 +72,77 @@ describe("Categories Routes", () => {
         });
     });
 
+    // Test for createCategory
+    describe("createCategory", () => {
+        it("should create a new category with valid data", async () => {
+            const req = {
+                body: {
+                    categoryName: "NEWPCATEGORY",
+                },
+            };
+            const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+            Category.findOne.mockResolvedValue(null);
+            CategoryMongo.findOne.mockResolvedValue(null);
+
+            await createCategory(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.json).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message: "Catégorie créé avec succès",
+                    success: true,
+                })
+            );
+        });
+        // Test for missing required fields
+        it("should not create a category if required fields are missing", async () => {
+            const req = {
+                body: {
+                    // Missing categoryName or expirationDate
+                },
+            };
+            const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+            await createCategory(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message:
+                        "Champs requis manquants. Veuillez fournir le nom de la catégorie.",
+                })
+            );
+        });
+
+        // Test for duplicate category name
+        it("should not create a category if the code already exists", async () => {
+            const req = {
+                body: {
+                    categoryName: "CATEGORYEXIST",
+                },
+            };
+            const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+            // Simulate finding an existing category
+            Category.findOne.mockResolvedValue({
+                categoryName: "CATEGORYEXIST",
+            });
+            CategoryMongo.findOne.mockResolvedValue({
+                categoryName: "CATEGORYEXIST",
+            });
+
+            await createCategory(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(409);
+            expect(res.json).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    error: "Cette catégorie existe déjà",
+                })
+            );
+        });
+    });
+
     describe("updateCategory", () => {
         it("should update a category successfully", async () => {
             const categoryId = 1; // Example category ID

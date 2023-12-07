@@ -22,7 +22,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = (req, res) => {
     const productId = req.params.productId;
-        
+
     ProductMongo.findOne({ productId: productId })
         .then((data) => {
             if (data) {
@@ -95,7 +95,7 @@ export const createProduct = async (req, res) => {
             promoMongo = await PromoMongo.findOne({
                 promoCode: promo,
             });
-        } 
+        }
 
         // Vérification que le produit n'existe pas dans PostgreSQL
         let createdProductPsql = await Product.findOne({
@@ -115,7 +115,6 @@ export const createProduct = async (req, res) => {
             brand: brandMongo,
             promo: promoMongo,
         });
-
 
         if (!createdProductPsql && !createdProductMongo) {
             // Création du produit dans  Psql
@@ -139,9 +138,6 @@ export const createProduct = async (req, res) => {
                 brand: brandMongo.id,
                 promo: promoMongo ? promoMongo.id : null,
             });
-
-            console.log("createdProductPsql===", createdProductPsql);
-            console.log("createdProductMongo===", createdProductMongo);
         } else {
             return res.status(409).json({
                 error: "Ce produit existe déjà.",
@@ -160,7 +156,6 @@ export const createProduct = async (req, res) => {
         });
     }
 };
-
 
 export const updateProduct = (req, res) => {
     const id = req.params.id;
