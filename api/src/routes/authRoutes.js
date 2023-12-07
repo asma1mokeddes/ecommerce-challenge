@@ -97,7 +97,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
         if (!user.activated) {
-            return res.status(401).json({ message: "Compte invalide" });
+            return res.status(401).json({ message: "Compte inactif" });
         }
 
         const payload = {
