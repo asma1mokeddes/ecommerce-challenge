@@ -8,7 +8,7 @@ export const getCategories = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message,
+            message: `Erreur lors de la récupération des catégories.`,
         });
     }
 };
@@ -174,8 +174,7 @@ export const deleteCategory = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({
-            success: false,
-            message: err.message,
+            message: "Erreur lors de la suppression de cette catégorie !",
         });
     }
 };
