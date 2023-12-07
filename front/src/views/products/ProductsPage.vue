@@ -1,4 +1,10 @@
 <template>
+   <div id="page-wrap">
+    <ProductsGrid v-if="products.length>0" :products="products" />
+    <div v-else>
+      <h1>Aucun produits trouvés</h1>
+    </div>
+    </div>
   <div class="search-bar">
     <input type="text" v-model="searchTerm" placeholder="Rechercher des produits...">
     <select v-model="selectedCategory">
