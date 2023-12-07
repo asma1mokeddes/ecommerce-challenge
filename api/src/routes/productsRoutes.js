@@ -2,7 +2,7 @@ import CategoryMongo from "../models/category.js";
 import BrandMongo from "../models/brand.js";
 import ProductMongo from "../models/product.js";
 import PromoMongo from "../models/promo.js";
-
+import mongoose from 'mongoose';
 import Product from "../models/product.model.js";
 import Category from "../models/category.model.js";
 import Brand from "../models/brand.model.js";
@@ -11,6 +11,7 @@ import Promo from "../models/promo.model.js";
 export const getProducts = async (req, res) => {
     try {
         const productsMongo = await ProductMongo.find();
+        console.log(productsMongo, "dlshfds");
         res.json(productsMongo);
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -35,29 +36,30 @@ export const getProduct = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
 export const searchProducts = async (req, res) => {
     try {
-        const { q, category, brand, minPrice, maxPrice } = req.query;
+        const { q, minPrice, maxPrice } = req.query;
         let searchQuery = {};
 
-        // Recherche par nom et description
         if (q) {
-            searchQuery.$or = [
+            // Préparer une liste de conditions de recherche
+            let orConditions = [
                 { productName: { $regex: q, $options: 'i' } },
                 { description: { $regex: q, $options: 'i' } }
             ];
-        }
-         if (q) {
-            searchQuery.productName = q;
-        }
 
-        if (category) {
-            searchQuery.category = category; 
-        }
+            // Vérifier si q est un ObjectId valide
+            if (mongoose.Types.ObjectId.isValid(q)) {
+                orConditions.push(
+                    { category: q },
+                    { brand: q },
+                    { promo: q }
+                );
+            }
 
-        // Filtre par marque
-        if (brand) {
-            searchQuery.brand = brand;
+            searchQuery.$or = orConditions;
         }
 
         // Filtre par prix minimum
@@ -76,12 +78,13 @@ export const searchProducts = async (req, res) => {
             }
         }
 
-        const searchResults = await ProductMongo.find(searchQuery);
-        res.json(searchResults);
+        const searchResults = await ProductMongo.find(searchQuery).populate('category').populate('brand').populate('promo');
+        res.status(200).json(searchResults);
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 
 

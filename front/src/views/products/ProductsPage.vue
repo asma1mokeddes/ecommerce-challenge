@@ -1,64 +1,34 @@
 <template>
-   <div id="page-wrap">
+  <div id="page-wrap">
     <ProductsGrid v-if="products.length>0" :products="products" />
     <div v-else>
       <h1>Aucun produits trouvés</h1>
     </div>
-    </div>
-  <div class="search-bar">
-    <input type="text" v-model="searchTerm" placeholder="Rechercher des produits...">
-    <select v-model="selectedCategory">
-      <option value="">Toutes catégories</option>
-      <!-- Options de catégories ici -->
-    </select>
-    <select v-model="selectedBrand">
-      <option value="">Toutes marques</option>
-      <!-- Options de marques ici -->
-    </select>
-    <input type="number" v-model.number="minPrice" placeholder="Prix min">
-    <input type="number" v-model.number="maxPrice" placeholder="Prix max">
-    <button @click="searchProducts">Rechercher</button>
   </div>
-  
+
 </template>
 
-
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import ProductsGrid from '../../components/ProductsGrid.vue';
 
 export default {
-  data() {
-    return {
-      searchTerm: '',
-      selectedCategory: '',
-      selectedBrand: '',
-      minPrice: null,
-      maxPrice: null,
-      products: []
-    };
-  },
-  methods: {
-    async searchProducts() {
-      try {
-        const query = new URLSearchParams({
-          q: this.searchTerm,
-          category: this.selectedCategory,
-          brand: this.selectedBrand,
-          minPrice: this.minPrice,
-          maxPrice: this.maxPrice
-        }).toString();
-
-        const response = await axios.get(`http://localhost:3000/products/search?${query}`);
-        this.products = response.data;
-      } catch (error) {
-        console.error("Erreur lors de la recherche:", error);
-      }
+    name: 'ProductsPage',
+    components: {
+        ProductsGrid
+      },
+    data() {
+      return {
+        products: []
+      };
+    },
+    async created() {
+      const response = await axios.get('http://localhost:3000/products');
+      const products = response.data;
+      this.products = products;
     }
-  }
-}
+};
 </script>
-
-
 
 <style scoped>
 
@@ -180,5 +150,3 @@ export default {
   }
 
 </style>
-
-
