@@ -5,6 +5,7 @@ import { categoriesRoutes } from "./categories";
 import { brandsRoutes } from "./brands";
 import { promosRoutes } from "./promos";
 import { productsRoutes } from "./products";
+import { ordersRoutes } from "./order";
 import { cartRoutes } from "./cart";
 
 const routes = [
@@ -13,6 +14,7 @@ const routes = [
     ...brandsRoutes,
     ...promosRoutes,
     ...productsRoutes,
+    ...ordersRoutes,
     ...cartRoutes,
     {
         meta: {

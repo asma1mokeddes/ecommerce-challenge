@@ -1,6 +1,7 @@
 <template>
     <div class="container p-2 mx-auto sm:p-4 dark:text-gray100">
       <h3 class="mb-4 text-2xl font-semibold leadi text-center">Commandes</h3>
+
       <div class="overflow-x-auto">
         <table class="min-w-full text-xs">
           <colgroup>
@@ -82,7 +83,7 @@
       >
         1
       </button>
-
+      <!-- Ajoutez ici des boutons supplémentaires pour les pages -->
       <button
         title="next"
         type="button"
@@ -117,8 +118,9 @@
   
       async fetchOrders() {
         try {
+            const userId = this.$route.params.userId;
           this.state.orders = await axiosInstance
-            .get("order")
+            .get(`order/user/${userId}`)
             .then((response) => {
                 console.log(response.data)
               return response.data;

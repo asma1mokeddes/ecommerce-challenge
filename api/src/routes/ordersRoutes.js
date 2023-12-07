@@ -5,7 +5,7 @@ import OrderProduct from "../models/order-product.js";
 
 export const getOrders = async (req, res) => {
   try {
-    const orders = await Order.findAll({ include: "products" });
+    const orders = await Order.findAll({ include: ["products","user"]});
 
     res.status(200).json(orders);
   } catch (error) {
@@ -42,10 +42,10 @@ export const createOrder = async (req, res) => {
 
 export const getOrder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { orderId } = req.params;
 
     const order = await Order.findOne({
-      where: { id: id },
+      where: { orderId: orderId },
       include: ["products","user"],
     });
 

@@ -72,11 +72,18 @@
                                 </button>
                                 <a
                                     class="text-black-300 hover:text-green-800 cursor-pointer"
+                                    @click="accedOrderUser(user.userId)"
+                                    >📄
+                                </a>
+                                <a 
+                                    v-if="roleUser === 'ROLE_ADMIN'"
+                                    class="text-black-300 hover:text-green-800 cursor-pointer"
                                     ><font-awesome-icon
                                         :icon="['fas', 'edit']"
                                     />
                                 </a>
                                 <a
+                                    v-if="roleUser === 'ROLE_ADMIN'"
                                     class="text-red-600 hover:text-red-800 cursor-pointer"
                                     @click="deleteUser(user.userId)"
                                 >
@@ -109,23 +116,43 @@
 </template>
 <script>
 const BASE_URL = "http://localhost:3002";
+import VueJwtDecode from 'vue-jwt-decode';
 import { reactive } from "vue";
 import axiosInstance from "@/utils/axiosInstance";
 import { showToast } from "@/utils/toast";
 import { EyeIcon } from "@heroicons/vue/20/solid";
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
     data() {
         return {
             state: reactive({
                 users: [],
+                roleUser: '',
             }),
         };
     },
 
     methods: {
         async init() {
+            await this.getRoleUserConnected();
             await this.fetchUsers();
+        },
+
+        async getRoleUserConnected(){
+            try {
+                const token = localStorage.getItem('token'); 
+                if (token) {
+                    this.userId = VueJwtDecode.decode(token).user.userId;
+                }
+                const result = await axiosInstance.get(`http://localhost:3002/users/${this.userId}`);
+                const user = result.data;
+                console.log(user);
+                this.roleUser = user.role;
+                console.log(user.role);
+            } catch (error) {
+                console.log(error);
+            }
         },
 
         async fetchUsers() {
@@ -137,6 +164,17 @@ export default {
                     });
             } catch (error) {
                 console.error("Error fetching users:", error);
+            }
+        },
+
+        async accedOrderUser(userId) {
+            try {
+                const router = useRouter();
+
+                await this.$router.push(`orders/user/${userId}`);
+
+            } catch (error) {
+                console.error("Erreur de redirection vers user:", error);
             }
         },
 
