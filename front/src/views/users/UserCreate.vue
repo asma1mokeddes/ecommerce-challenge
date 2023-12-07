@@ -1,65 +1,80 @@
 <template>
-    <section class="p-6 dark:bg-gray-800 dark:text-gray-50">
+     <div class="text-center">
+            <h2 class="mt-10 font-bold text-xl">Création d'utilisateurs</h2>
+        </div>
+    <section
+        class="mx-auto p-6 flex items-center justify-center"
+    >
+       
+
         <form
             novalidate=""
             action=""
-            class="container flex flex-col mx-auto space-y-12"
+            class="ml-80 container flex flex-col mx-auto space-y-12"
         >
             <fieldset
                 class="grid grid-cols-4 gap-6 p-6 rounded-md shadow-sm dark:bg-gray-900"
             >
-                <div class="space-y-2 col-span-full lg:col-span-1">
-                    <p class="font-medium">
-                        Création d'Utilisateur (Réservée aux Administrateurs)
-                    </p>
-                    <p class="text-xs">
-                        Pour des raisons de sécurité, la création d'utilisateur
-                        est réservée aux administrateurs du site. Veuillez vous
-                        connecter en tant qu'administrateur pour accéder à cette
-                        fonctionnalité.
-                    </p>
-                </div>
-
                 <div class="grid grid-cols-6 gap-4 col-span-full lg:col-span-3">
                     <div class="col-span-full sm:col-span-3">
-                        <label for="firstname" class="text-sm">Nom</label>
+                        <label for="firstName" class="text-sm">Nom</label>
                         <input
-                            id="firstname"
+                            v-model="state.firstName"
                             type="text"
+                            name="firstName"
+                            id="firstName"
                             placeholder="Nom"
                             class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
                         />
                     </div>
                     <div class="col-span-full sm:col-span-3">
-                        <label for="lastname" class="text-sm">Prénom</label>
+                        <label for="lastName" class="text-sm">Prénom</label>
                         <input
-                            id="lastname"
+                            v-model="state.lastName"
                             type="text"
+                            name="lastName"
+                            id="lastName"
                             placeholder="Prénom"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
                         />
                     </div>
-                    <div class="col-span-full">
-                        <label for="address" class="text-sm"
-                            >Addresse email</label
-                        >
-                        <input
-                            id="address"
-                            type="text"
-                            placeholder="Address email"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
-                        />
-                    </div>
+
                     <div class="col-span-full sm:col-span-2">
                         <label for="dateOfBirth" class="text-sm"
                             >Date de naissance</label
                         >
                         <input
-                            id="dateOfBirth"
+                            v-model="state.dateOfBirth"
                             type="date"
+                            name="dateOfBirth"
+                            id="dateOfBirth"
                             placeholder="Date de naissance"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
                         />
+                    </div>
+
+                    <div class="col-span-full sm:col-span-3">
+                        <label for="email" class="text-sm">Adresse email</label>
+                        <input
+                            v-model="state.email"
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="leroy@jenkins.com"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
+                        />
+                    </div>
+
+                    <div class="col-span-full sm:col-span-2">
+                        <label for="role" class="text-sm">Role</label>
+                        <select
+                            v-model="state.role"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 custom-select"
+                        >
+                            <option value="Question">Utilisateur</option>
+                            <option value="Commande">Magasinier</option>
+                            <option value="Réclamation">Admin</option>
+                        </select>
                     </div>
 
                     <div class="col-span-full sm:col-span-2">
@@ -67,116 +82,77 @@
                             >Mot de passe</label
                         >
                         <input
+                            v-model="state.password"
+                            type="password"
                             id="password"
-                            type="text"
+                            name="password"
                             placeholder="Mot de passe"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
                         />
+                        <span v-if="state.errors" class="text-red-500">{{
+                            state.errors.password
+                        }}</span>
                     </div>
                 </div>
             </fieldset>
-            <fieldset
-                class="grid grid-cols-4 gap-6 p-6 rounded-md shadow-sm dark:bg-gray-900"
+            <button
+                @click.prevent="createUser"
+                class="mx-auto bottom-4 justify-center px-8 py-3 font-semibold dark:bg-violet400 text-gray800"
             >
-                <div class="space-y-2 col-span-full lg:col-span-1">
-                    <p class="font-medium">Profile</p>
-                    <p class="text-xs">Adipisci fuga autem eum!</p>
-                </div>
-                <div class="grid grid-cols-6 gap-4 col-span-full lg:col-span-3">
-                    <div class="col-span-full sm:col-span-3">
-                        <label for="username" class="text-sm">Username</label>
-                        <input
-                            id="username"
-                            type="text"
-                            placeholder="Username"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri dark:border-gray-700 dark:text-gray-900"
-                        />
-                    </div>
-                    <div class="col-span-full sm:col-span-3">
-                        <label for="website" class="text-sm">Website</label>
-                        <input
-                            id="website"
-                            type="text"
-                            placeholder="https://"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri dark:border-gray-700 dark:text-gray-900"
-                        />
-                    </div>
-                    <div class="col-span-full">
-                        <label for="bio" class="text-sm">Bio</label>
-                        <textarea
-                            id="bio"
-                            placeholder=""
-                            class="w-full rounded-md focus:ring focus:ri focus:ri dark:border-gray-700 dark:text-gray-900"
-                        ></textarea>
-                    </div>
-                    <div class="col-span-full">
-                        <label for="bio" class="text-sm">Photo</label>
-                        <div class="flex items-center space-x-2">
-                            <img
-                                src="https://source.unsplash.com/30x30/?random"
-                                alt=""
-                                class="w-10 h-10 rounded-full dark:bg-gray-500 dark:bg-gray-700"
-                            />
-                            <button
-                                type="button"
-                                class="px-4 py-2 border rounded-md dark:border-gray-100"
-                            >
-                                Change
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+                Créer l'utilisateur
+            </button>
         </form>
     </section>
-    <button
-        type="button"
-        class="margin absolute bottom-4 left-4 px-8 py-3 font-semibold rounded-full bg-indigo-300 text-gray-800"
-    >
-        Créer l'utilisateur
-    </button>
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
+import { ref, reactive } from "vue";
+import { showToast } from "@/utils/toast";
+import { useRouter } from "vue-router";
+
 const BASE_URL = "http://localhost:3002";
+const router = useRouter();
 
-export default {
-    data() {
-        return {
-            firstName: "",
-            lastName: "",
-            emailAddress: "",
-            password: "",
-            dateOfBirth: "",
-            role: "",
-        };
-    },
+const state = reactive({
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    email: ref(""),
+    password: ref(""),
+    role: "",
+    errors: {},
+});
 
-    methods: {
-        async createUser() {
-            try {
-                await axios({
-                    baseURL: "BASE_URL",
-                    method: "POST",
-                    url: "/users/create",
-                    data: {
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        emailAddress: this.emailAddress,
-                        password: this.password,
-                        dateOfBirth: this.dateOfBirth,
-                        role: this.role,
-                    },
-                });
+const createUser = async () => {
+    try {
+        state.errors = {};
 
-                // Redirigez l'utilisateur vers la liste des utilisateurs après la création
-                this.$router.push("/users");
-            } catch (error) {
-                console.error("Error creating users:", error);
-            }
-        },
-    },
+        const response = await axios({
+            baseURL: BASE_URL,
+            method: "POST",
+            url: "/users/create",
+            data: {
+                firstName: state.firstName,
+                lastName: state.lastName,
+                dateOfBirth: state.dateOfBirth,
+                email: state.email,
+                role: state.role,
+                password: state.password,
+            },
+        });
+        showToast(response.data.message);
+        navigateToUsers();
+    } catch (error) {
+        if (error.response && error.response.data) {
+            state.errors = error.response.data.errors;
+        }
+        console.error(error);
+    }
+};
+
+const navigateToUsers = () => {
+    router.push("/users");
 };
 </script>
 
@@ -190,7 +166,9 @@ label {
     height: 100%;
 }
 input[type="text"],
-input[type="date"] {
+input[type="date"],
+input[type="email"],
+input[type="password"] {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -201,5 +179,15 @@ input[type="date"] {
 }
 .margin {
     margin-left: 80%;
+}
+
+.custom-select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 </style>
