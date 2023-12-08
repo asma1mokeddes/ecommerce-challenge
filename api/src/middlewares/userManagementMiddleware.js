@@ -101,7 +101,7 @@ export const adminOrStoreKeeperMiddleware = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
 
         const userRole = decodedToken.user.role;
-
+        console.log("userRole =====", userRole);
         if (userRole === "ROLE_ADMIN" || userRole === "ROLE_STORE_KEEPER") {
             next();
         } else {

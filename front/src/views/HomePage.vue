@@ -185,7 +185,7 @@ header {
   #page-wrap {
     padding-top: 50px;
     padding-bottom: 50px;
-    max-width: 1500px;
+    width: 100%;
   }
 
   .title-page-wrap{
@@ -206,7 +206,7 @@ header {
 
   /* Styles de la section */
 .feature-section {
-  max-width: 100%;
+  width: 100%;
   margin: auto;
   position: relative;
 }

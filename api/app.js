@@ -52,7 +52,6 @@ app.use((error, req, res, next) => {
 });
 
 try {
-    console.log("process.env.DB_URI ====", process.env.DB_URI);
     await mongoose
         .connect(process.env.DB_URI, {
             useNewUrlParser: true,
