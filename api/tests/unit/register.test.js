@@ -25,67 +25,6 @@ describe("register function", () => {
         jest.clearAllMocks();
     });
 
-    // it("should register a new user with valid data", async () => {
-    //     // Mock request object with valid data
-    //     const today = new Date();
-    //     const birthDate = new Date(
-    //         today.getFullYear() - 20,
-    //         today.getMonth(),
-    //         today.getDate()
-    //     );
-    //     const req = {
-    //         body: {
-    //             firstName: "John",
-    //             lastName: "Doe",
-    //             emailAddress: "john@example.com",
-    //             dateOfBirth: birthDate,
-    //             password: "securePassword123",
-    //         },
-    //     };
-
-    //     // Mock response object
-    //     const res = {
-    //         json: jest.fn(),
-    //         status: jest.fn().mockReturnThis(),
-    //     };
-
-    //     // Execute the register function
-    //     await register(req, res);
-
-    //     // Expectations and Assertions
-    //     expect(UserMongo.findOne).toHaveBeenCalledWith({
-    //         emailAddress: "john@example.com",
-    //     });
-    //     expect(User.findOne).toHaveBeenCalledWith({
-    //         where: { emailAddress: "john@example.com" },
-    //     });
-    //     expect(UserMongo.create).toHaveBeenCalledWith({
-    //         firstName: "John",
-    //         lastName: "Doe",
-    //         emailAddress: "john@example.com",
-    //         dateOfBirth: birthDate,
-    //         role: "ROLE_USER",
-    //     });
-    //     expect(User.create).toHaveBeenCalledWith({
-    //         firstName: "John",
-    //         lastName: "Doe",
-    //         emailAddress: "john@example.com",
-    //         dateOfBirth: birthDate,
-    //         password: expect.any(String), // since the password would be hashed
-    //         passwordModificationDate: expect.any(Date),
-    //         role: "ROLE_USER",
-    //     });
-    //     expect(sendActivationEmail).toHaveBeenCalledWith(
-    //         req,
-    //         res,
-    //         expect.any(String)
-    //     );
-    //     expect(res.json).toHaveBeenCalledWith({
-    //         message: "Utilisateur créé avec succès",
-    //         token: expect.anything(),
-    //     });
-    // });
-
     it("should handle missing data gracefully", async () => {
         // Mock request object with missing data
         const req = {
@@ -151,37 +90,4 @@ describe("register function", () => {
             })
         );
     });
-
-    // Mock request object with a weak password
-    /** it("should handle insufficient password strength", async () => {
-        const req = {
-            body: {
-                firstName: "Alice",
-                lastName: "Smith",
-                emailAddress: "alice@example.com",
-                dateOfBirth: "1990-03-01",
-                password: "123", // Intentionally weak password
-            },
-        };
-
-        // Mock response object
-        const res = {
-            json: jest.fn(),
-            status: jest.fn().mockReturnThis(),
-        };
-
-        // Execute the register function
-        await register(req, res);
-
-        // Check if the status method was called with 400 (Bad Request) or similar
-        expect(res.status).toHaveBeenCalledWith(expect.any(Number));
-        // Check if the json method was called with an error message indicating weak password
-        expect(res.json).toHaveBeenCalledWith(
-            expect.objectContaining({
-                error: expect.stringContaining(
-                    "Password does not meet complexity requirements"
-                ),
-            })
-        );
-    }); */
 });
