@@ -34,7 +34,7 @@ const login = async () => {
     } catch (err) {
         console.error("Error during login:", err);
         const errorMessage = err.response?.data?.message || "Erreur inconnue";
-        showToast( errorMessage);
+        showToast(errorMessage);
     }
 };
 </script>

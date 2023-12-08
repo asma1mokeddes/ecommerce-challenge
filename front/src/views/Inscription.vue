@@ -59,7 +59,7 @@
                             >Adresse email</label
                         >
                         <input
-                            v-model="state.email"
+                            v-model="state.emailAddress"
                             type="email"
                             name="email"
                             id="email"
@@ -141,15 +141,15 @@ const state = reactive({
     firstName: "",
     lastName: "",
     dateOfBirth: "",
-    email: ref(""),
+    emailAddress: ref(""),
     password: ref(""),
     errors: {},
 });
 
 const register = async () => {
-    const parsedEmail = emailSchema.safeParse(state.email);
+    const parsedEmail = emailSchema.safeParse(state.emailAddress);
     if (!parsedEmail.success) {
-        state.errors.email = parsedEmail.error.issues[0].message;
+        state.errors.emailAddress = parsedEmail.error.issues[0].message;
     }
 
     // Validation du mot de passe
@@ -162,7 +162,7 @@ const register = async () => {
         !state.lastName ||
         !state.firstName ||
         !state.dateOfBirth ||
-        !state.email ||
+        !state.emailAddress ||
         !state.password
     ) {
         state.errors.message = "Tous les champs sont obligatoires.";

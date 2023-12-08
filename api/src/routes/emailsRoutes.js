@@ -72,13 +72,10 @@ export const activate = async (req, res) => {
             { activated: true }
         );
 
-        await t.commit();
-
         res.send(
             "Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter."
         );
     } catch (error) {
-        await t.rollback();
         console.error("Erreur lors de l'activation du compte :", error);
         res.status(400).send("Lien d'activation non valide.");
     }
@@ -127,7 +124,6 @@ export const sendEmailWithTemplate = async (
 
         let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-        console.log("sendSmtpEmail ===", sendSmtpEmail);
         sendSmtpEmail = {
             to: [
                 {
@@ -143,8 +139,6 @@ export const sendEmailWithTemplate = async (
                     "custom_header_1:custom_value_1|custom_header_2:custom_value_2",
             },
         };
-
-        console.log("sendSmtpEmail ===", sendSmtpEmail);
 
         await apiInstance.sendTransacEmail(sendSmtpEmail);
     } catch (error) {

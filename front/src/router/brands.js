@@ -5,7 +5,7 @@ export const brandsRoutes = [
         },
         path: "/brands",
         name: "brands",
-        component: () => import("@/views/brands/BrandManagement.vue"),
+        component: () => import("@/views/brands/BrandView.vue"),
     },
     {
         meta: {
