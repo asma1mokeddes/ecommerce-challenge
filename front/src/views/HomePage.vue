@@ -10,7 +10,7 @@
           <i class="fas fa-star"></i>
           <i class="far fa-star"></i>
         </div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, odio cumque. Ab nulla ipsum adipisci, pariatur id quas dignissimos perferendis. Provident nemo qui reiciendis, voluptates perspiciatis sapiente natus hic. Dicta.</p>
+        <p> La paire de baskets qui allie style et confort. Fabriquée avec des matériaux de haute qualité, elle offre une expérience exceptionnelle à chaque pas. La technologie de pointe garantit un ajustement parfait, tandis que le design moderne ajoute une touche tendance à votre tenue.</p>
         <a href="#" class="btn">Ajouter au panier</a>
       </div>  
       <div>
@@ -151,7 +151,7 @@ header {
   }
 
   .btn:hover{
-    background: #5d4497;
+    background: #9577db;
   }
 
   .body > div:nth-child(2){
@@ -186,6 +186,7 @@ header {
     padding-top: 50px;
     padding-bottom: 50px;
     max-width: 1500px;
+    width: 100%;
   }
 
   .title-page-wrap{
@@ -206,7 +207,7 @@ header {
 
   /* Styles de la section */
 .feature-section {
-  max-width: 100%;
+  width: 100%;
   margin: auto;
   position: relative;
 }

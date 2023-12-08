@@ -45,7 +45,7 @@ body {
 
 #page-wrap {
     margin: auto;
-    max-width: 800px;
+    max-width: 1500px;
 }
 
 @media screen and (max-width: 800px) {

@@ -17,6 +17,14 @@ export const ordersRoutes = [
     },    
     {
         meta: {
+            title: "Valider une commande",
+        },
+        path: "/orders/validation/:orderId",
+        name: "orderConfirmation",
+        component: () => import("@/views/orders/OrderValidateView.vue"),
+    },
+    {
+        meta: {
             title: "Modifier une commande",
         },
         path: "/orders/update/:orderId",

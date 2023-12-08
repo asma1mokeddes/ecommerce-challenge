@@ -9,6 +9,7 @@ import brands from "./src/router/brandsRouter.js";
 import emails from "./src/router/emailsRouter.js";
 import cart from "./src/router/cartRouter.js";
 import order from "./src/router/orderRouter.js";
+import payment from "./src/router/paymentRouter.js";
 
 
 import dotenv from "dotenv";
@@ -46,6 +47,7 @@ app.use("/brands", brands);
 app.use("/emails", emails);
 app.use("/cart", cart);
 app.use("/order", order);
+app.use("/payment", payment);
 
 app.use((error, req, res, next) => {
     console.log("error===", error);
