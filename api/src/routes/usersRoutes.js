@@ -17,7 +17,6 @@ export const getUsers = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message:
-                err.message ||
                 "Une erreur est survenue lors de la récupération des utilisateurs.",
         });
     }
@@ -132,7 +131,7 @@ export const createUser = async (req, res) => {
             });
         } else {
             res.status(409).json({
-                error: `Cet utilisateur existe déjà`,
+                error: `Cet utilisateur existe déjà.`,
             });
         }
     } catch (error) {
@@ -142,13 +141,10 @@ export const createUser = async (req, res) => {
     }
 };
 
-// TO FIX
-
 export const updateUser = async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        console.log("req.body ====", req.body);
         const birthDate = new Date(req.body.dateOfBirth);
         const today = new Date();
         const age = today.getFullYear() - birthDate.getFullYear();
@@ -168,7 +164,6 @@ export const updateUser = async (req, res) => {
                 },
             },
         });
-        console.log("existingUser  ====", existingUser);
 
         if (existingUser) {
             return res.status(409).json({
@@ -252,7 +247,7 @@ export const deleteUser = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({
-            message: `Erreur lors de la suppression de cet utilisateur`,
+            message: `Erreur lors de la suppression de ce cet utilisateur`,
         });
     }
 };

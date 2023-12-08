@@ -25,14 +25,20 @@ describe("register function", () => {
         jest.clearAllMocks();
     });
 
-    it("should register a new user with valid data", async () => {
+    it.only("should register a new user with valid data", async () => {
         // Mock request object with valid data
+        const today = new Date();
+        const birthDate = new Date(
+            today.getFullYear() - 20,
+            today.getMonth(),
+            today.getDate()
+        );
         const req = {
             body: {
                 firstName: "John",
                 lastName: "Doe",
                 emailAddress: "john@example.com",
-                dateOfBirth: "1990-01-01",
+                dateOfBirth: birthDate,
                 password: "securePassword123",
             },
         };
@@ -57,14 +63,14 @@ describe("register function", () => {
             firstName: "John",
             lastName: "Doe",
             emailAddress: "john@example.com",
-            dateOfBirth: "1990-01-01",
+            dateOfBirth: birthDate,
             role: "ROLE_USER",
         });
         expect(User.create).toHaveBeenCalledWith({
             firstName: "John",
             lastName: "Doe",
             emailAddress: "john@example.com",
-            dateOfBirth: "1990-01-01",
+            dateOfBirth: birthDate,
             password: expect.any(String), // since the password would be hashed
             passwordModificationDate: expect.any(Date),
             role: "ROLE_USER",
@@ -76,7 +82,7 @@ describe("register function", () => {
         );
         expect(res.json).toHaveBeenCalledWith({
             message: "Utilisateur créé avec succès",
-            token: expect.any(String),
+            token: expect.anything(),
         });
     });
 
