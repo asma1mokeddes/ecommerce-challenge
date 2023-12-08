@@ -12,10 +12,10 @@
 				<a rel="noopener noreferrer" href="/products" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Produits</a>
 			</li>
 			<li class="flex">
-				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Hommes</a>
+				<a rel="noopener noreferrer" href="/products/search?q=6572165c9f14efe5997e3209" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Hommes</a>
 			</li>
 			<li class="flex">
-				<a rel="noopener noreferrer" href="#" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Femmes</a>
+				<a rel="noopener noreferrer" href="/products/search?q=${`65721eb3e26ea14f5d89688d`}" class="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Femmes</a>
 			</li>
 		</ul>
     <div class="items-center flex-shrink-0 hidden lg:flex">

@@ -1,11 +1,16 @@
 <template>
   <div id="page-wrap">
-    <ProductsGrid v-if="products.length>0" :products="products" />
+    <div class="search-bar">
+      <input type="text" v-model="searchTerm" placeholder="Rechercher des produits...">
+      <input type="number" v-model="minPrice" placeholder="Prix min">
+      <input type="number" v-model="maxPrice" placeholder="Prix max">
+      <button @click="searchProducts">Rechercher</button>
+    </div>
+    <ProductsGrid v-if="products.length > 0" :products="products" />
     <div v-else>
       <h1>Aucun produits trouvés</h1>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -16,137 +21,84 @@ export default {
     name: 'ProductsPage',
     components: {
         ProductsGrid
-      },
+    },
     data() {
-      return {
-        products: []
-      };
+        return {
+            products: [],
+            searchTerm: '', // Holds the value entered in the search bar
+            minPrice: null,
+            maxPrice: null
+        };
     },
     async created() {
-      const response = await axios.get('http://localhost:3000/products');
-      const products = response.data;
-      this.products = products;
+        await this.fetchAllProducts();
+    },
+    methods: {
+        async fetchAllProducts() {
+            try {
+                const response = await axios.get('http://localhost:3000/products/');
+                this.products = response.data;
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        },
+        async searchProducts() {
+            // Start with an empty array for query parameters
+            let queryParams = [];
+
+            // Check if searchTerm is provided and add it to the query parameters
+            if (this.searchTerm) {
+                queryParams.push(`q=${encodeURIComponent(this.searchTerm)}`);
+            }
+
+            // Check if minPrice is provided and add it to the query parameters
+            if (this.minPrice) {
+                queryParams.push(`minPrice=${this.minPrice}`);
+            }
+
+            // Check if maxPrice is provided and add it to the query parameters
+            if (this.maxPrice) {
+                queryParams.push(`maxPrice=${this.maxPrice}`);
+            }
+
+            // Join the query parameters with '&' to form the final query string
+            let searchQuery = queryParams.join('&');
+
+            try {
+                const response = await axios.get(`http://localhost:3000/products/search?${searchQuery}`);
+                this.products = response.data;
+                console.log("Found products:", this.products);
+            } catch (error) {
+                console.error("Error searching products:", error);
+        }
+    },
     }
 };
 </script>
 
+<!-- Add your existing styles here -->
 <style scoped>
-
-  .btn {
-    padding: 0.7em 1.5em;
-    background: #71C9CE;
-    border-radius: 3em;
-    letter-spacing: 1px;
-    font-size: 1em;
-    transition: 0.3s;
-  }
-
-  .btn:hover{
-    background: #A6E3E9;
-  }
-
-  #page-wrap {
-    padding-top: 50px;
-    max-width: 1500px;
-  }
-
-  .title-page-wrap{
+  /* ... existing styles ... */
+  .search-bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
   }
-
-  .title-page-wrap span a{
-    color: #71C9CE; 
-    text-decoration: none;
-    transition: 0.3s;
+  .search-bar input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
-
-  .title-page-wrap span a:hover{
-    color: #55a8ad; 
+  .search-bar button {
+    padding: 10px 15px;
+    background-color: #71C9CE;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
-  .grid-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 16px;
+  .search-bar button:hover {
+    background-color: #A6E3E9;
   }
-
-  .product-item {
-    background: white;
-    outline: 1px solid #dcdbeb;
-    align-items: center;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 2%;
-    padding: 20px;
-    position: relative;
-    width: 32%;
-  }
-
-  .product-name {
-    margin-bottom: 0;
-  }
-
-  img {
-    height: 200px;
-    width: 200px;
-  }
-
-  a {
-    width: 100%;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  @media screen and (max-width: 1210px) {
-    .body{
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-    header::before{
-      display: none;
-    }
-    header{
-      height: initial;
-    }
-    .body > div:nth-child(2){
-      justify-content: center;
-      margin: 3em 0;
-    }
-    .body img{
-      transform: none;
-    }
-    .body p{
-      margin: 2em auto 3em auto;
-    }
-  }
-
-  @media screen and (max-width: 800px) {
-    .body img {
-      width: 90%;
-    }
-    .footer{
-      flex-direction: column;
-      margin-top: 3em;
-    }
-  }
-
-  @media screen and (max-width: 650px) {
-    header{
-      height: initial;
-    }
-
-    .footer{
-      margin: 4em auto 2em auto;
-    }
-  }
-
-  #page-wrap {
-    margin: auto;
-  }
-
 </style>
