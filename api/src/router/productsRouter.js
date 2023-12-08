@@ -20,21 +20,21 @@ router.get("/:productId", getProduct);
 router.get("/", getProducts);
 router.post(
     "/create",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     upload.single("image"),
     createProduct
 );
 router.put(
     "/:productId",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     updateProduct
 );
 router.delete(
     "/:productId",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     deleteProduct
 );
 

@@ -5,11 +5,13 @@
         >
             <div class="mb-8 text-center">
                 <h1 class="my-3 text-4xl font-bold">Inscription</h1>
-                <p class="text-sm text-gray-400">Inscrivez-vous pour accéder à notre site</p>
+                <p class="text-sm text-gray-400">
+                    Inscrivez-vous pour accéder à notre site
+                </p>
             </div>
-                <form novalidate="" action="" class="space-y-6">
-                    <div class="space-y-4">
-                        <div>
+            <form novalidate="" action="" class="space-y-6">
+                <div class="space-y-4">
+                    <div>
                         <label for="firstName" class="block mb-2 text-sm"
                             >Nom</label
                         >
@@ -85,24 +87,30 @@
                             passwordError
                         }}</small>
                     </div>
-                    </div>
-                    <div class="space-y-2">
-                    <div>
-                    <button
-                        @click.prevent="register"
-                        class="w-full px-8 py-3 font-semibold rounded-md bg-purple500 text-gray900">
-                        Inscription
-                    </button>
                 </div>
+                <div class="space-y-2">
+                    <div>
+                        <button
+                            @click.prevent="register"
+                            class="w-full px-8 py-3 font-semibold rounded-md bg-purple500 text-gray900"
+                        >
+                            Inscription
+                        </button>
+                    </div>
 
-                <p class="px-6 text-sm text-center text-gray400">
-                    Vous avez déjà un compte?
-                    <a rel="noopener noreferrer" href="/login" class="hover:underline text-purple500">Connectez-vous</a>.
-                </p>
-		  </div>
-		</form>
-	  </div>
-	</div>
+                    <p class="px-6 text-sm text-center text-gray400">
+                        Vous avez déjà un compte?
+                        <a
+                            rel="noopener noreferrer"
+                            href="/login"
+                            class="hover:underline text-purple500"
+                            >Connectez-vous</a
+                        >.
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -110,8 +118,9 @@ import axios from "axios";
 import { ref, reactive } from "vue";
 import { z } from "zod";
 import { useRouter } from "vue-router";
+import axiosInstance from "@/utils/axiosInstance";
+import { showToast } from "@/utils/toast";
 
-const BASE_URL = "http://localhost:3002";
 const router = useRouter();
 
 const emailSchema = z
@@ -168,23 +177,18 @@ const register = async () => {
     }
 
     try {
-        state.errors = {};
-        await axios({
-            baseURL: BASE_URL,
-            method: "POST",
-            url: "/auth/register",
-            data: {
-                firstName: state.firstName,
-                lastName: state.lastName,
-                emailAddress: state.email,
-                dateOfBirth: state.dateOfBirth,
-                password: state.password,
-            },
-        });
-
+        const response = await axiosInstance.post(`/auth/register`, state);
         router.push("/login");
+        showToast(
+            "Votre compte a été crée avec succès, veuillez consulter votre email pour activer votre compte "
+        );
     } catch (e) {
-        console.log(e);
+        console.error(
+            "Erreur lors de la création de l'utilisateur:",
+            e.response.data
+        );
+        state.errors.message =
+            "Une erreur est survenue lors de la création de l'utilisateur.";
     }
 };
 

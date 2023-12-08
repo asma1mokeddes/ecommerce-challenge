@@ -37,7 +37,7 @@
 						</li>
 					<li>
 
-						<a rel="noopener noreferrer" href="/conditions-generales-vente">Conditions générales de vente</a><br>
+						<a rel="noopener noreferrer" href="/conditions-generales-vente">Conditions générales de vente et utilisateurs</a><br>
 						</li>
 					</ul>
 				</div>

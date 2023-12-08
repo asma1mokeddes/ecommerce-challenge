@@ -1,5 +1,3 @@
-import { mdiAccountCircle, mdiMonitor } from "@mdi/js";
-
 export default [
     {
         to: "/",
