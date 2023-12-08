@@ -36,7 +36,7 @@ export default {
     methods: {
         async fetchAllProducts() {
             try {
-                const response = await axios.get('http://localhost:3000/products/');
+                const response = await axiosInstance.get('http://localhost:3000/products/');
                 this.products = response.data;
             } catch (error) {
                 console.error("Error fetching products:", error);
