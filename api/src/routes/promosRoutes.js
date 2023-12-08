@@ -8,8 +8,8 @@ export const getPromos = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message:
-                err.message ||
-                "Une erreur est survenue lors de la récupération des promotions.",
+                "Une erreur est survenue lors de la récupération des promotions." ||
+                err.message,
         });
     }
 };
@@ -66,6 +66,7 @@ export const createPromo = async (req, res) => {
                 promoCode,
                 expirationDate,
             });
+
             await PromoMongo.create({
                 promoCode,
                 expirationDate,

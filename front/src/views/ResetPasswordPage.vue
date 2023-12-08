@@ -14,7 +14,6 @@ const router = useRouter();
 
 const reset = () => {
     axiosInstance.post("/emails/reset", form).then((response) => {
-        console.log("je suis là");
         router.push("/login");
     });
 };

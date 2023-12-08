@@ -1,55 +1,37 @@
-<!-- <script setup>
-import { reactive } from "vue"; // Importez ref pour créer des références réactives
-import SectionMain from "@/components/SectionMain.vue";
-import CardBox from "@/components/CardBox.vue";
-import FormField from "@/components/FormField.vue";
-import FormControl from "@/components/FormControl.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
-import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
-import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
-import { mdiAccount, mdiAccountPlusOutline, mdiMail } from "@mdi/js";
-import router from "@/router";
+<script setup>
+import { reactive, onMounted } from "vue";
 import axiosInstance from "@/utils/axiosInstance";
-import "vue-select/dist/vue-select.css";
-import { languages } from "@/data/languages";
+import router from "@/router";
+
 import { showToast } from "@/utils/toast";
 
 const userId = router.currentRoute.value.params.userId;
 const state = reactive({
   user: {
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    address: "",
-    companies: [],
-    skills: [],
-    points: null,
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    emailAddress: "",
+    role: ""
   },
-  companies: [],
   responseMessage: "",
 });
 
 const init = async () => {
   await fetchUser();
-  await fetchCompanies();
 };
 
-const fetchCompanies = async () => {
-  try {
-    state.companies = await axiosInstance.get("companies").then((response) => {
-      return response.data;
-    });
-  } catch (error) {
-    console.error("Error fetching companies:", error);
-  }
-};
 
 const fetchUser = async () => {
   try {
-    state.user = await axiosInstance.get(`users/${userId}`).then((response) => {
-      return response.data;
-    });
+    const response = await axiosInstance.get(`users/${userId}`);
+    const user = response.data;
+    state.user = user;
+
+    // Formater la date pour correspondre au format du calendrier
+    user.dateOfBirth = new Date(user.dateOfBirth).toISOString().split("T")[0];
+    state.user.role = mapRoleFromBackend(user.role);
+    return user;
   } catch (error) {
     console.error("Error fetching user:", error);
   }
@@ -72,120 +54,125 @@ const updateUser = async () => {
   }
 };
 
-init();
+const mapRoleFromBackend = (backendRole) => {
+  const roleMappings = {
+    ROLE_USER: "Utilisateur",
+    ROLE_STORE_KEEPER: "Magasinier",
+    ROLE_ADMIN: "Admin",
+  };
+
+  return roleMappings[backendRole] || backendRole;
+};
+onMounted(init);
 </script>
 
+
+
 <template>
-  <LayoutAuthenticated>
-    <SectionMain>
-      <SectionTitleLineWithButton
-        :icon="mdiAccountPlusOutline"
-        title="Modifier l'utilisateur"
-        main
-      />
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 form-container">
-        <!-- Formulaire de création d'utilisateur -->
-        <CardBox is-form class="shadow" @submit.prevent="updateUser">
-          <FormField label="Nom" help="Votre nom">
-            <FormControl
-              v-model="state.user.firstname"
-              :icon="mdiAccount"
-              name="username"
-              required
-              autocomplete="username"
-            />
-          </FormField>
-
-          <FormField label="Prénom" help="Votre prénom">
-            <FormControl
-              v-model="state.user.lastname"
-              :icon="mdiAccount"
-              name="username"
-              required
-              autocomplete="username"
-            />
-          </FormField>
-
-          <FormField label="Entreprise" help="Sélectionnez votre entreprise">
-            <v-select
-              v-model="state.user.companies"
-              :options="state.companies"
-              :reduce="(company) => company._id"
-              label="name"
-            />
-          </FormField>
-
-          <FormField label="Compétences" help="Vos compétences">
-            <v-select
-              v-model="state.user.skills"
-              :options="languages"
-              multiple
-            />
-          </FormField>
-
-          <FormField label="Points" help="Ajouter des points (max 1000)">
-            <FormControl
-                v-model="state.user.points"
-                :icon="mdiAccount"
-                name="points"
-                required
-                autocomplete="points"
-            />
-          </FormField>
-
-          <FormField label="Adresse" help="Votre adresse postale">
-            <FormControl
-              v-model="state.user.address"
-              :icon="mdiAccount"
-              name="address"
-              required
-              autocomplete="address"
-            />
-          </FormField>
-
-          <FormField label="Email" help="Votre adresse email">
-            <FormControl
-              v-model="state.user.email"
-              :icon="mdiMail"
-              name="email"
-              type="email"
-              required
-              autocomplete="email"
-            />
-          </FormField>
-
-          <FormField
-            label="Numéro de téléphone"
-            help="Votre numéro de téléphone"
+  <div class="text-center">
+      <h2 class="mt-10 font-bold text-xl">Modifier un utilisateur</h2>
+  </div>
+  <section class="mx-auto p-6 flex items-center justify-center">
+      <form
+          novalidate=""
+          action=""
+          class="ml-80 container flex flex-col mx-auto space-y-12"
+      >
+          <fieldset
+              class="grid grid-cols-4 gap-6 p-6 rounded-md shadow-sm "
           >
-            <FormControl
-              v-model="state.user.phone"
-              :icon="mdiAccount"
-              name="tel"
-              type="tel"
-              required
-              autocomplete="tel"
-            />
-          </FormField>
-          <!-- Autres champs du formulaire ici -->
-          <template #footer>
-            <BaseButtons>
+              <div class="grid grid-cols-6 gap-4 col-span-full lg:col-span-3">
+                  <div class="col-span-full sm:col-span-3">
+                      <label for="firstName" class="text-sm">Nom</label>
+                      <input
+                          v-model="state.user.firstName"
+                          type="text"
+                          name="firstName"
+                          id="firstName"
+                          placeholder="Nom"
+                          class="w-full rounded-md focus:ring focus:ri focus:ri form-field"
+                      />
+                  </div>
+                  <div class="col-span-full sm:col-span-3">
+                      <label for="lastName" class="text-sm">Prénom</label>
+                      <input
+                          v-model="state.user.lastName"
+                          type="text"
+                          name="lastName"
+                          id="lastName"
+                          placeholder="Prénom"
+                          class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 form-field"
+                      />
+                  </div>
+
+                  <div class="col-span-full sm:col-span-2">
+                      <label for="dateOfBirth" class="text-sm"
+                          >Date de naissance</label
+                      >
+                      <input
+                          v-model="state.user.dateOfBirth"
+                          type="date"
+                          name="dateOfBirth"
+                          id="dateOfBirth"
+                          placeholder="Date de naissance"
+                          class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 form-field"
+                      />
+                  </div>
+
+                  <div class="col-span-full sm:col-span-3">
+                      <label for="email" class="text-sm">Adresse email</label>
+                      <input
+                          v-model="state.user.emailAddress"
+                          id="emailAddress"
+                          type="email"
+                          name="email"
+                          placeholder="leroy@jenkins.com"
+                          class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 form-field"
+                      />
+                  </div>
+
+                  <div class="col-span-full sm:col-span-2">
+                      <label for="role" class="text-sm">Role</label>
+                      <select
+                          v-model="state.user.role"
+                          class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 custom-select form-field"
+                      >
+                          <option value="Utilisateur">
+                              Utilisateur
+                          </option>
+                          <option value="Magasinier">Magasinier</option>
+                          <option value="Admin">Admin</option>
+                      </select>
+                  </div>
+              </div>
+          </fieldset>
+          <div class="text-center">
               <button
-                  type="submit"
-                  class="rounded-full bg-[#00BB7E] px-4 py-2.5 text-sm font-semibold text-white shadow-sm"
+                  @click.prevent="updateUser"
+                  class="mx-auto px-8 py-3 font-semibold dark:bg-purple500"
               >
-                Modifier l'utilisateur
+                  Modifier
               </button>
-            </BaseButtons>
-          </template>
-        </CardBox>
-      </div>
-    </SectionMain>
-  </LayoutAuthenticated>
+          </div>
+      </form>
+  </section>
 </template>
 
-<style>
+<style scoped>
+.text-center {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.form-field {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid #000000;
+  color: rgb(26, 25, 65);
+}
+
+
 .form-container {
   display: flex;
   justify-content: center;
@@ -195,15 +182,13 @@ init();
 }
 
 .form-container .shadow {
-  max-width: 500px; /* Adjust this value as needed to control the maximum width of the form */
-  width: 100%; /* Ensure the form takes the available width within the container */
+  max-width: 500px;
+  width: 100%;
 }
 
-.button {
-  width: 300px;
-  justify-content: center;
-  align-items: center;
-  background-color: #d62020;
-  margin-left: 50px;
+.dark\:bg-violet400 {
+  background-color: #7f9cf5;
 }
-</style> -->
+
+</style>
+

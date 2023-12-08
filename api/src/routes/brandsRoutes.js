@@ -10,7 +10,6 @@ export const getBrands = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message:
-                err.message ||
                 "Une erreur est survenue lors de la récupération des marques.",
         });
     }
@@ -132,7 +131,7 @@ export const updateBrand = async (req, res) => {
             });
         } else {
             return res.status(404).json({
-                message: `La catégorie avec l'ID ${brandId} n'existe pas.`,
+                message: `La marque avec l'ID ${brandId} n'existe pas.`,
             });
         }
     } catch (error) {
