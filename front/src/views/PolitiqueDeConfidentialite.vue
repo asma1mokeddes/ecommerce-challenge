@@ -1,65 +1,62 @@
 <template>
-    <section class="bg-gray900 dark:text-gray100">
-        <div
-            class="container max-w-xl p-6 py-12 mx-auto space-y-24 lg:px-8 lg:max-w-7xl bg-gray900 text-gray100"
-        >        <h2 class="text-3xl font-bold tracking-wide mb-4 ">Politique de Confidentialité</h2>
-
-        <div>
-                <h2
-                    class="text-3xl font-bold tracki sm:text-5xl dark:text-gray-50"
-                >
-                    Politique de confidentialité
-                </h2>
-                <p
-                    class="max-w-3xl mb-4 text-xl dark:text-gray400"
-                >
-                Bienvenue sur le site web de Marche Magique. La protection de vos données personnelles est importante pour nous. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre site.
-                </p>
-            </div>
+    <div>
+      <section class="bg-gray-900 dark:text-gray-100 p-6 py-12">
+        <div class="container mx-auto space-y-8">
+          <h1 class="text-3xl font-bold tracking-wide text-center sm:text-5xl dark:text-gray-50">
+            Politique de Confidentialité
+          </h1>
   
-        <p class="text-xl font-bold">Collecte des Informations</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
-
-        <h3
-                        class="text-2xl font-bold tracki sm:text-3xl dark:text-gray-50"
-                    >
-                    Collecte des Informations
-                    </h3>
-                    <p class="mt-3 text-lg dark:text-gray-400">
-                        Bienvenue sur le site web de Marche Magique. La protection de vos données personnelles est importante pour nous. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre site.
-                    </p>
-
+          <!-- Section sur l'utilisation de cookies -->
+          <section>
+            <h2 class="text-2xl font-bold tracking-wide sm:text-3xl dark:text-gray-50">
+              Utilisation de Cookies
+            </h2>
+            <p class="mt-3 text-lg dark:text-gray-400">
+              Nous tenons à vous informer que notre site n'utilise pas de cookies pour le suivi des utilisateurs. Nous respectons votre vie privée et ne collectons pas d'informations personnelles à des fins publicitaires ou de suivi.
+            </p>
+          </section>
   
-        <p class="text-xl font-bold ">Utilisation des Informations</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
+          <!-- Section sur le droit de retrait -->
+          <section>
+            <h2 class="text-2xl font-bold tracking-wide sm:text-3xl dark:text-gray-50">
+              Droit de Retrait
+            </h2>
+            <p class="mt-3 text-lg dark:text-gray-400">
+              Vous avez le droit de retirer votre consentement à tout moment. Si vous avez précédemment donné votre consentement à l'utilisation de vos données personnelles, vous pouvez le retirer en nous contactant via l'adresse e-mail : <a href="mailto:contact@marchemagique.com" class="text-blue-500">contact@marchemagique.com</a>. Le retrait du consentement n'affectera pas la légalité du traitement basé sur le consentement avant son retrait.
+            </p>
+          </section>
   
-        <p class="text-xl font-bold">Cookies et Technologies Similaires</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
+          <!-- Section sur le droit de suppression des données -->
+          <section>
+            <h2 class="text-2xl font-bold tracking-wide sm:text-3xl dark:text-gray-50">
+              Droit de Suppression des Données
+            </h2>
+            <p class="mt-3 text-lg dark:text-gray-400">
+              Vous avez le droit de demander la suppression de vos données personnelles détenues par Marche Magique. Pour exercer ce droit, veuillez nous contacter via l'adresse e-mail : <a href="mailto:contact@marchemagique.com" class="text-blue-500">contact@marchemagique.com</a>. Nous effacerons alors vos données personnelles dans les meilleurs délais, sauf si nous sommes légalement tenus de les conserver.
+            </p>
+          </section>
   
-        <p class="text-xl font-bold">Sécurité</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
-  
-        <p class="text-xl font-bold">Vos Droits</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
-  
-        <p class="text-xl font-bold">Modifications de la Politique de Confidentialité</p>
-        <!-- Ajoutez d'autres sections selon vos besoins -->
- 
-        <p class="mb-2">
-          Dernière mise à jour : 06-12-2023
-        </p>    
-      </div>
-    </section>
+          <!-- Section sur le droit de modifier le compte -->
+          <section>
+            <h2 class="text-2xl font-bold tracking-wide sm:text-3xl dark:text-gray-50">
+              Droit de Modifier le Compte
+            </h2>
+            <p class="mt-3 text-lg dark:text-gray-400">
+              Vous avez la possibilité de modifier les informations de votre compte, y compris votre adresse e-mail, à tout moment. Pour effectuer des modifications, veuillez vous connecter à votre compte sur notre site web et accéder à la section de gestion du compte. Si vous rencontrez des difficultés ou avez des questions, n'hésitez pas à nous contacter à l'adresse : <a href="mailto:support@marchemagique.com" class="text-blue-500">support@marchemagique.com</a>.
+            </p>
+          </section>
+        </div>
+      </section>
+    </div>
   </template>
   
   <script>
   export default {
-    name: 'PrivacyPolicy',
-    // Vous pouvez ajouter des données, des méthodes ou d'autres configurations ici.
+    // Ajoutez ici des méthodes ou des données spécifiques à la Politique de Confidentialité si nécessaire
   }
   </script>
   
   <style scoped>
-
+  /* Ajoutez ici des styles spécifiques à la Politique de Confidentialité */
   </style>
   

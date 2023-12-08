@@ -21,23 +21,23 @@ router.get("/:brandId", getBrand);
 
 router.post(
     "/create",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     createBrand
 );
 // Mettre à jour une marque par ID
 
 router.put(
     "/:brandId",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     updateBrand
 );
 // Supprimer une marque par ID
 router.delete(
     "/:brandId",
-    // authMiddleware,
-    // adminOrStoreKeeperMiddleware,
+    authMiddleware,
+    adminOrStoreKeeperMiddleware,
     deleteBrand
 );
 

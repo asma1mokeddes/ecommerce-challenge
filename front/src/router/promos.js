@@ -5,7 +5,7 @@ export const promosRoutes = [
         },
         path: "/promos",
         name: "promos",
-        component: () => import("@/views/promos/PromoManagement.vue"),
+        component: () => import("@/views/promos/PromoView.vue"),
     },
     {
         meta: {
@@ -13,6 +13,6 @@ export const promosRoutes = [
         },
         path: "/promos/create",
         name: "promosCreate",
-        component: () => import("@/views/promos/CreatePromo.vue"),
+        component: () => import("@/views/promos/PromoCreate.vue"),
     },
 ];

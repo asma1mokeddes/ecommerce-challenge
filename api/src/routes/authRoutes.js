@@ -61,11 +61,10 @@ export const register = async (req, res) => {
         const options = {
             expiresIn: "12h",
         };
-        console.log("Before token");
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
-        const activationLink = `https://localhost:3002/emails/activate?token=${token}`;
-        // await sendActivationEmail(req, res, activationLink);
+        const activationLink = `http://localhost:3002/emails/activate?token=${token}`;
+        await sendActivationEmail(req, res, activationLink);
 
         await user.save();
 

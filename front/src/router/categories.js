@@ -5,7 +5,7 @@ export const categoriesRoutes = [
         },
         path: "/categories",
         name: "categories",
-        component: () => import("@/views/categories/CategoryManagement.vue"),
+        component: () => import("@/views/categories/CategoryView.vue"),
     },
     {
         meta: {
@@ -13,6 +13,6 @@ export const categoriesRoutes = [
         },
         path: "/categories/create",
         name: "categoriesCreate",
-        component: () => import("@/views/categories/CreateCategory.vue"),
+        component: () => import("@/views/categories/CategoryCreate.vue"),
     },
 ];

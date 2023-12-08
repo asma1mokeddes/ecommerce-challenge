@@ -3,8 +3,6 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
-// import { useStyleStore } from "@/stores/style.js";
-import { darkModeKey } from "@/config.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
