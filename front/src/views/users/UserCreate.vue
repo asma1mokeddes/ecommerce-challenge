@@ -1,12 +1,8 @@
 <template>
-     <div class="text-center">
-            <h2 class="mt-10 font-bold text-xl">Création d'utilisateurs</h2>
-        </div>
-    <section
-        class="mx-auto p-6 flex items-center justify-center"
-    >
-       
-
+    <div class="text-center">
+        <h2 class="mt-10 font-bold text-xl">Créer un utilisateur</h2>
+    </div>
+    <section class="mx-auto p-6 flex items-center justify-center">
         <form
             novalidate=""
             action=""
@@ -24,7 +20,7 @@
                             name="firstName"
                             id="firstName"
                             placeholder="Nom"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray-700 text-gray-900 form-field"
                         />
                     </div>
                     <div class="col-span-full sm:col-span-3">
@@ -35,7 +31,7 @@
                             name="lastName"
                             id="lastName"
                             placeholder="Prénom"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 form-field"
                         />
                     </div>
 
@@ -49,7 +45,7 @@
                             name="dateOfBirth"
                             id="dateOfBirth"
                             placeholder="Date de naissance"
-                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900"
+                            class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 form-field"
                         />
                     </div>
 
@@ -71,9 +67,11 @@
                             v-model="state.role"
                             class="w-full rounded-md focus:ring focus:ri focus:ri border-gray700 text-gray900 custom-select"
                         >
-                            <option value="Question">Utilisateur</option>
-                            <option value="Commande">Magasinier</option>
-                            <option value="Réclamation">Admin</option>
+                            <option value="Utilisateur" selected>
+                                Utilisateur
+                            </option>
+                            <option value="Magasinier">Magasinier</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
 
@@ -95,21 +93,23 @@
                     </div>
                 </div>
             </fieldset>
-            <button
-                @click.prevent="createUser"
-                class="mx-auto bottom-4 justify-center px-8 py-3 font-semibold dark:bg-violet400 text-gray800"
-            >
-                Créer l'utilisateur
-            </button>
+            <div class="text-center">
+                <button
+                    @click.prevent="createUser"
+                    class="mx-auto px-8 py-3 font-semibold dark:bg-violet400"
+                >
+                    Créer
+                </button>
+            </div>
         </form>
     </section>
 </template>
 
 <script setup>
-import axios from "axios";
 import { ref, reactive } from "vue";
 import { showToast } from "@/utils/toast";
 import { useRouter } from "vue-router";
+import axiosInstance from "@/utils/axiosInstance";
 
 const BASE_URL = "http://localhost:3002";
 const router = useRouter();
@@ -128,31 +128,39 @@ const createUser = async () => {
     try {
         state.errors = {};
 
-        const response = await axios({
-            baseURL: BASE_URL,
-            method: "POST",
-            url: "/users/create",
-            data: {
-                firstName: state.firstName,
-                lastName: state.lastName,
-                dateOfBirth: state.dateOfBirth,
-                email: state.email,
-                role: state.role,
-                password: state.password,
-            },
-        });
-        showToast(response.data.message);
-        navigateToUsers();
-    } catch (error) {
-        if (error.response && error.response.data) {
-            state.errors = error.response.data.errors;
+        const roleMappings = {
+            Utilisateur: "ROLE_USER",
+            Magasinier: "ROLE_STORE_KEEPER",
+            Admin: "ROLE_ADMIN",
+        };
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
         }
-        console.error(error);
+        const data = {
+            firstName: state.firstName,
+            lastName: state.lastName,
+            dateOfBirth: state.dateOfBirth,
+            emailAddress: state.email,
+            role: roleMappings[state.role],
+            password: state.password,
+        };
+
+        const response = await axiosInstance.post("/users/create", data);
+
+        showToast(response.data.message);
+
+        router.push("/users");
+    } catch (error) {
+        handleError(error);
     }
 };
 
-const navigateToUsers = () => {
-    router.push("/users");
+const handleError = (error) => {
+    if (error.response && error.response.data) {
+        state.errors = error.response.data.errors;
+    }
+    console.error(error);
 };
 </script>
 
@@ -189,5 +197,9 @@ input[type="password"] {
     border: 1px solid #ccc;
     font-size: 16px;
     transition: background-color 0.3s, border-color 0.3s;
+}
+
+button {
+    margin-top: auto; /* Utilisé pour positionner le bouton en bas */
 }
 </style>

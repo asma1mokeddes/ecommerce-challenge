@@ -61,6 +61,7 @@ export const register = async (req, res) => {
         const options = {
             expiresIn: "12h",
         };
+        console.log("Before token");
 
         const token = jwt.sign(payload, process.env.SECRET_KEY, options);
         const activationLink = `https://localhost:3002/emails/activate?token=${token}`;
@@ -97,7 +98,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
         if (!user.activated) {
-            return res.status(401).json({ message: "Compte invalide" });
+            return res.status(401).json({ message: "Compte inactif" });
         }
 
         const payload = {

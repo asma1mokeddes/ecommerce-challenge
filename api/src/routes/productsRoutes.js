@@ -22,7 +22,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = (req, res) => {
     const productId = req.params.productId;
-        
+
     ProductMongo.findOne({ productId: productId })
         .then((data) => {
             if (data) {
@@ -49,6 +49,53 @@ export const getProduct = (req, res) => {
                 message: error.message,
             });
         });
+};
+
+export const searchProducts = async (req, res) => {
+    try {
+        const { q, minPrice, maxPrice } = req.query;
+        let searchQuery = {};
+
+        if (q) {
+            // Préparer une liste de conditions de recherche
+            let orConditions = [
+                { productName: { $regex: q, $options: 'i' } },
+                { description: { $regex: q, $options: 'i' } }
+            ];
+
+            // Vérifier si q est un ObjectId valide
+            if (mongoose.Types.ObjectId.isValid(q)) {
+                orConditions.push(
+                    { category: q },
+                    { brand: q },
+                    { promo: q }
+                );
+            }
+
+            searchQuery.$or = orConditions;
+        }
+
+        // Filtre par prix minimum
+        if (minPrice) {
+            const minPriceValue = parseFloat(minPrice);
+            if (!isNaN(minPriceValue)) {
+                searchQuery.price = { ...searchQuery.price, $gte: minPriceValue };
+            }
+        }
+
+        // Filtre par prix maximum
+        if (maxPrice) {
+            const maxPriceValue = parseFloat(maxPrice);
+            if (!isNaN(maxPriceValue)) {
+                searchQuery.price = { ...searchQuery.price, $lte: maxPriceValue };
+            }
+        }
+
+        const searchResults = await ProductMongo.find(searchQuery).populate('category').populate('brand').populate('promo');
+        res.status(200).json(searchResults);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 };
 
 export const createProduct = async (req, res) => {
@@ -95,7 +142,7 @@ export const createProduct = async (req, res) => {
             promoMongo = await PromoMongo.findOne({
                 promoCode: promo,
             });
-        } 
+        }
 
         // Vérification que le produit n'existe pas dans PostgreSQL
         let createdProductPsql = await Product.findOne({
@@ -115,7 +162,6 @@ export const createProduct = async (req, res) => {
             brand: brandMongo,
             promo: promoMongo,
         });
-
 
         if (!createdProductPsql && !createdProductMongo) {
             // Création du produit dans  Psql
@@ -142,9 +188,6 @@ export const createProduct = async (req, res) => {
                 brand: brandMongo.id,
                 promo: promoMongo ? promoMongo.id : null,
             });
-
-            console.log("createdProductPsql===", createdProductPsql);
-            console.log("createdProductMongo===", createdProductMongo);
         } else {
             return res.status(409).json({
                 error: "Ce produit existe déjà.",
@@ -163,7 +206,6 @@ export const createProduct = async (req, res) => {
         });
     }
 };
-
 
 export const updateProduct = (req, res) => {
     const id = req.params.id;

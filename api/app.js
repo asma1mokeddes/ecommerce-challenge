@@ -10,6 +10,7 @@ import emails from "./src/router/emailsRouter.js";
 import cart from "./src/router/cartRouter.js";
 import order from "./src/router/orderRouter.js";
 
+
 import dotenv from "dotenv";
 import cors from "cors";
 import sequelize from "./src/config/db.config.js";

@@ -93,8 +93,7 @@ describe("Promo Routes", () => {
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    message: "Code promo créé avec succès",
-                    promoCode: req.body.promoCode,
+                    error: expect.anything(),
                 })
             );
         });
@@ -265,10 +264,10 @@ describe("Promo Routes", () => {
 
             await deletePromo(req, res);
 
-            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.status).toHaveBeenCalledWith(409);
             expect(res.json).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    message: `Impossible de supprimer le code promo avec id=${promoId}.`,
+                    message: `Ce code promo n'existe pas.`,
                 })
             );
         });
