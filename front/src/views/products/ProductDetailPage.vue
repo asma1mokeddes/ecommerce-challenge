@@ -1,41 +1,42 @@
 <template>
-  <div>
-
-    <div id="page-wrap">
-      <div class="product-wrap">
-        <div id="img-wrap">
-          <img v-bind:src="imageURL" />
-        </div>
-        <div id="product-details">
-          <h1>{{ product.productName }}</h1>
-          <h3 id="price">{{ product.price }}€</h3>
-          <button
-            id="add-to-cart"
-            v-if="!itemIsInCart && !showSuccessMessage"
-            v-on:click="addToCart"
-          >Ajouter au panier</button>
-          <button
-            id="add-to-cart"
-            class="green-button"
-            v-if="!itemIsInCart && showSuccessMessage"
-          >Votre produit a été ajouté au panier !</button>
-          <button
-            id="add-to-cart"
-            class="grey-button"
-            v-if="itemIsInCart"
-          >Ce produit est déjà dans votre panier</button>
-          <h4>Description</h4>
-          <p>{{ product.description }}</p>
-        </div>
+  <div id="page-wrap">
+    <div class="product-wrap">
+      <div id="img-wrap">
+        <img :src="imageURL" alt="Product Image" />
       </div>
+      <div id="product-details">
+        <h1 class="product-title">{{ product.productName }}</h1>
+        <h3 class="product-price">{{ product.price }}€</h3>
+        <button
+          class="add-to-cart-btn primary"
+          v-if="!itemIsInCart && !showSuccessMessage"
+          @click="addToCart"
+        >
+          Ajouter au panier
+        </button>
+        <button
+          class="add-to-cart-btn success"
+          v-if="!itemIsInCart && showSuccessMessage"
+        >
+          Ajouté au panier !
+        </button>
+        <button
+          class="add-to-cart-btn disabled"
+          v-if="itemIsInCart"
+          disabled
+        >
+          Dans le panier
+        </button>
+        <h4>Description</h4>
+        <p class="product-description">{{ product.description }}</p>
       </div>
+    </div>
   </div>
-
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import axios from 'axios'; 
+import axiosInstance from "@/utils/axiosInstance";
 const BASE_URL = "http://localhost:3002";
 
 import VueJwtDecode from 'vue-jwt-decode';
@@ -70,7 +71,7 @@ export default {
         if (token) {
              this.userId = VueJwtDecode.decode(token).user.userId;
         }
-        await axios.post(`http://localhost:3002/cart/users/${this.userId}/cart`, {
+        await axiosInstance.post(`http://localhost:3002/cart/users/${this.userId}/cart`, {
           productId: this.productId
         }, {
           headers: {
@@ -85,14 +86,14 @@ export default {
     },
     async created(){
       try {
-        const { data: product } = await axios.get(`http://localhost:3000/products/${this.$route.params.id}`);
+        const { data: product } = await axiosInstance.get(`http://localhost:3000/products/${this.$route.params.id}`);
         this.product = product;
 
         const token = localStorage.getItem('token'); 
         if (token) {
              this.userId = VueJwtDecode.decode(token).user.userId;
         }
-        const result = await axios.get(`http://localhost:3002/cart/users/${this.userId}/cart`, {
+        const result = await axiosInstance.get(`http://localhost:3002/cart/users/${this.userId}/cart`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -108,59 +109,78 @@ export default {
 </script>
 
 <style scoped>
-  #page-wrap{
-    max-width: 1200px;
-    font-family: "Roboto";
-  }
-  .product-wrap {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-    margin: 50px auto;
-    background: white;
-    outline: 1px solid #eeecec;
-    border-radius: 12px;
-    width: 100%;
-    justify-content: space-between;
-    padding: 50px;
-  }
+#page-wrap {
+  max-width: 1000px;
+  font-family: "Roboto";
+}
 
-  #img-wrap {
-    text-align: center;
-    background: white;
-  }
+.product-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  background: white;
+  outline: 1px solid #eeecec;
+  border-radius: 12px;
+  padding: 20px;
+}
 
-  img {
-    width: 400px;
-  }
+#img-wrap {
+  text-align: center;
+  background: white;
+}
 
-  #product-details {
-    padding: 16px;
-    position: relative;
-    max-width: 600px;
-  }
+img {
+  width: 300px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  #product-details p{
-    color: #6B7290;
-    line-height: 28px;
-  }
-  #add-to-cart {
-    width: 100%;
-    background: #71C9CE;
-    transition: 0.3s;
-  }
-  #add-to-cart:hover {
-    background: #A6E3E9;
-  }
-  #price {
-    position: absolute;
-    top: 24px;
-    right: 16px;
-  }
-  .green-button {
-    background-color: green;
-  }
-  .grey-button {
-    background-color: #888;
-  }
+#product-details {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.product-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  font-size: 18px;
+  color: #ff4500; /* Orange Red color */
+  margin-bottom: 16px;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  background: #7F5DD0;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #9577db;
+}
+
+.add-to-cart-btn.success {
+  background-color: #5cb85c; /* Green color */
+  color: #fff;
+}
+
+.add-to-cart-btn.disabled {
+  background-color: #ddd; /* Light gray color */
+  color: #666;
+  cursor: not-allowed;
+}
+
+.product-description {
+  color: #6b7290;
+  line-height: 1.6;
+}
 </style>

@@ -14,6 +14,10 @@ Order.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 			},
+    tel:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
       orderStatus: { 
         type: DataTypes.ENUM(
           "en attente de paiement",
@@ -24,16 +28,6 @@ Order.init(
           "livré"
         ),
         allowNull: false,
-        validate: {
-          isIn: {
-            args: [["en attente de paiement",
-            "paiement échoué",
-            "payé",
-            "en cours d'expédition",
-            "expédié",
-            "livré"]],
-          },
-        }
       },
 		},
 	{

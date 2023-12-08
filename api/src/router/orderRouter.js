@@ -13,24 +13,24 @@ import { adminOrStoreKeeperMiddleware } from "../middlewares/userManagementMiddl
 const router = express.Router();
 
 router.get("/", 
-// authMiddleware,
+authMiddleware,
 //  adminOrStoreKeeperMiddleware,
   getOrders);
 router.get("/:orderId", 
-// authMiddleware,
+authMiddleware,
  getOrder);
 router.get("/user/:userId",
-//  authMiddleware,
+ authMiddleware,
   getOrdersUser);
 router.post("/",
-//  authMiddleware,
+ authMiddleware,
   createOrder);
 router.put("/:orderId", 
-// authMiddleware, 
+authMiddleware, 
 // adminOrStoreKeeperMiddleware, 
 updateOrder);
 router.delete("/:orderId",
-//  authMiddleware,
+ authMiddleware,
 //   adminOrStoreKeeperMiddleware,
    deleteOrder);
 

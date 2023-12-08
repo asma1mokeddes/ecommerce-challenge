@@ -133,11 +133,13 @@ const createUser = async () => {
             Magasinier: "ROLE_STORE_KEEPER",
             Admin: "ROLE_ADMIN",
         };
+
         const token = localStorage.getItem("token");
+
         if (!token) {
             router.push("/login");
         }
-        const data = {
+            const data = {
             firstName: state.firstName,
             lastName: state.lastName,
             dateOfBirth: state.dateOfBirth,
@@ -150,7 +152,7 @@ const createUser = async () => {
 
         showToast(response.data.message);
 
-        router.push("/users");
+        navigateToUsers();
     } catch (error) {
         handleError(error);
     }

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axiosInstance from "@/utils/axiosInstance";
 import ProductsGrid from '../../components/ProductsGrid.vue';
 
 export default {
@@ -36,7 +36,7 @@ export default {
     methods: {
         async fetchAllProducts() {
             try {
-                const response = await axios.get('http://localhost:3000/products/');
+                const response = await axiosInstance.get('http://localhost:3000/products/');
                 this.products = response.data;
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -78,8 +78,26 @@ export default {
 
 <!-- Add your existing styles here -->
 <style scoped>
-  /* ... existing styles ... */
-  .search-bar {
+
+  .btn {
+    padding: 0.7em 1.5em;
+    background: #71C9CE;
+    border-radius: 3em;
+    letter-spacing: 1px;
+    font-size: 1em;
+    transition: 0.3s;
+  }
+
+  .btn:hover{
+    background: #A6E3E9;
+  }
+
+  #page-wrap {
+    padding-top: 50px;
+    width: 100%;
+  }
+
+  .title-page-wrap{
     display: flex;
     justify-content: center;
     margin-bottom: 20px;

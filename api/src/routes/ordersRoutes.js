@@ -1,7 +1,5 @@
 import Order from "../models/order.model.js";
 import OrderProduct from "../models/order-product.js";
-// import Product from "../models/product.js";
-// import User from "../models/user.model.js";
 
 export const getOrders = async (req, res) => {
   try {
@@ -17,10 +15,11 @@ export const getOrders = async (req, res) => {
 
 export const createOrder = async (req, res) => {
     try {
-        const { userId, products, deliveryAddress } = req.body;
+        const { userId, products, deliveryAddress, tel } = req.body;
 
         const createdOrder = await Order.create({
             addressUser: deliveryAddress,
+            tel: tel,
             orderStatus: "en attente de paiement", 
             userId: userId,
         });
@@ -77,7 +76,7 @@ export const getOrdersUser = async (req, res) => {
 export const updateOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { orderStatus, deliveryAddress } = req.body;
+    const { orderStatus, deliveryAddress, tel } = req.body;
 
     const order = await Order.findByPk(orderId);
     if (!order) {
@@ -87,6 +86,7 @@ export const updateOrder = async (req, res) => {
     await order.update({
       orderStatus: orderStatus || order.orderStatus, // Mettre à jour uniquement si défini dans le body
       addressUser: deliveryAddress || order.addressUser, // Mettre à jour uniquement si défini dans le body
+      tel: tel || order.tel, // Mettre à jour uniquement si défini dans le body
     });
 
     res.status(200).json({ message: "Commande mise à jour avec succès" });
